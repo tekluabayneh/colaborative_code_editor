@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "dist/src/server.js",
+  "scripts": {
+   "build": "npx tsc",
+   "prestart": "npm run build",
+    "start": "nodemon dist/src/server.js",
+    "predev": "npm run build",
+    "dev": "concurrently \"npx tsc -watch\" \"nodemon dist/src/srever.js\" "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "concurrently": "^9.2.0",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.7"
+  }
+}
