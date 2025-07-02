@@ -1,13 +1,13 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "dist/src/server.js",
+  "main": "dist/server.js",
   "scripts": {
    "build": "npx tsc",
    "prestart": "npm run build",
-    "start": "nodemon dist/src/server.js",
+    "start": "nodemon dist/server.js",
     "predev": "npm run build",
-    "dev": "concurrently \"npx tsc -watch\" \"nodemon dist/src/srever.js\" "
+    "dev": "concurrently \"npx tsc -watch\" \"nodemon dist/srever.js\" "
   },
   "keywords": [],
   "author": "",
