@@ -1,6 +1,7 @@
 import Link from "next/link"
 import "../../styles/globals.css"
-
+import image from  "../../../../assets/login_image.png"
+import Image from "next/image"
 const Register = () => {
   return (
 		<div className="w-full h-screen flex items-center justify-center relative">
@@ -32,14 +33,15 @@ const Register = () => {
 	</div>
       <form className="p-6 m-1 rounded shadow-md w-[30rem] ">
 	<div className="mb-4">
-         <label className="block text-white text-sm font-bold mb-2" htmlFor="email">Email </label> <input placeholder="Your email address"  className="w-full p-3 mb-1 placeholder-white border-1 outline-none focus:ring-1 border-purple-200 rounded"/>
+         <label className="block text-white text-sm font-bold mb-2" htmlFor="email">Email </label>
+<input placeholder="Your email address"  className="w-full p-3 mb-1 placeholder-white border-1 outline-none focus:ring-1 border-purple-200 rounded"/>
 						<div className="flex items-center justify-between">
 	<label className="block text-white mt-1 text-sm font-bold mb-2" htmlFor="password">Password</label>
  	<Link href="#" className="text-purple-200 text-sm hover:underline">Forgot password?</Link>
 	</div>
-	  <input type="password" placeholder="Your password"
-	    className="w-full px-3 py-2  border rounded focus:outline-none focus:ring-1 focus:accent-purple-200" />
-	</div>
+
+<input placeholder="Your email address"  className="w-full p-3 mb-1 placeholder-white border-1 outline-none focus:ring-1 border-purple-200 rounded"/>
+					</div>
 	<div className="mb-4">
 <button className="bg-black text-white border border-[#333] rounded cursor-pointer px-45 py-2 font-semibold hover:bg-[#333] transition duaration-300">
 						Register
@@ -50,7 +52,7 @@ const Register = () => {
       </form>
   </div>
 			<div className="hidden md:flex w-full items-center text-white justify-center mt-4">
-			 this one is image
+			<Image src={image} alt="Description of image" className="w-full h-screen object-cover"/>
 			 </div>
   </div>
 )}
