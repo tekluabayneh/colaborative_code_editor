@@ -1,18 +1,23 @@
 import Link from "next/link"
 import { useForm } from "react-hook-form";
 import { formTypeLogin } from "../types/form";
-
+import { validateFormData } from "../utils/formValidate"
 type Props = {
     toogle: React.Dispatch<React.SetStateAction<boolean>>
 }
-
 const Login = ({ toogle }: Props) => {
+
+
     const { register, handleSubmit, reset, formState: { errors } } = useForm < formTypeLogin > ()
 
+    const formSubmit = (data: formTypeLogin): void | formTypeLogin => {
+        if (!validateFormData(data)) {
+            console.log("Invalid form data");
+            return;
+        }
 
-    const formSubmit = (data: formTypeLogin): formTypeLogin => {
-        console.log(data);
-        return data;
+        console.log(data)
+        reset()
     }
 
     return (
@@ -64,9 +69,12 @@ const Login = ({ toogle }: Props) => {
                             minLength: {
                                 value: 6,
                                 message: "Password must be at least 6 characters"
-                            }
+                            },
+                            maxLength: {
+                                value: 30,
+                                message: "Password must be less than 20 characters"
+                            },
                         })}
-
                             placeholder="Your password " className="w-full p-3 mb-1 placeholder-white border-1 outline-none focus:ring-1 border-purple-200 rounded" />
                         <p className="text-red-500">{errors.password ? errors.password.message : ""}</p>
                     </div>
