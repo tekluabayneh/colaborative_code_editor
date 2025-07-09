@@ -9,7 +9,6 @@ const Auth = () => {
     const [isLogin, setisLogin] = useState<boolean>(true);
 
     return (
-
         <div className="w-full h-screen flex items-center justify-center relative">
             <div className="w-full">
                 {isLogin ?
@@ -20,7 +19,6 @@ const Auth = () => {
                 <Image src={image} alt="Description of image" className="w-full h-screen object-cover" />
                 <p className="absolute bottom-4 text-white text-sm">© 2025 CodeSync. All rights reserved.</p>
             </div>
-
         </div>
 
     )

@@ -1,6 +1,6 @@
-import Link from "next/link"
 import { useForm } from "react-hook-form";
-import { formTypeRegister, FormValues, formErrors } from "../types/form"
+import { formTypeRegister, FormValues } from "../types/form"
+import { validateFormData } from "../utils/formValidate"
 type Props = {
     toogle: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -9,11 +9,16 @@ const Register = ({ toogle }: Props) => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm < FormValues > ()
 
 
-    const formSubmit = (data: formTypeRegister): formTypeRegister => {
+    const formSubmit = (data: formTypeRegister): formTypeRegister | void => {
+        if (!validateFormData(data)) {
+            console.log("Invalid form data");
+            return
+        }
+        reset();
         console.log(data);
         return data;
-    }
 
+    }
 
     return (
 
@@ -72,6 +77,10 @@ const Register = ({ toogle }: Props) => {
                         minLength: {
                             value: 6,
                             message: "Password must be at least 6 characters"
+                        },
+                        maxLength: {
+                            value: 30,
+                            message: "Password must be less than 20 characters"
                         }
                     })}
 

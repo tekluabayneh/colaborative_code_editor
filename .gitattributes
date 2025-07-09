@@ -1,0 +1,13 @@
+# .gitattributes
+
+# Auto normalize line endings
+* text=auto
+
+# Force LF for all JS/TS/JSON files (optional)
+*.js text eol=lf
+*.ts text eol=lf
+*.json text eol=lf
+
+# Prevent CRLF messing up on Linux/Mac
+*.sh text eol=lf
+

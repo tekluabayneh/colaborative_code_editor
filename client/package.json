@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
+    "@tanstack/react-query": "^5.81.5",
+    "axios": "^1.10.0",
     "gsap": "^3.13.0",
     "next": "15.3.4",
     "react": "^19.0.0",
