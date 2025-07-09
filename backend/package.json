@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "dist/server.js",
   "scripts": {
-   "build": "npx tsc",
-   "prestart": "npm run build",
+    "build": "npx tsc",
+    "prestart": "npm run build",
     "start": "nodemon dist/server.js",
     "predev": "npm run build",
     "dev": "concurrently \"npx tsc -watch\" \"nodemon dist/srever.js\" "
@@ -14,10 +14,12 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "bcryptjs": "^3.0.2",
     "concurrently": "^9.2.0",
     "express": "^5.1.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.3",
     "@types/node": "^24.0.7"
   }
