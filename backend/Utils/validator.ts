@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import { Request } from 'express';
 import type { returnMessage } from "../types/user"
 const checkPassworlength = (password: string, email: string): boolean => {
@@ -55,9 +56,20 @@ const ValidateLogin = (request: Request): returnMessage => {
     }
 }
 
+const VerifyJwtToken = (token: string, secretKey: string): string | jwt.JwtPayload => {
+    try {
+        const decoded = jwt.verify(token, secretKey)
+        return decoded as jwt.JwtPayload;
+    } catch (error) {
+        return "Invalid token"
+    }
+}
 
+const isUserAlreadyRegistered = (email: string): boolean => {
+    return true
+}
 
-export default { ValidateLogin, ValidateRegister };
+export default { ValidateLogin, ValidateRegister, VerifyJwtToken, isUserAlreadyRegistered }
 
 
 // validateing step we hvae to take 
