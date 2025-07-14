@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-const usrSchema = new mongoose.Schema({
-    name: {
+const userSchema = new mongoose.Schema({
+    usrName: {
         type: String,
         required: true,
         trim: true
@@ -18,8 +18,18 @@ const usrSchema = new mongoose.Schema({
         minlength: 6,
         maxlength: 30,
     },
+    role: {
+        type: String,
+        enum: ["Editor", "Admin", "Reviewer", "Read_only"],
+    },
+    OnwenersId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Onwser",
+        required: true
+    }
+
 })
 
-const User = mongoose.model("User", usrSchema);
+const Users = mongoose.model("User", userSchema);
 
-export default User;
+export default Users;
