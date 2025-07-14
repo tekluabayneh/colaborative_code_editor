@@ -33,35 +33,12 @@ app.get('/', (req: Request, res: Response) => {
     console.log('Authorization Header:', header);
     res.send('Hello from TypeScript + Express!');
 });
-//
-// const addUserTemp = async () => {
-//     const users = [{
-//         name: "teklu",
-//         password: "234234",
-//         email: "example@gmail.com",
-//     },
-//     {
-//         name: "teklu",
-//         password: "234234",
-//         email: "example@gmail.com",
-//     },
-//     {
-//         name: "teklu",
-//         password: "234234",
-//         email: "example@gmail.com",
-//     }
-//     ]
-//     const user = await User.insertMany(users)
-//     console.log(user)
-// }
-// addUserTemp()
-//
-const getUser = async () => {
-    const userRepo = await User.find()
-    console.log(userRepo)
-}
-getUser()
 
+app.get('/api/users', async (req: Request, res: Response) => {
+    const userRepo = await User.find()
+    res.status(200).json(userRepo)
+    console.log(userRepo)
+})
 
 app.use("/api", AuthRouter)
 export default app;
