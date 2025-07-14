@@ -5,9 +5,10 @@ const GenerateUsertoken = (): string => {
     return nanoid(32);
 }
 
-const SignUser_SWT_Toekn = (userId: string, secretKey: string): string => {
-    return jwt.sign(userId, secretKey, { expiresIn: "1h" });
+const SignUser_JWT_Token = (email: string, secretKey: string): string => {
+    return jwt.sign(email, secretKey, { expiresIn: "1h" });
 }
 
 
-export default { SignUser_SWT_Toekn, GenerateUsertoken }
+
+export default { SignUser_JWT_Token, GenerateUsertoken }

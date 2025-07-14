@@ -1,31 +1,30 @@
 import jwt from "jsonwebtoken";
 import { Request } from 'express';
 import type { returnMessage } from "../types/user"
-const checkPassworlength = (password: string, email: string): boolean => {
+import Owners from "../models/Owners";
+
+const validateEmailAndPassword = (password: string, email: string): boolean => {
     if (password.length < 6 || password.length > 30) {
         return false
     }
     // if email is not the correct email type return message for the user  
     const regx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-    if (!regx.test(email)) {
-        return false
-    }
-    return true
+    return regx.test(email)
 }
 
 const ValidateRegister = (request: Request): returnMessage => {
-    const { email, username, password } = request.body
-    if (!email || !username || !password) {
+    const { email, userName, password } = request.body
+    if (!email || !userName || !password) {
         return {
             isValid: false,
             message: " Validation failed: Missing required fields"
         }
     }
 
-    if (!checkPassworlength(password, email)) {
+    if (!validateEmailAndPassword(password, email)) {
         return {
             isValid: false,
-            message: "Invalid email or password length is not correct"
+            message: "Invalid email or password length is above 30"
         }
     }
     return {
@@ -43,7 +42,7 @@ const ValidateLogin = (request: Request): returnMessage => {
         }
     }
 
-    if (!checkPassworlength(password, email)) {
+    if (!validateEmailAndPassword(password, email)) {
         return {
             isValid: false,
             message: "Invalid email or password length is not correct"
@@ -65,8 +64,9 @@ const VerifyJwtToken = (token: string, secretKey: string): string | jwt.JwtPaylo
     }
 }
 
-const isUserAlreadyRegistered = (email: string): boolean => {
-    return true
+const isUserAlreadyRegistered = async (email: string): Promise<boolean> => {
+    const findUserByEmail = await Owners.find({ email: email })
+    return findUserByEmail.length === 0 ? false : true
 }
 
 export default { ValidateLogin, ValidateRegister, VerifyJwtToken, isUserAlreadyRegistered }
@@ -75,3 +75,8 @@ export default { ValidateLogin, ValidateRegister, VerifyJwtToken, isUserAlreadyR
 // validateing step we hvae to take 
 // first check if the input value are present or not
 // then check if the input value are valid or not
+
+
+
+
+

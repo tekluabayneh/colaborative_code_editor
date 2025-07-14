@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
-const userSchema = new mongoose.Schema({
-    usrName: {
+import type { Owners } from "../types/Owners";
+
+const OwnersSchema = new mongoose.Schema<Owners>({
+    userName: {
         type: String,
         required: true,
         trim: true
@@ -20,16 +22,10 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["Editor", "Admin", "Reviewer", "Read_only"],
-    },
-    OnwenersId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Onwser",
-        required: true
+        enum: ["Owner"],
+        default: "Owner",
     }
-
 })
+const Owners = mongoose.model<Owners>("Onwser", OwnersSchema);
 
-const Users = mongoose.model("User", userSchema);
-
-export default Users;
+export default Owners;

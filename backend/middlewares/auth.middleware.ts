@@ -1,20 +1,22 @@
 import { Request, Response, NextFunction } from 'express';
 import validateAuthRequest from '../Utils/validator';
 import checkRole from './role.middleware';
+const VerifyJwtToken = require('../Utils/validator').VerifyJwtToken;
+
 //  sing JWT token
 // give them role if they are admin or user 
 // check if the user is already registered 
-const ResgisterValidate = (req: Request, res: Response, next: NextFunction) => {
-    const { email, password, username } = req.body;
+const ResgisterValidate = async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body;
+
+    console.log(await validateAuthRequest.isUserAlreadyRegistered(email))
     // validate the request body for registration
     if (!validateAuthRequest.ValidateRegister(req).isValid) {
-        res.status(400).json({ error: validateAuthRequest.ValidateRegister(req).message });
+        res.status(400).json({ message: validateAuthRequest.ValidateRegister(req).message });
         return
     }
-
-    // check if the user is already registered
-    if (!validateAuthRequest.isUserAlreadyRegistered(email)) {
-        res.status(400).json({ error: 'User already registered' });
+    if (await validateAuthRequest.isUserAlreadyRegistered(email)) {
+        res.status(400).json({ message: 'user already exist please check you email ' });
         return
     }
 
@@ -22,13 +24,24 @@ const ResgisterValidate = (req: Request, res: Response, next: NextFunction) => {
 }
 
 
-const LoginValidate = (req: Request, res: Response, next: NextFunction) => {
+const LoginValidate = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
     // validate the request body for registration
     if (!validateAuthRequest.ValidateLogin(req)) {
         res.status(400).json({ error: 'Invalid registration data' });
         return
     }
+
+    if (await validateAuthRequest.isUserAlreadyRegistered(email)) {
+        res.status(400).json({ message: 'user already exist please check you email ' });
+        return
+    }
+
+    if (!VerifyJwtToken(email, process.env.JWT_SECRET_KEY)) {
+        res.status(401).json({ message: 'Invalid JWT token' });
+        return
+    }
+
     // check usr role get the role from the db using the email 
     checkRole(email)
     next()
