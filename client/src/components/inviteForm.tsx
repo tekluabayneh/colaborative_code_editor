@@ -31,6 +31,7 @@ const InviteForm = () => {
       return;
     }
 
+
     setIsLoading(true);
     
     // Simulate API call
