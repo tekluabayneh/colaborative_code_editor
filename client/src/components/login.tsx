@@ -26,9 +26,8 @@ const Login = ({ toogle }: Props) => {
             <div className="flex flex-col w-full items-center justify-center min-h-screen bg-black">
 
 
-                <div className="absolute top-3 left-5">
-                    <h1 className="text-2xl font-bold leading-none">CodeSync!</h1>
-                </div>
+                <div className="absolute top-3 left-5 ">
+                    <h1 className="hidden md:flex text-2xl font-bold leading-none">CodeSync!</h1> </div>
 
                 <h1 className="text-3xl font-bold leading-none m-0">Welcome!</h1>
                 <p className="text-white ml-1">Login to continue to CodeSync</p>
