@@ -4,6 +4,8 @@ import NarBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import heroReviewImage  from "../../../assets/this-one-can-be-for-landing-also-for-main-folder-structure.png"
 import Image from "next/image";
+import FAQ from "@/components/FAQ";
+import RealTimeCollaboration from "../components/RealTimeColaboration";
 const LandingPage = () => {
   return (
     <div className="min-h-screen bg-black text-white">
@@ -63,10 +65,11 @@ const LandingPage = () => {
                     </div>
                 </div>
 
-
-
+        {/* FAQ */}
+                <FAQ/>
+  <RealTimeCollaboration/>
             </main>
-            <Footer/>;
+            <Footer/>
         </div>
     );
 };
