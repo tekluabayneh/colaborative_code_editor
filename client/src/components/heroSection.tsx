@@ -1,6 +1,5 @@
 import React from 'react';
 import { Code2, Users, Zap, Globe } from 'lucide-react';
-
 const HeroSection = () => {
   const features = [
     {
@@ -57,6 +56,8 @@ const HeroSection = () => {
             <p className="text-sm text-muted-foreground">{feature.description}</p>
           </div>
         ))}
+
+
       </div>
     </div>
   );
