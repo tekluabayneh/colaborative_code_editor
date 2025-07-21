@@ -102,11 +102,27 @@ const documents= [
 
  
 
-const Folder_tree = (Documents)=> {
- console.log(Documents)
+const Folder_tree = ({Documents})=> {
+ // console.log(Documents)
 
     return (
  <div className="folder-tree">
+
+{    Documents.map(( item ,index) => {
+return  item.type === "folder" ? <div>
+<VscFolder/> 
+<span>{item.name}</span>
+</div>
+:
+
+
+
+                    <p className='flex items-center'>
+                    <VscFile/> {item.name}</p>
+            })
+            }
+
+
  </div>
     )
 }
