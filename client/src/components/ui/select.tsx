@@ -178,7 +178,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
   ({ options, value, onChange, placeholder = "Select...", className, ...props }, ref) => {
     const [isOpen, setIsOpen] = React.useState(false)
 
-    const selectedLabel = options.find(opt => opt.value === value)?.label
+    const selectedLabel = options?.find(opt => opt.value === value)?.label
 
     return (
       <div ref={ref} className={cn("relative", className)} {...props}>
