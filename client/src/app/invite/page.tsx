@@ -32,7 +32,7 @@ const Invite = () => {
         }}
       ></div>
 
-      <div className="relative z-10 container mx-auto px-4 py-16">
+      <div className="relative  w-full  mx-auto lg:ml-[15rem]  lg:w-[60rem] xl:w-[75rem]  container px-4 py-16">
         <HeroSection />
         <InviteForm />
       </div>
