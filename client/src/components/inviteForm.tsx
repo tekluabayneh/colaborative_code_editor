@@ -191,9 +191,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { SidebarProvider } from "../components/ui/sidebar";
+import { SidebarProvider } from "../components/ui/sidebar"
 import { TeamSidebar } from "../components/TeamSidebar";
 import { useToast } from "../Hooks/use-toast";
+import HeroSection from "./heroSection";
 import { Mail, Send, UserPlus, Check, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -277,9 +278,12 @@ const Invitation = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
+                <div className="hidden lg:flex ">
         <TeamSidebar />
-        
+       </div> 
         <div className="flex-1 flex items-center justify-center p-8">
+
+
           <div className="w-full max-w-md">
             <Card className="bg-card border-border shadow-2xl">
               <CardHeader className="text-center space-y-4 pb-8">
@@ -331,8 +335,8 @@ const Invitation = () => {
                     )}>
                       <SelectValue placeholder="Select a role" />
                     </SelectTrigger>
-                    <SelectContent className="bg-popover border-border shadow-xl">
-                      <SelectItem value="viewer" className="cursor-pointer hover:bg-accent text-popover-foreground">
+                    <SelectContent className="bg-popover border-border shadow-xl z-10 bg-gray-400">
+                      <SelectItem value="viewer" className="cursor-pointer hover:bg-accent text-popover-foreground ">
                         <div className="flex items-center space-x-2">
                           <div className="w-2 h-2 rounded-full bg-muted-foreground/50"></div>
                           <div>
