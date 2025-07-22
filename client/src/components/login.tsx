@@ -60,7 +60,7 @@ const Login = ({ toogle }: Props) => {
                         <p className="text-red-500">{errors.email ? errors.email.message : ""}</p>
                         <div className="flex items-center justify-between">
                             <label className="block text-white mt-1 text-sm font-bold mb-2" htmlFor="password">Password</label>
-                            <Link href="#" className="text-purple-200 text-sm hover:underline">Forgot password?</Link>
+                            <Link href="/forgotPassword" className="text-purple-200 text-sm hover:underline">Forgot password?</Link>
                         </div>
 
                         <input {...register("password", {
