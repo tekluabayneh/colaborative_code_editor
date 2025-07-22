@@ -13,11 +13,6 @@ const HeroSection = () => {
       description: 'Invite team members with custom roles and permissions'
     },
     {
-      icon: Zap,
-      title: 'Lightning Fast',
-      description: 'Optimized for speed with instant synchronization'
-    },
-    {
       icon: Globe,
       title: 'Global Access',
       description: 'Access your projects from anywhere, anytime'
@@ -25,7 +20,7 @@ const HeroSection = () => {
   ];
 
   return (
-    <div className="text-center space-y-12 mb-16">
+    <div className="text-center space-y-12 mb-16 ">
       <div className="space-y-6">
         <div className="animate-float">
           <h1 className="text-5xl md:text-7xl font-bold gradient-text leading-tight bg-gradient-to-br from-purple-400 to-purple-600 bg-clip-text text-transparent">
@@ -40,8 +35,7 @@ const HeroSection = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-        {features.map((feature, index) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl  lg:ml-36 xl:ml-56"> {features.map((feature, index) => (
           <div
             key={feature.title}
             className="group p-6 rounded-xl bg-card/30 border border-border/30 backdrop-blur-sm hover:bg-card/50 transition-all duration-300 hover:scale-105"
