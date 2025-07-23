@@ -18,7 +18,7 @@ interface User {
 }
 
 export const ChatSidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [messageText, setMessageText] = useState('');
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -92,7 +92,7 @@ export const ChatSidebar = () => {
 
   if (isCollapsed) {
     return (
-      <div className="h-full w-12 bg-gray-900 border-r border-gray-700 flex flex-col items-center py-4">
+      <div className="h-full absolute top-0 right-0 w-12 bg-gray-900 border-r border-gray-700 flex flex-col items-center py-4">
         <button
           onClick={() => setIsCollapsed(false)}
           className="p-2 rounded-md hover:bg-gray-800 transition-colors"
