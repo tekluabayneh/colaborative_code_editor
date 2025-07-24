@@ -1,36 +1,59 @@
-import { VscFolder, VscFile } from 'react-icons/vsc'
- 
-import { ChevronRight, ChevronDown} from 'lucide-react';
+import { VscFolder, VscFile } from 'react-icons/vsc';
+import { ChevronRight, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 
 type folderType = {
- name:string,
- parentId:string,
-  extension:string,
-content:string,
-    ownerId:string,
-    type:string
+  _id: string | number,
+  name: string,
+  parentId: string | number | null,
+  extension: string,
+  content: string,
+  ownerId: string,
+  type: string,
+  children: folderType[],
+  Documents: folderType[],
 }
 
+type FolderTreeProps = {
+  Documents: folderType[]
+  onFileClick?: (id: number | string) => void
+}
 
-const Folder_tree = ({Documents})=> {
-    const [isClosed , setisClosed] = useState(false)
-    // console.log(Documents)
- const onFileClick = () => {
-    }
-    return (
+const Folder_tree = ({ Documents, onFileClick }: FolderTreeProps) => {
+  // Each Folder_tree instance tracks its own open/close state
+  const [isClosed, setIsClosed] = useState(true);
+
+  return (
     <ul>
       {Documents.map(item => (
         <li key={item._id}>
           {item.type === "folder" ? (
             <>
-              <span>📁 {item.name}</span>
-              {item.children?.length > 0 && (
-                <Folder_tree Documents={item.children} onFileClick={onFileClick} />
+              <div
+                className='flex items-center cursor-pointer select-none'
+                onClick={() => setIsClosed(!isClosed)}  // toggle on folder click
+              >
+                {/* Toggle icon changes based on open/closed */}
+                {isClosed ? <ChevronRight /> : <ChevronDown />}
+                <div className='flex items-center gap-1 ml-1'>
+                  <VscFolder /> {item.name}
+                </div>
+              </div>
+
+              {/* Show children only if open */}
+              {!isClosed && item.children?.length > 0 && (
+                <div className='pl-2'>
+                  <Folder_tree Documents={item.children} onFileClick={onFileClick} />
+                </div>
               )}
             </>
           ) : (
-            <span onClick={() => onFileClick(item._id)}>📄 {item.name}</span>
+            <div
+              className='flex items-center pl-2 pt-1 gap-1 cursor-pointer'
+              onClick={() => onFileClick?.(item._id)}
+            >
+              <VscFile /> {item.name}
+            </div>
           )}
         </li>
       ))}
@@ -40,20 +63,3 @@ const Folder_tree = ({Documents})=> {
 
 export default Folder_tree;
 
-
-                // return  item.type === "folder" ? <div className='flex  cursor-pointer items-center gap-1 hover:bg-gray-800'>
-                //
-                //    <span className='flex items-center'>
-                //  {isClosed ? <ChevronDown /> : <ChevronRight/>}
-                //         <VscFolder /> 
-                //    </span>
-                //     <span key={index}>{item.name}</span>
-                // </div>
-                //     :
-                //
-                //     <p className='flex  cursor-pointer items-center gap-1 hover:bg-gray-800'>
-                //         <VscFile/> 
-                //     <span key={index}>
-                //         {item.name}
-                //     </span>
-                //     </p>
