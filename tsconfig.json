@@ -1,0 +1,13 @@
+// /tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "lib": ["dom", "esnext"],
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "types": ["cypress", "node"]
+  },
+  "include": ["E2E/cypress/**/*.ts", "E2E/cypress/support/commands.js"]
+}
