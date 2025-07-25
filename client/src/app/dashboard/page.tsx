@@ -1,130 +1,37 @@
 "use client"
 import React,{ useState} from "react";
-import Folder_tree from "@/components/folder_tree";
+import { FilePlus, FolderPlus } from 'lucide-react';
 import { ChatSidebar } from "@/components/ChatBar";
 import CodeEditor from  "../../components/Editor"
 import FileSystem from "@/components/FileSystem";
-
-const Documents = [
-  {
-    _id: 0,
-    name: "page",
-    type: "folder",
-    parentId: null,
-    children: []
- },
-  {
-    _id: 1,
-    name: "root",
-    type: "folder",
-    parentId: null,
- 
-    children: [
-{
-        _id: 2,
-        name: "main",
-        type: "folder",
-        parentId: 1,
-        Children:[]
-
-},
-      {
-        _id: 2,
-        name: "src",
-        type: "folder",
-        parentId: 1,
-
-        children: [
-          {
-            _id: 3,
-            name: "components",
-            type: "folder",
-            parentId: 2,
-            children: [
-              {
-                _id: 4,
-                name: "App.js",
-                type: "file",
-                parentId: 3,
-                children: []
-              },
-{
-                _id: 4,
-                name: "App.js",
-                type: "file",
-                parentId: 3,
-                children: []
-              },
-{
-                _id: 4,
-                name: "App.js",
-                type: "file",
-                parentId: 3,
-                children: [
-{
-                _id: 4,
-                name: "App.js",
-                type: "file",
-                parentId: 3,
-                children: []
-              },
-{
-                _id: 4,
-                name: "App.js",
-                type: "file",
-                parentId: 3,
-                children: [
-{
-                _id: 4,
-                name: "App.js",
-                                                type: "file",
-                                                parentId: 3,
-                                                children: []
-                                            },
-
-
-                                        ]
-                                    },
-
-
-
-                                ]
-                            },
-
-                        ]
-                    },
-                    {
-                        _id: 5,
-                        name: "utils",
-                        type: "folder",
-                        parentId: 2,
-                        children: [
-                            {
-                                _id: 6,
-                                name: "math.js",
-                                type: "file",
-                                parentId: 5,
-                                children: []
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-    }
-]
-
-
+import { fileTree } from "@/data/FolderTree";
+import {Node } from "../../types/Node"
+const File= fileTree
 const Home = () => {
-    const [resizeFileTree, setReziseFileTree] = useState(42)
-    console.log(resizeFileTree) 
+    const [resizeFileTree, setReziseFileTree] = useState<number>(42)
+    const [getFolderName, setgetFolderName] = useState<string>()
+    const [fileTree, setFileTree] = useState(File);
+
+    console.log(fileTree) 
+
+    const Createfolder = ()=> {
+        const newFolder:Node = {
+            name: "getFolderName",
+            nodes: [{ name: "one" }, { name: "two" }],
+        }; console.log(fileTree) 
+        setFileTree({...fileTree, ...newFolder})
+    }
+
     return (
         <div className="w-full flex justify-center items-center h-screen relative">
-<FileSystem/>
 
             {/* this is the folder and file tree  */}
-            <div className={`h-screen w-38`}>
-                <Folder_tree Documents={Documents}/>
+            <div className={`h-screen w-40`}>
+                <div className="w-full flex items-center justify-baseline pl-6 gap-9 py-2 border-b-orange-50">
+                    <FolderPlus onClick={() => Createfolder()}  className="w-6 h-6 text-yellow-600 cursor-pointer" />
+                    <FilePlus className="w-6 h-6 text-blue-600 cursor-pointer" />
+                </div>
+                <FileSystem folders={fileTree} />
             </div>
 
 
