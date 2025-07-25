@@ -1,4 +1,4 @@
- // const { defineConfig } = require("cypress");
+// const { defineConfig } = require("cypress");
 //
 // module.exports = defineConfig({
 //   e2e: {
@@ -8,14 +8,17 @@
 //   },
 // });
 //
- import { defineConfig } from 'cypress'
+import { defineConfig } from "cypress";
 
 export default defineConfig({
   e2e: {
-    specPattern: "E2E/cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
+    //specPattern: "E2E/cypress/e2e/**/*.cy.{js,jsx,ts,tsx}",
+    //    specPattern: "E2E/cypress/e2e/**/*.{cy.js,cy.jsx,cy.ts,cy.tsx}",
+    specPattern: "E2E/cypress/e2e/**/*.{spec,cy}.{js,jsx,ts,tsx}",
+
     supportFile: "E2E/cypress/support/e2e.js",
     fixturesFolder: "E2E/cypress/fixtures",
     videosFolder: "E2E/cypress/videos",
     screenshotsFolder: "E2E/cypress/screenshots",
   },
-})
+});
