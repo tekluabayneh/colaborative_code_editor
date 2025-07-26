@@ -62,10 +62,12 @@ const Register = ({ toogle }: Props) => {
           >
             userName{" "}
           </label>
-          <input
-            {...register("userName", {
+          <input             {...register("userName", {
               required: "userName is mandatory",
             })}
+    data-testid="testid_username"
+
+
             placeholder="Your usreName "
             className="w-full p-3 mb-1 placeholder-white border-1 outline-none focus:ring-1 border-purple-200 rounded"
           />
@@ -122,7 +124,7 @@ const Register = ({ toogle }: Props) => {
           </p>
         </div>
 
-        <button className="bg-black text-white border border-[#333] rounded cursor-pointer px-45 py-2 font-semibold hover:bg-[#333] transition duaration-300">
+        <button data-testid="Register_button" className="bg-black text-white border border-[#333] rounded cursor-pointer px-45 py-2 font-semibold hover:bg-[#333] transition duaration-300">
           Register
         </button>
 
