@@ -54,7 +54,7 @@ const Login = ({ toogle }: Props) => {
                 <form onSubmit={handleSubmit(formSubmit)} className="p-6 m-1 rounded shadow-md w-[30rem] ">
                     <div className="mb-4">
                         <label className="block text-white text-sm font-bold mb-2" htmlFor="email">Email </label>
-                        <input  {...register("email", {
+                        <input data-testid="testid_email_login"  {...register("email", {
                             required: "email is mandatory"
                         })} placeholder="Your email address" className="w-full p-3 mb-1 placeholder-white border-1 outline-none focus:ring-1 border-purple-200 rounded" />
                         <p className="text-red-500">{errors.email ? errors.email.message : ""}</p>
@@ -63,7 +63,8 @@ const Login = ({ toogle }: Props) => {
                             <Link href="/forgotPassword" className="text-purple-200 text-sm hover:underline">Forgot password?</Link>
                         </div>
 
-                        <input {...register("password", {
+                        <input data-testid="testid_password_login"
+							{...register("password", {
                             required: "password is mandatory",
                             minLength: {
                                 value: 6,
@@ -78,11 +79,11 @@ const Login = ({ toogle }: Props) => {
                         <p className="text-red-500">{errors.password ? errors.password.message : ""}</p>
                     </div>
                     <div className="mb-4">
-                        <button className="bg-black text-white border  border-[#333] rounded cursor-pointer px-48 py-2 font-semibold hover:bg-[#333] transition duaration-300">
+                        <button  data-testid="testid_login_button" className="bg-black text-white border  border-[#333] rounded cursor-pointer px-48 py-2 font-semibold hover:bg-[#333] transition duaration-300">
                             Login
                         </button>
 
-                        <div onClick={() => toogle(false)} className="text-purple-200 ml-30 cursor-pointer text-sm hover:underline mt-7">Don't Have an Account? Register</div>
+                        <div data-testid="DontHave_Account" onClick={() => toogle(false)} className="text-purple-200 ml-30 cursor-pointer text-sm hover:underline mt-7">Don't Have an Account? Register</div>
                     </div>
                 </form>
 
