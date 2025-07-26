@@ -34,7 +34,10 @@ const leftClick =(( e:React.MouseEvent) => {
 
 
   return (
-    <li key={node.name} className="relative" onClick={(e) => leftClick(e)}   >
+    <li key={node.name} className="relative" onClick={(e) => leftClick(e)}>
+
+
+
             { isRightClick && <div className='absolute top-2 left-16 w-40 p-5 h-40 z-50 bg-gray-800 rounded '> <div className='flex items-left pl-1 justify-center gap-0.5 flex-col'>
     <span className='cursor-pointer text-white text-lg text-nowrap '>New file</span>
      <span  className='cursor-pointer text-white text-lg text-nowrap'>Create folder</span>
@@ -66,7 +69,7 @@ const leftClick =(( e:React.MouseEvent) => {
             }`}
           />
         ) : (
-          <DocumentIcon className="ml-[12px] size-6 text-gray-900" />
+          <DocumentIcon className="ml-[12px] size-6 text-gray-200" />
         )}
         {node.name}
       </span>
