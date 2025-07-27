@@ -1,67 +1,42 @@
 "use client"
-import React, { useState } from "react";
+import React from "react";
 import {Node } from "../../types/Node"
-
+import { useFileSystem } from "@/context/FileTreeContext";
 type PropsType = {
     setFileTree: React.Dispatch<React.SetStateAction<Node[]>>,
     setisModalopen: React.Dispatch<React.SetStateAction<boolean>>,
     isFile:boolean
 }
 
-
-const generateId = () => crypto.randomUUID();
-
-const NameInputModal = ({setFileTree, setisModalopen, isFile}: PropsType) => {
-    const [name, setName] = useState("");
-
-    const handleSubmit = () => {
-        const newFolder:Node= {
-            folderid:generateId(),
-            name: name,
-            nodes: [],
-
-        }
-        const newFile:Node = {
-            name:name 
-        }
-
-            setFileTree((prev:Node[]) => [...prev, isFile ? newFile : newFolder])
-            setisModalopen(false)
-
-    }
-
-    const handleCancel= () => {
-        setisModalopen(false)
-    }
-
-
-    return (
-        <div className=" mx-auto mt-50 bg-gary-50 fixed inset-0 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl shadow-xl p-6 w-80">
-                <h2 className="text-lg font-semibold mb-4 text-black">Enter Title</h2>
-                <input
-                    type="text"
-                    value={name}
-                    placeholder="New name..."
-                    onChange={(e) => setName(e.target.value)} className="w-full border border-gray-300 text-black rounded-md px-3 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <div className="flex justify-end gap-2">
-                    <button
-                        onClick={handleSubmit}
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                    >
-                        Create
-                    </button>
-                    <button
-                        onClick={handleCancel}
-                        className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
-                    >
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
-};
+const NameInputModal = () => {
+const { name, setName,handleSubmit, handleCancel} = useFileSystem()
+return (
+  <div className="mx-auto fixed inset-0 bg-opacity-20 flex items-center justify-center z-50">
+    <div className="bg-gray-900 rounded-xl shadow-2xl p-6 w-80 border border-gray-700">
+      <h2 className="text-lg font-semibold mb-4 text-white">Enter Title</h2>
+      <input
+        type="text"
+        value={name}
+        placeholder="New name..."
+        onChange={(e) => setName(e.target.value)}
+        className="w-full bg-gray-800 text-white border border-gray-600 rounded-md px-3 py-2 mb-4 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      <div className="flex justify-end gap-2">
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+        >
+          Create
+        </button>
+        <button
+          onClick={handleCancel}
+          className="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
 export default NameInputModal;
