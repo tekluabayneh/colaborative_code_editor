@@ -1,64 +1,100 @@
 "use client"
-import React, {createContext, ReactNode, useContext, useState } from "react";
+import React, {createContext, ReactNode, useContext, useState , useEffect} from "react";
 import { fileTree as intialTree } from "@/data/FolderTree";
 import { toast } from "react-hot-toast";
-import { Node } from "@/types/Node";
+import { Node , FileSystemContextType } from "@/types/Node";
 const generateId = () => crypto.randomUUID();
-type FileSystemContextType = {
-    name: string;
-    setName: (value: string) => void;
-    isModabolen: boolean;
-    setisModalopen: (value: boolean) => void;
-    isFile: boolean;
-    setisFile: (value: boolean) => void;
-    fileTree: Node[];
-    setFileTree: React.Dispatch<React.SetStateAction<Node[]>>;
-    handleSubmit: () => void;
-    handleCancel: () => void;
-    CreateFolder_andFile: (node: Node, e: MouseEvent) => void;
-    leftClick: (e: MouseEvent) => void;
-    Createfolder : () => void;
-    CreateFile_and_FolderWithin:(isFile:boolean) => void
-     Dletefile_and_folder: () => void
-
-};
-
 const FileSystemContext = createContext<FileSystemContextType | null>(null);
 
 export const  FileSystemProvider =({children}:{children:ReactNode}) => {
+
     const [name, setName] = useState("");
     const [isModabolen, setisModalopen] = useState(false)
     const [isFile, setisFile] = useState(false)
     const [fileTree, setFileTree] = useState<Node[]>(intialTree);
 
+useEffect(() => {
+  console.log("✅ File Tree Updated", JSON.stringify(fileTree, null, 2));
+}, [fileTree]);
+
     const handleSubmit = () => {
+        const FolderId:string | null = localStorage.getItem("folderId")
+
         const newFolder:Node= {
             folderid:generateId(),
             name: name,
             nodes: [],
 
         }
+
         const newFile:Node = {
             name:name 
         }
 
-        if(newFolder.name === "" || newFile.name === ""){
+        /// if therer is not folder id in the localStorage create the file and also folder in the root level
+            if(name == ""){
+                toast("Please enter a folder or file name.", {
+                    icon: "⚠️",
+                    style: {
+                        background: "#fef3c7",
+                        color: "#92400e",
+                    },
+                });
+                return 
+            }
 
-            toast("Please enter a folder or file name.", {
-                icon: "⚠️",
-                style: {
-                    background: "#fef3c7",
-                    color: "#92400e",
-                },
-            });
+
+    const addToTree = (nodes: Node[]): Node[] => {
+            console.log(FolderId)
+        return nodes.map(node => {
+            if (node.folderid  === FolderId) {
+                    if(node.nodes && node.nodes?.length >  0 ){
+                return {
+                    ...node,
+                    nodes: [...node.nodes, isFile ? newFile : newFolder]
+                };
+            }
+                }else if(node.nodes && node.nodes.length == 0){
+                    return {
+                        ...node,
+                        nodes:[isFile ? newFile : newFolder]
+                } }
+
+
+  
+            if (node.nodes && node.nodes.length >0 ) {
+                return {
+                    ...node,
+                    nodes: addToTree(node.nodes)
+                };
+            }
+
+            return node;
+        });
+    };
+
+
+        if(!FolderId){
+            setFileTree((prev:Node[]) => [...prev, isFile ? newFile : newFolder])
+            setisModalopen(false)
+            setName("")
+            console.log("file are root level")
             return 
+        }else{
+        // Add to nested folder
+         setFileTree(prev =>  addToTree(prev))
+            setisModalopen(false)
+            setName("")
+        console.log("📁 Created in nested folder")
+
+    setTimeout(() => {
+        localStorage.setItem("folderId","")
+        },900)
         }
-
-        setFileTree((prev:Node[]) => [...prev, isFile ? newFile : newFolder])
-        setisModalopen(false)
-        setName("")
-
     }
+
+
+
 
     const Createfolder = () =>{
         setisModalopen(true)
@@ -68,28 +104,14 @@ export const  FileSystemProvider =({children}:{children:ReactNode}) => {
         setisModalopen(false)
     }
 
-
-    const CreateFolder_andFile =((node:Node, e:React.MouseEvent) => {
-        e.preventDefault()
-        localStorage.setItem("folderId", JSON.stringify(node.folderid!))
-        console.log(localStorage.getItem("folderId"))
-        console.log('Right click', node.folderid);
+    const  CreateFile_and_FolderWithin = (isFile:boolean) => {
         setisModalopen(true)
-    })
-
-    const leftClick =(( e:React.MouseEvent) => {
-        e.preventDefault()
-        console.log('Right click');
-    })
-
-      const  CreateFile_and_FolderWithin = (isFile:boolean) => {
-             setisModalopen(true)
-              setisFile(isFile)
+        setisFile(isFile)
         const folderId = localStorage.getItem("folderId")
         console.log("this",folderId)
-       }
+    }
 
- const    Dletefile_and_folder = () => {}
+    const    Dletefile_and_folder = () => {}
 
     return (
         <FileSystemContext.Provider
@@ -105,10 +127,8 @@ export const  FileSystemProvider =({children}:{children:ReactNode}) => {
                 setFileTree,
                 handleSubmit,
                 handleCancel,
-                CreateFolder_andFile,
-                leftClick,
                 CreateFile_and_FolderWithin,
-               Dletefile_and_folder
+                Dletefile_and_folder
             }}
         >
             {children}
