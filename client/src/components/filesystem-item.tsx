@@ -4,19 +4,25 @@ import { ChevronRightIcon } from '@heroicons/react/solid';
 import { DocumentIcon, FolderIcon } from '@heroicons/react/solid';
 import { AnimatePresence, motion } from 'framer-motion';
 import {Node} from "../types/Node"
-import { useState } from 'react';
+import { useState , useEffect} from 'react';
 import { useFileSystem } from '@/context/FileTreeContext';
 export function FilesystemItem({ node }: { node: Node }) {
-    const { CreateFile_and_FolderWithin, Dletefile_and_folder} = useFileSystem()
+    const { CreateFile_and_FolderWithin} = useFileSystem()
     const [isOpen, setIsOpen] = useState(false);
     const [isRightClick, setisRightClick] = useState(false);
-    window.addEventListener("click", () => {
-        setisRightClick(false)
-    })
+
+
+useEffect(() => {
+  const handleClick = () => setisRightClick(false);
+  window.addEventListener("click", handleClick);
+
+  return () => window.removeEventListener("click", handleClick);
+}, []);
 
     const CreateFolder_andFile =((node:Node, e:React.MouseEvent) => {
         e.preventDefault()
         console.log('Right click', node);
+        localStorage.setItem("folderId", JSON.stringify(node.folderid!))
         setisRightClick(!isRightClick)
     })
 
