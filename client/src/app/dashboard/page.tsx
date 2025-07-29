@@ -1,48 +1,49 @@
-"use client"
-import React from "react";
-import { FilePlus, FolderPlus } from 'lucide-react';
-import { ChatSidebar } from "@/components/ChatBar";
-import CodeEditor from  "../../components/Editor"
-import FileSystem from "@/components/FileSystem";
-import { Toaster } from "react-hot-toast";
-import NameInputModal from "../../components/ui/CreateFolderModal" 
-import { useFileSystem } from "@/context/FileTreeContext";
-const Home = () => {
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { DashboardSidebar } from "@/components/dashboard/DashboardSideBar";
+import { StatsCards } from "@/components/dashboard/StatusCards";
+import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
+import { RecentFiles } from "@/components/dashboard/RecentFiles";
+import { TeamSection } from "@/components/dashboard/TeamSection";
 
-const { isModabolen, setisFile , Createfolder ,fileTree}  = useFileSystem()
-
-return (
-        <div className="w-full flex justify-center items-center h-screen relative">
-<Toaster />
-            {/* this is the folder and file tree  */}
-            <div className={`h-screen w-40`}>
-                <div className="w-full flex items-center justify-baseline pl-6 gap-9 py-2 border-b-orange-50">
-                    <FolderPlus onClick={() => { 
-                        setisFile(false)
-                        Createfolder()}}  className="w-6 h-6 text-yellow-600 cursor-pointer" />
-                    <FilePlus    onClick={() => {
-                        setisFile(true)
-                        Createfolder()}}  className="w-6 h-6 text-blue-600 cursor-pointer" />
-                </div>
-                <FileSystem folders={fileTree}  />
+const MainDashboard = () => {
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="flex">
+        <DashboardSidebar />
+        
+        <div className="flex-1 flex flex-col">
+          <DashboardHeader />
+          
+          <main className="flex-1 p-6 space-y-6 overflow-auto">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+                <p className="text-muted-foreground mt-1">
+                  Welcome back! Here's what's happening with your projects.
+                </p>
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Last updated: {new Date().toLocaleTimeString()}
+              </div>
             </div>
 
+            <StatsCards />
 
-            {/* this is the editor in the middle   */}
-            <div className="w-full h-screen grid-cols-3 bg-green-500"> 
-                <CodeEditor/>
-                { isModabolen && <NameInputModal /> }
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2 space-y-6">
+                <ActivityFeed />
+              </div>
+              
+              <div className="space-y-6">
+                <TeamSection />
+                <RecentFiles />
+              </div>
             </div>
-
-
-
-            <div className="z-10 w-80 absolute top-0 right-0 h-screen">
-                <ChatSidebar/> 
-            </div>
-
-
+          </main>
         </div>
+      </div>
+    </div>
+  );
+};
 
-    );
-}
-export default Home;
+export default MainDashboard;
