@@ -16,7 +16,7 @@ const activities = [
     time: "2 minutes ago",
     type: "commit",
     icon: GitCommit,
-    color: "code-green",
+    color: "green-500",
     priority: "high"
   },
   {
@@ -31,7 +31,7 @@ const activities = [
     time: "5 minutes ago",
     type: "pr",
     icon: GitPullRequest,
-    color: "code-purple",
+    color: "purple-500",
     priority: "medium"
   },
   {
@@ -46,7 +46,7 @@ const activities = [
     time: "12 minutes ago",
     type: "edit",
     icon: FileEdit,
-    color: "code-blue",
+    color: "blue-500",
     priority: "low"
   },
   {
@@ -61,7 +61,7 @@ const activities = [
     time: "18 minutes ago",
     type: "comment",
     icon: MessageSquare,
-    color: "code-orange",
+    color: "orange-500",
     priority: "medium"
   },
   {
@@ -76,7 +76,7 @@ const activities = [
     time: "25 minutes ago",
     type: "commit",
     icon: GitCommit,
-    color: "code-green",
+    color: "green-500",
     priority: "high"
   }
 ];
@@ -95,29 +95,29 @@ const getPriorityIcon = (priority: string) => {
 const getPriorityColor = (priority: string) => {
   switch (priority) {
     case "high":
-      return "code-red";
+      return "red-500";
     case "medium":
-      return "code-orange";
+      return "orange-500";
     default:
-      return "muted-foreground";
+      return "white";
   }
 };
 export const ActivityFeed = () => {
   return (
-    <Card className="relative overflow-hidden bg-gradient-glass border border-border/50 backdrop-blur-sm">
+    <Card className="relative overflow-hidden border border-gray-600/50 backdrop-blur-sm">
       {/* Background mesh */}
       <div className="absolute inset-0 bg-gradient-mesh opacity-40" />
       
       <CardHeader className="relative">
         <CardTitle className="flex items-center gap-3">
           <div className="relative">
-            <div className="w-3 h-3 bg-code-green rounded-full animate-pulse-slow"></div>
-            <div className="absolute inset-0 w-3 h-3 bg-code-green rounded-full animate-ping opacity-75"></div>
+            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse-slow"></div>
+            <div className="absolute inset-0 w-3 h-3 bg-green-500 rounded-full animate-ping opacity-75"></div>
           </div>
           <span className="bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
             Live Activity Feed
           </span>
-          <Badge variant="outline" className="text-code-green border-code-green/30 bg-code-green/5">
+          <Badge variant="outline" className="text-green-500 border-code-green/30 bg-green-500/5">
             Real-time
           </Badge>
         </CardTitle>
@@ -181,7 +181,7 @@ export const ActivityFeed = () => {
                         {activity.priority}
                       </span>
                     </div>
-                    </div>
+</div>
                 </div>
                 
                 <p className="text-sm text-foreground/90 group-hover:text-foreground transition-colors font-medium">
