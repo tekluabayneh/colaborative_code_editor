@@ -70,13 +70,13 @@ const teamMembers = [
 const getStatusConfig = (status: string) => {
   switch (status) {
     case "online":
-      return { color: "code-green", icon: Circle, pulse: true };
+      return { color: "green-500", icon: Circle, pulse: true };
     case "away":
-      return { color: "code-orange", icon: Circle, pulse: false };
+      return { color: "white", icon: Circle, pulse: false };
     case "offline":
-      return { color: "muted-foreground", icon: Circle, pulse: false };
+      return { color: "red-500", icon: Circle, pulse: false };
     default:
-      return { color: "muted-foreground", icon: Circle, pulse: false };
+      return { color: "gray-900", icon: Circle, pulse: false };
   }
 };
 
@@ -100,26 +100,26 @@ export const TeamSection = () => {
   const onlineCount = teamMembers.filter(m => m.status === "online").length;
   
   return (
-    <Card className="relative overflow-hidden bg-gradient-glass border border-border/50 backdrop-blur-sm">
+    <Card className="relative overflow-hidden bg-neutral-900 border border-gray-600/50 backdrop-blur-sm">
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-mesh opacity-30" />
       
       <CardHeader className="relative flex flex-row items-center justify-between">
         <CardTitle className="flex items-center gap-3">
           <div className="relative">
-            <Users className="w-5 h-5 text-code-purple" />
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-code-green rounded-full border-2 border-background animate-pulse-slow" />
+            <Users className="w-5 h-5 text-code-purple text-code-green" />
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-600 rounded-full border-2 border-background animate-pulse-slow" />
           </div>
-          <span className="bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
+          <span className="bg-gradient-to-r from-purple-500 to-pink-600 bg-clip-text">
             Team Members
           </span>
         </CardTitle>
         
         <div className="flex items-center gap-2">
-          <Badge variant="outline" className="text-code-green border-code-green/30 bg-code-green/10">
+          <Badge variant="outline" className="text-green-600 ">
             {onlineCount} online
           </Badge>
-          <Badge variant="outline" className="text-code-blue border-code-blue/30 bg-code-blue/10">
+          <Badge variant="outline" className="text-blue-600 ">
             {teamMembers.length} total
           </Badge>
         </div>
@@ -136,11 +136,10 @@ export const TeamSection = () => {
               key={member.id} 
               className={`
                 relative flex items-center gap-4 p-4 rounded-xl 
-                bg-gradient-to-r from-transparent via-code-purple/5 to-transparent
-                hover:from-code-purple/10 hover:via-code-purple/5 hover:to-transparent
+                bg-gradient-to-r from-transparent via-purple-500 to-transparent
+                hover:from-purple-50 hover:via-code-purple/5 hover:to-transparent
                 transition-all duration-500 group cursor-pointer
-                border border-transparent hover:border-code-purple/20
-                animate-slide-up
+                border border-transparent animate-slide-up
               `}
               style={{ animationDelay: `${index * 75}ms` }}
             >
@@ -219,7 +218,7 @@ export const TeamSection = () => {
         <div className="pt-2">
           <Button 
             variant="outline" 
-            className="w-full border-dashed border-primary/30 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group"
+            className="w-full border-dashed border-primary/30 hover:border-gray-500/50 hover:bg-neutral-900/5 transition-all duration-300 group"
           >
             <Users className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
             Invite Team Member
