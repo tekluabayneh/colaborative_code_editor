@@ -40,7 +40,7 @@ const getStatusColor = (status: string) => {
 
 export function TeamSidebar() {
   return (
-    <Sidebar className="w-70 border-r border-sidebar-border bg-sidebar-background">
+    <Sidebar className="w-80 border-r border-sidebar-border bg-sidebar-background">
       <div className="p-4 border-b border-sidebar-border">
         <div className="flex items-center space-x-2">
           <Users className="h-6 w-6 text-primary" />
