@@ -7,7 +7,7 @@ import { TeamSection } from "@/components/dashboard/TeamSection";
 
 const MainDashboard = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-nuteral-900 ">
       <div className="flex">
         <DashboardSidebar />
         
@@ -36,7 +36,6 @@ const MainDashboard = () => {
               
               <div className="space-y-6">
                 <TeamSection />
-                <RecentFiles />
               </div>
             </div>
           </main>
