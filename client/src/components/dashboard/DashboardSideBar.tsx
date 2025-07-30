@@ -15,7 +15,7 @@ const navigation = [
 
 export const DashboardSidebar = () => {
   return (
-    <div className="w-64 bg-card border-r border-border flex flex-col h-screen">
+    <div className="w-64 bg-neutral-900 border-r border-gray-700 flex flex-col h-screen">
       <div className="p-6">
         <nav className="space-y-2">
           {navigation.map((item) => {
@@ -26,7 +26,7 @@ export const DashboardSidebar = () => {
                 variant={item.current ? "secondary" : "ghost"}
                 className={cn(
                   "w-full justify-start gap-3 h-11",
-                  item.current && "bg-gradient-accent border border-primary/20"
+                  item.current && "bg-purple-400 border border-gray-700"
                 )}
               >
                 <Icon className="w-5 h-5" />
@@ -37,7 +37,7 @@ export const DashboardSidebar = () => {
         </nav>
       </div>
 
-      <div className="mt-auto p-6 border-t border-border">
+      <div className="mt-auto p-6 border-t border-gray-700">
         <div className="bg-gradient-accent rounded-lg p-4 border border-primary/20">
           <h3 className="font-semibold text-sm mb-2">Upgrade to Pro</h3>
           <p className="text-xs text-muted-foreground mb-3">
