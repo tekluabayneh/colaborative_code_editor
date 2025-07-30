@@ -8,8 +8,8 @@ const stats = [
     change: "+12%",
     changeType: "positive" as const,
     icon: FileText,
-    color: "code-blue",
-    bgGradient: "bg-gradient-to-br from-code-blue/20 via-code-blue/10 to-transparent",
+    color: "text-blue-500",
+    bgGradient: "bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-6 rounded-1xl shadow-xl text-white",
     glowColor: "shadow-glow-blue",
     chartData: [20, 35, 25, 40, 30, 45, 35, 50]
   },
@@ -17,8 +17,8 @@ const stats = [
     change: "+4",
     changeType: "positive" as const,
     icon: GitCommit,
-    color: "code-green",
-    bgGradient: "bg-gradient-to-br from-code-green/20 via-code-green/10 to-transparent",
+    color: "text-green-500",
+    bgGradient: "bg-gradient-to-br from-green-300 via-purple-100 to-pink-200 p-6 rounded-1xl shadow-xl text-white",
     glowColor: "shadow-glow-green",
     chartData: [10, 15, 8, 20, 18, 23, 19, 25]
   },
@@ -28,8 +28,8 @@ const stats = [
     change: "+2",
     changeType: "positive" as const,
     icon: Users,
-    color: "code-purple",
-    bgGradient: "bg-gradient-to-br from-code-purple/20 via-code-purple/10 to-transparent",
+    color: "text-purple-400",
+    bgGradient: "bg-gradient-to-br from-yellow-300 via-purple-100 to-gray-200 p-6 rounded-1xl shadow-xl text-white",
     glowColor: "shadow-glow",
     chartData: [6, 7, 6, 8, 7, 8, 7, 8]
   },
@@ -39,8 +39,8 @@ const stats = [
     change: "+8%",
     changeType: "positive" as const,
     icon: TrendingUp,
-    color: "code-orange",
-    bgGradient: "bg-gradient-to-br from-code-orange/20 via-code-orange/10 to-transparent",
+    color: "text-orange-400",
+    bgGradient: "bg-gradient-to-br from-pink-300 via-purple-100 to-purple-200 p-6 rounded-1xl shadow-xl text-white",
     glowColor: "shadow-glow",
     chartData: [45, 52, 48, 60, 65, 68, 70, 73]
   }
@@ -101,7 +101,7 @@ export const StatsCards = () => {
           <Card 
             key={stat.title} 
             className={`
-              relative overflow-hidden bg-gradient-glass border border-border/50 
+              relative overflow-hidden bg-gradient-glass border border-gray-600 
               hover:border-${stat.color}/50 transition-all duration-500 
               hover:${stat.glowColor} hover:scale-[1.02] group
               backdrop-blur-sm animate-fade-in
