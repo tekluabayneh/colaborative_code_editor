@@ -66,10 +66,7 @@ const Index = () => {
   const [users, setUsers] = useState(mockUsers);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUsers = users.filter( (user) => user.name.toLowerCase().includes(searchTerm.toLowerCase()) || user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleRoleChange = (userId: number, newRole: string) => {

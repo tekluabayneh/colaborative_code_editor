@@ -104,7 +104,7 @@ const getPriorityColor = (priority: string) => {
 };
 export const ActivityFeed = () => {
   return (
-    <Card className="relative overflow-hidden border border-gray-600/50 backdrop-blur-sm">
+    <Card className="relative overflow-hidden border border-gray-600/50 bg-neutral-900">
       {/* Background mesh */}
       <div className="absolute inset-0 bg-gradient-mesh opacity-40" />
       

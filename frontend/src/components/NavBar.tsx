@@ -15,7 +15,7 @@ return (
               <nav className="hidden md:flex space-x-8">
                 <Link href="#" className="text-gray-300 hover:text-white transition-colors">Product</Link>
                 <Link href="#" className="text-gray-300 hover:text-white transition-colors">Resources</Link>
-                <Link href="#" className="text-gray-300 hover:text-white transition-colors">Docs</Link>
+                <Link href="/DocDashboard" className="text-gray-300 hover:text-white transition-colors">Docs</Link>
                 <Link href="#" className="text-gray-300 hover:text-white transition-colors">Pricing</Link>
               </nav>
             </div>

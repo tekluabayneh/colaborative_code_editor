@@ -4,7 +4,7 @@ import express, { Request, Response } from 'express';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import cors from "cors"
-import AuthRouter from "./routes/auth.route.js"
+import AuthRouter from "./routes/auth.route"
 import User from "./models/user";
 const app = express();
 

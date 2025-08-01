@@ -1,9 +1,15 @@
 {
-  "dependencies": {
-    "cypress": "^14.5.2"
-  },
-  "devDependencies": {
-    "@types/node": "^24.1.0",
-    "typescript": "^5.8.3"
-  }
+    "dependencies": {
+        "cypress": "^14.5.2"
+    },
+    "scripts": {
+        "dev": "concurrently \"npm:dev-backend\" \"npm:dev-frontend\"",
+        "dev-backend": "npm run serve_ts --prefix backend",
+        "dev-frontend": "npm run dev --prefix frontend"
+    },
+    "devDependencies": {
+        "@types/node": "^24.1.0",
+        "concurrently": "^9.2.0",
+        "typescript": "^5.8.3"
+    }
 }

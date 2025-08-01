@@ -30,13 +30,19 @@ const MainDashboard = () => {
             <StatsCards />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 space-y-6">
+              <div className="lg:col-span-2 space-y-6 ">
                 <ActivityFeed />
               </div>
-              
-              <div className="space-y-6">
-                <TeamSection />
+
+            <div className="space-y-1 lg:col-span-4 ">
+             <TeamSection />
               </div>
+
+              <div className="flex-1 lg:col-span-6 flex  space-y-6">
+                <RecentFiles/>
+              </div>
+
+
             </div>
           </main>
         </div>

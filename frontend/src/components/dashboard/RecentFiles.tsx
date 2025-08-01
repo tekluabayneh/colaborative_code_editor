@@ -92,7 +92,7 @@ const getStatusConfig = (status: string) => {
 
 export const RecentFiles = () => {
   return (
-    <Card className="relative overflow-hidden bg-gradient-to-b border border-gray-700/50 backdrop-blur-sm group">
+    <Card className="w-full relative overflow-hidden bg-gradient-to-b border border-gray-700/50 bg-neutral-900 group">
 
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-mesh opacity-30" />

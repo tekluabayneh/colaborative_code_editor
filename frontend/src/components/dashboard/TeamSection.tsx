@@ -100,7 +100,7 @@ export const TeamSection = () => {
   const onlineCount = teamMembers.filter(m => m.status === "online").length;
   
   return (
-    <Card className="relative overflow-hidden bg-neutral-900 border border-gray-600/50 backdrop-blur-sm">
+    <Card className="w-full relative overflow-hidden p-6 bg-neutral-900 border border-gray-600/50 backdrop-blur-sm">
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-mesh opacity-30" />
       
