@@ -2,6 +2,7 @@ import Link from "next/link"
 import { useForm } from "react-hook-form";
 import { formTypeLogin } from "../types/form";
 import { validateFormData } from "../utils/formValidate"
+import axios from "axios";
 type Props = {
     toogle: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -10,6 +11,13 @@ const Login = ({ toogle }: Props) => {
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm < formTypeLogin > ()
 
+const SubmitFormData =async (formData:formTypeLogin) => {
+	const  response = await axios.post( "http://localhost:5000/api/auth/login", formData)
+	 const data = response.data 
+		console.log(data)
+	}
+
+
     const formSubmit = (data: formTypeLogin): void | formTypeLogin => {
         if (!validateFormData(data)) {
             console.log("Invalid form data");
@@ -17,6 +25,7 @@ const Login = ({ toogle }: Props) => {
         }
 
         console.log(data)
+	 SubmitFormData(data)
         reset()
     }
 
