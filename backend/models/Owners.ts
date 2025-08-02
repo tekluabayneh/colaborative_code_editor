@@ -18,7 +18,6 @@ const OwnersSchema = new mongoose.Schema<Owners>({
         type: String,
         required: true,
         minlength: 6,
-        maxlength: 30,
     },
     role: {
         type: String,
@@ -26,6 +25,6 @@ const OwnersSchema = new mongoose.Schema<Owners>({
         default: "Owner",
     }
 })
-const Owners = mongoose.model<Owners>("Onwser", OwnersSchema);
+const Owners = mongoose.model<Owners>("Owners", OwnersSchema);
 
 export default Owners;
