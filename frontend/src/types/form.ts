@@ -3,6 +3,7 @@ export type formTypeRegister = {
     password: string;
     email: string;
 };
+
 export type formTypeLogin = {
     email: string;
     password: string;
@@ -13,6 +14,7 @@ export type formErrors = {
     email?: string;
     password?: string;
 }
+
 export type FormValues = {
     userName: string;
     email: string;
