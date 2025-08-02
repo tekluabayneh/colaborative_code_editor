@@ -1,10 +1,8 @@
-
-
 type FileList ={
   name:string,
   type:string,
   _id:string,
-  parentId:number ,
+  parentId:number,
     }
 
 const BuildTree =(FlatList:FileList , parentId:string) => {
