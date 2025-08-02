@@ -6,7 +6,7 @@ const GenerateUsertoken = (): string => {
 }
 
 const SignUser_JWT_Token = (email: string, secretKey: string): string => {
-    return jwt.sign(email, secretKey, { expiresIn: "1h" });
+    return jwt.sign({email}, secretKey, { expiresIn: "1h" });
 }
 
 
