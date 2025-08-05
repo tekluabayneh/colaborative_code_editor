@@ -8,7 +8,7 @@ import AuthRouter from "./routes/auth.route";
 import User from "./models/user";
 import passport from "passport"
 import session from "express-session"
-import {configureGoogleAuth , configureGitHubStrategy}from "./controllers/outh.controller";
+import {configuregoogleAuth, configuregithubstrateg } from "./controllers/outh.controller";
 const app = express();
 type user ={
 	_id?:number
@@ -39,10 +39,10 @@ app.use(passport.session());
 
 
 // // Github auth
-configureGitHubStrategy(passport);
+configuregithubstrateg(passport);
 
 // // Google auth
-configureGoogleAuth(passport);
+configuregoogleAuth(passport);
 
 
 passport.serializeUser((user:user, done) => {
