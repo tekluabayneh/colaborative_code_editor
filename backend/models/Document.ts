@@ -2,11 +2,18 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const contentSchema = new Schema({
-    _id: { type: Schema.Types.ObjectId, required: true }, // Same ID as the file node
-    content: { type: String, required: true },
-    owner: { type: Schema.Types.ObjectId, ref: "User", required: true }, // Add this line
+const DocumentSchema= new Schema({
+	_id: {
+		type: Schema.Types.ObjectId, // this should be same id as the folder/file id
+		required: true 
+	}, 
+	content: { 
+		type: String, 
+		required: true },
+	owner: {
+		type: Schema.Types.ObjectId, 
+		ref: "User", 
+		required: true } 
 }, { timestamps: true });
 
-module.exports = mongoose.model("Content", contentSchema);
-
+export const Document = mongoose.model("Documents", DocumentSchema);
