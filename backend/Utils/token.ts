@@ -9,6 +9,9 @@ const SignUser_JWT_Token = (email: string, secretKey: string): string => {
     return jwt.sign({email}, secretKey, { expiresIn: "1h" });
 }
 
+const Otp = ():string => { 
+return nanoid(6)
+}
 
 
-export default { SignUser_JWT_Token, GenerateUsertoken }
+export default { SignUser_JWT_Token, GenerateUsertoken , Otp}
