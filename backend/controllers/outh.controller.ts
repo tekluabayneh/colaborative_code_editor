@@ -1,51 +1,52 @@
-import {Strategy as GoogleSterategy, profile} from "passport-google-oauth20"
-import { Strategy as GithubSterategy  } from "passport-github2"
-import { Passport, type PassportStatic } from "passport"
-import Owners from "../models/Owners"
-import Users from "../models/user"
+import {Strategy as googlesterategy, type Profile} from "passport-google-oauth20"
+import {Strategy as githubsterategy  } from "passport-github2"
+import { type PassportStatic } from "passport"
+import owners from "../models/Owners"
+import users from "../models/user"
+ 
 
-type argsType = {
-	req:Request,
-	accessToken:string,
-	refrechToken:string,
-	profile:profile,
-	done:(user:any,error?:any ) =>void 
+const GetEmail = (profile:Profile):string => {
+ return  profile.emails  && profile.emails?.length > 0 && profile.emails[0].value ? profile.emails[0].value : "";
 }
 
 
-export const configureGoogleAuth = (passport:PassportStatic) => {
+const GetPhoto = (profile: Profile): string => {
+  return profile.photos?.[0]?.value ?? "";
+};
+
+
+
+export const configuregoogleAuth = (passport:PassportStatic) => {
 
 	passport.use(
-		new GoogleSterategy(
-			{clientId:"one", secrectId:"tow", callbackUrl:"callbackUrl", passReqToCallback:true},
-			async (req:Request, accessToken:string, refrechToken:string, profile:profile,done:(error:any, user:any)=> void ) => {
-				try {
-					const User = {
+		new googlesterategy({clientID:"one", clientSecret:"tow", callbackURL:"callbackurl"},
+			async (accesstoken:string, refrechtoken:string, profile:Profile,done:(error:any, user:any)=> void ) => { try {
+					const user= {
 						id:profile.id,
-						firstName:profile.name.familyName,
-						lastNam:profile.name.givenName,
-						email:profile.emails[0].value,
-						photo:profile.photos[0].value 
+						firstname:profile.name?.familyName,
+						lastname:profile.name?.givenName,
+						email:GetEmail(profile),
+						photo:GetPhoto(profile)
 					}
 
 					// check if user exist in db 
-					const CheckQueryFromOwner = await Owners.find({email:User.email})
-					const CheckQueryFromUser = await Users.find({email:User.email})
+					const checkqueryfromowner = await owners.find({email:user.email})
+					const checkqueryfromuser = await users.find({email:user.email})
 
-					if(CheckQueryFromUser){
-						done(null, User)
+					if(checkqueryfromuser){
+						done(null, user)
 						return 
-					} else if (CheckQueryFromOwner){
-						done(null, User)
+					} else if (checkqueryfromowner){
+						done(null, user)
 						return 
 					}
 
 					// otherwise if the user does not exit register/stre the record in db 
 
-					const userData = await Owners.insertOne(User)
+					const userdata = await owners.insertOne(user)
 
-					if(userData){
-						done(null, User)
+					if(userdata){
+						done(null, user)
 						return
 					}
 
@@ -61,26 +62,25 @@ export const configureGoogleAuth = (passport:PassportStatic) => {
 }
 
 
-export const configureGitHubStrategy = (passport:PassportStatic) => {
+export const configuregithubstrateg = (passport:PassportStatic) => {
 	passport.use(
-		new GithubSterategy(
-			{clientId:"one", secrectId:"tow", callbackUrl:"callbackUrl", passReqToCallback:true},
-			async (req:Request, accessToken:string, refrechToken:string, profile:profile,done:(error:any,user:any)=> void ) => {
+		new githubsterategy( {clientID:"one", clientSecret:"tow", callbackURL:"callbackurl"},
+			async (accesstoken:string, refrechtoken:string, profile:Profile,done:(error:any,user:any)=> void ) => {
 				try {
 
-					let fullName = profile._json.name;
+					let fullname = profile._json.name;
 
-					let firstName = "";
-					let lastName = "";
+					let firstname = "";
+					let lastname = "";
 
-					if (fullName) {
-						const parts = fullName.trim().split(" ");
-						firstName = parts[0];
-						lastName = parts.slice(1).join(" ") || "";
+					if (fullname) {
+						const parts = fullname.trim().split(" ");
+						firstname = parts[0];
+						lastname = parts.slice(1).join(" ") || "";
 					} else {
-						// fallback: use username as both first and last name
-						firstName = profile.username;
-						lastName = profile.username;
+						// fallback: username as both first and last name
+						firstname = profile?.username ?? ""
+						lastname = profile?.username ?? "" 
 					}
 
 					const user = {
@@ -88,37 +88,37 @@ export const configureGitHubStrategy = (passport:PassportStatic) => {
 						username: profile.username,
 						photo: profile.photos?.[0]?.value || "",
 						email: profile.emails?.[0]?.value ?? null,
-						firstName,
-						lastName,
+						firstname,
+						lastname,
 					};
 
 					// check if the user exist
-					const CheckQueryFromOwner = Owners.findOne({email:user.email})
-					const CheckQueryFromUser =  Users.findOne({email:user.email}) 
+					const checkqueryfromowner = owners.findOne({email:user.email})
+					const checkqueryfromuser =  users.findOne({email:user.email}) 
 
 					// if the user already exist just no need to store the data
-					if(await CheckQueryFromOwner){
+					if(await checkqueryfromowner){
 						done(null, user) 
 						return 
-					}else if(await CheckQueryFromUser){
+					}else if(await checkqueryfromuser){
 						done(null, user)
 						return 
 					}
 
 
 
-					const userData = await Owners.insertOne(user)
-                                       if(!userData){
-    done(null, null)
+					const userdata = await owners.insertOne(user)
+                                       if(!userdata){
+						    done(null, null)
 						return 
 					}
-					if(userData){
+					if(userdata){
 						done(null, user)
 						return
 					}
 
 				} catch (error) {
-					console.log("error while sign in with Github")
+					console.log("error while sign in with github")
 					done(error, null)
 				} 
 
