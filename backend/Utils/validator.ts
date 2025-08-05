@@ -8,7 +8,7 @@ const validateEmailAndPassword = (password: string, email: string): boolean => {
   if (password.length < 6 || password.length > 30) {
     return false;
   }
-  // if email is not the correct email type return message for the user
+
   const regx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return regx.test(email);
 };
@@ -72,16 +72,15 @@ const isUserAlreadyRegistered = async (email: string): Promise<boolean> => {
 };
 
 
-const isUserRoleOwnerOrUser =async(email:string) => {
+const isUserRoleOwnerOrUser = async (email:string) => {
 const Owners_user = await Owners.findOne({email:email})
 const users_user =  await Users.findOne({email:email})
-
 	// is the result of owners is empty we know its user
 	if(Owners_user){
-         return { role:Owners_user.role, isOwner:true }
+         return { role:Owners_user.role, isOwner:true, Owners_user }
 
 	}else if(users_user){
-	  return { role:users_user.role, isOwner:false }
+	  return { role:users_user.role, isOwner:false, users_user}
 	}
 
 }
@@ -89,7 +88,6 @@ const users_user =  await Users.findOne({email:email})
 const isPasswordMatch = async(password:string, hasedapssword:string): Promise<boolean> => {
    return compareSync(password,hasedapssword) 
 }
-
 
 export default {
   ValidateLogin,
