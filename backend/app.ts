@@ -5,14 +5,17 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
 import AuthRouter from "./routes/auth.route";
-import User from "./models/user";
+import OAuthRouter from "./routes/OAuth.route";
 import passport from "passport"
 import session from "express-session"
 import {configuregoogleAuth, configuregithubstrateg } from "./controllers/outh.controller";
+import Owners from "./models/Owners";
 const app = express();
+
 type user ={
 	_id?:number
 }
+
 // Middleware to enable cors
 app.use(
   cors({
@@ -46,17 +49,14 @@ configuregoogleAuth(passport);
 
 
 passport.serializeUser((user:user, done) => {
-  done(null, user._id);
+  done(null, user._id ?? "1")
 });
 
 
 passport.deserializeUser(async (user, done) => {
   try {
-    // let CheckQuery = "SELECT * FROM users WHERE email = ? ";
-    // let [result] = await db.execute(CheckQuery, [user.email]);
-    let result = [1]
+    let result = [0]
     if (result.length > 0) {
-      // If user already exists, handle it appropriately
       return done(null, result[0]);
     } else {
       return done(null, false);
@@ -65,9 +65,6 @@ passport.deserializeUser(async (user, done) => {
     return done(err);
   }
 });
-
-
-
 
 
 // Middleware to set security-related HTTP headers
@@ -88,11 +85,12 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello from TypeScript + Express!");
 });
 
-app.get("/api/users", async (req: Request, res: Response) => {
-  const userRepo = await User.find();
-  res.status(200).json(userRepo);
-  console.log(userRepo);
-});
 
+// local auth 
 app.use("/api", AuthRouter);
+
+// OAuth 
+app.use("/api", OAuthRouter);
+
+
 export default app;
