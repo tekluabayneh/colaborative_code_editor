@@ -48,7 +48,6 @@ export const configuregoogleAuth = (passport:PassportStatic) => {
 					}
 
 					// otherwise if the user does not exit register/stre the record in db 
-
 					const userdata = await owners.insertOne(user)
 
 					if(userdata){
@@ -70,7 +69,11 @@ export const configuregoogleAuth = (passport:PassportStatic) => {
 
 export const configuregithubstrateg = (passport:PassportStatic) => {
 	passport.use(
-		new githubsterategy( {clientID:"one", clientSecret:"tow", callbackURL:"callbackurl"},
+		new githubsterategy({
+			clientID: process.env.GITHUB_CLIENTID!,
+			clientSecret: process.env.GITHUB_CLIENTSECRET!,
+			callbackURL:process.env.GITHUB_CLLBACKURL!,
+		},
 			async (accesstoken:string, refrechtoken:string, profile:Profile,done:(error:any,user:any)=> void ) => {
 				try {
 
@@ -99,20 +102,16 @@ export const configuregithubstrateg = (passport:PassportStatic) => {
 					};
 
 					// check if the user exist
-					const checkqueryfromowner = owners.findOne({email:user.email})
-					const checkqueryfromuser =  users.findOne({email:user.email}) 
+					const checkqueryfromowner = await owners.findOne({email:user.email})
+					const checkqueryfromuser =  await users.findOne({email:user.email}) 
 
 					// if the user already exist just no need to store the data
-					if(await checkqueryfromowner){
-						done(null, user) 
-						return 
-					}else if(await checkqueryfromuser){
-						done(null, user)
-						return 
-					}
+					if(checkqueryfromowner) return  done(null, user) 
+						
+					if(checkqueryfromuser) return done(null, user)
 
 
-
+                                          return 
 					const userdata = await owners.insertOne(user)
                                        if(!userdata){
 						    done(null, null)

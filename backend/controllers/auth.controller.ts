@@ -7,7 +7,6 @@ import validator from "../Utils/validator"
 import Users from '../models/user';
 import OtpModel from '../models/Otp'; 
 import sendOtpEmail from '../services/email.service';
-import { verify } from 'crypto';
 
 const Register = async (req: Request, res: Response) => {
 	const { email, password, userName } = req.body;
@@ -23,9 +22,9 @@ const Register = async (req: Request, res: Response) => {
 		return;
 	}
 
-
 	res.status(200).json({ message: 'Registration successful', });
 }
+
 
 
 const Login = async (req: Request, res: Response) => {

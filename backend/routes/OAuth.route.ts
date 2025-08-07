@@ -19,14 +19,15 @@ OAuthRouter.get("/google/callback",
 
 
 
-OAuthRouter.get("github", (req:Request, res:Response, next:NextFunction) => {
-	passport.authenticate("google", {scope:["profile", "user:email"]})(req, res, next)
+OAuthRouter.get("/github", (req:Request, res:Response, next:NextFunction) => {
+	passport.authenticate("github", {scope:["profile", "user:email"]})(req, res, next)
 })
 
 
 
 OAuthRouter.get("/github/callback", passport.authenticate("github", { failureRedirect:"http://localhost:3000/Auth"}) 
 	,async (req:Request,res:Response) => {
+		console.log("github data",req)
 		res.redirect("http://localhost:3000")
 	})
 
