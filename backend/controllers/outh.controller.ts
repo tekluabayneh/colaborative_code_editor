@@ -19,7 +19,11 @@ const GetPhoto = (profile: Profile): string => {
 export const configuregoogleAuth = (passport:PassportStatic) => {
 
 	passport.use(
-		new googlesterategy({clientID:"one", clientSecret:"tow", callbackURL:"callbackurl"},
+		new googlesterategy( {
+	 clientID:process.env.GOOGLE_CLIENTID ?? "",
+	 clientSecret:process.env.GOOGLE_CLIENTSECRET ?? "",
+     	  callbackURL:process.env.GOOGLE_CALBACKURL, 
+		},
 			async (accesstoken:string, refrechtoken:string, profile:Profile,done:(error:any, user:any)=> void ) => { try {
 					const user= {
 						id:profile.id,
@@ -28,6 +32,8 @@ export const configuregoogleAuth = (passport:PassportStatic) => {
 						email:GetEmail(profile),
 						photo:GetPhoto(profile)
 					}
+
+				console.log(user)
 
 					// check if user exist in db 
 					const checkqueryfromowner = await owners.find({email:user.email})

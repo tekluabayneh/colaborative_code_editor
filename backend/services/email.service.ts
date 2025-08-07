@@ -1,5 +1,4 @@
 import  nodemailer from  "nodemailer"
-import Otp  from "../Utils/token"
 
 
 const transport = nodemailer.createTransport({
