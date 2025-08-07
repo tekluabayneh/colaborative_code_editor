@@ -98,7 +98,7 @@ const verifyOtp = async (req:Request, res:Response) => {
 	}
  
 
-	if(Date.now()  > Record.expiresAt) {
+	if(Number(Date.now())  > Number(Record.expiresAt)) {
 	res.status(400).json({Message:"OTP expired "}) 
 	return 
 	}
