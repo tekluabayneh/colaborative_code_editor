@@ -1,23 +1,22 @@
-import  nodemailer from  "nodemailer"
+import  nodemailer , { Transporter,SendMailOptions }from  "nodemailer"
 
-
-const transport = nodemailer.createTransport({
+const transport: Transporter = nodemailer.createTransport({
 	service:"gmail",
 	auth:{
-		user: "owner email",
-		pass:"owner password" 
+		user:process.env.GMAIL, 
+		pass:process.env.USER_PASSWORD,
 	}, 
 })
 
 const sendOtpEmail  = async (to:string , otp:string) => {
-	const mailOption ={ 
-		from:"owner email" ,
+	const mailOption: SendMailOptions ={ 
+		from: process.env.GMAIL,
 		to:to,
 		subject:"Your Otp code" ,
 		html:`<p> Your Otp code is ${otp}</p>`
 	}
-
-	await transport.sendMail(mailOption)	
+	console.log(mailOption)
+	transport.sendMail(mailOption)	
 }
 
 export default sendOtpEmail
