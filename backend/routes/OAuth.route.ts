@@ -28,7 +28,7 @@ OAuthRouter.get("/github", (req:Request, res:Response, next:NextFunction) => {
 OAuthRouter.get("/github/callback", passport.authenticate("github", { failureRedirect:"http://localhost:3000/Auth"}) 
 	,async (req:Request,res:Response) => {
 		console.log("github data",req)
-		res.redirect("http://localhost:3000")
+		res.redirect("http://localhost:3000/dashboard")
 	})
 
 export default OAuthRouter
