@@ -28,7 +28,7 @@ const Register = async (req: Request, res: Response) => {
 
 
 const Login = async (req: Request, res: Response) => {
-	const { email, password, userName } = req.body;
+	const { email, password} = req.body;
 
 	// check usr role get the role from the db using the email
 	const UserRole = await checkRole(email); 
@@ -49,70 +49,97 @@ const Login = async (req: Request, res: Response) => {
 }
 
 const SendOTP = async (req:Request, res:Response) => {
-	const {email} = req.body
 	/// check if the user email exixt if not send them they should first register 
-	if(!email){
+	if(!req.body?.email){
 		res.status(400).json({Message:"email is required if you want to reset your password "}) 
 		return 
 	}
 
-      const checkuserFromOwners = await Owners.findOne({email:email})
-      const checkusrFromUsers = await Users.findOne({email:email})  
-
-
-	if(!checkuserFromOwners && !checkusrFromUsers){ 
-		res.status(400).json({Message:"user is not found with the provided email check your emai again "}) 
-		return 
-	}   
-
-
-	// stpre the otp in db 
-        const otp = Tokens.Otp() 
-
-	const StoreOtp  = OtpModel.insertOne({email, otp }) 
-     
 	try {
-	 await sendOtpEmail(email, otp)	
-	res.status(200).json({message:"otp sent successfully"})
-	} catch (error) {
-	 res.status(500).json({message:"internal server error"}) 	
+		const {email} = req.body
+
+		const checkuserFromOwners = await Owners.findOne({email:email})
+		const checkusrFromUsers = await Users.findOne({email:email})  
+
+
+		if(!checkuserFromOwners && !checkusrFromUsers){ 
+			res.status(400).json({Message:"user is not found with the provided email check your emai again "}) 
+			return 
+		}   
+
+		// stpre the otp in db 
+		const otp = Tokens.Otp() 
+                const expiresAt = new Date(Date.now() + 5 * 60 * 1000)
+		const StoreOtp  = await OtpModel.insertOne({email, otp, expiresAt}) 
+                       
+		if(!StoreOtp._id) {
+			res.status(500).json({message:"otp is not stored unsuccessfully"})
+			return  
+		}
+   
+		     const  responseEmail = await sendOtpEmail(email, otp)	
+			console.log(responseEmail)
+
+		res.status(200).json({message:"otp sent successfully"})
+		} catch (error) {
+		res.status(500).json({message:"internal server error", error}) 	
 	} 
 }
 
 const verifyOtp = async (req:Request, res:Response) => {
- const {email, otp} = req.body
- 
-	if(!email || !otp){
-	res.status(400).json({message:"email and opt are mandatory"}) 
-	   return 
+	if(!req.body.email || !req.body.Otp ||  !req.body.newPassword){
+		res.status(400).json({message:"email and opt are mandatory"}) 
+		return 
 	}
-  
+
+	const {email, Otp, newPassword} = req.body
+
 
 	// get the opt from the data and match them and also the email 
 	const Record = await OtpModel.findOne({email:email}) 
 
-        if(!Record) {
-	res.status(400).json({Message:"no OTP found for this email"}) 
-	return 
+        console.log(Record)
+       
+       if(!Record?._id) {
+		res.status(400).json({Message:"no OTP found for this email"}) 
+		return 
 	}
- 
+
 
 	if(Number(Date.now())  > Number(Record.expiresAt)) {
-	res.status(400).json({Message:"OTP expired "}) 
-	return 
+		res.status(400).json({Message:"OTP expired "}) 
+		return 
 	}
 
-	if(Record.otp !== otp) {
-	res.status(400).json({Message:"no OTP found for this email"}) 
-	return 
+	if(Record.otp !== Otp) {
+		res.status(400).json({Message:"no OTP found for this email"}) 
+		return 
+	}
+    
+          
+          const HashedPassword  = await HashPassword(newPassword)
+          const updateFromOwner = await Owners.updateOne({email}, {password:HashedPassword})
+          const updateFromUsers = await Owners.updateOne({email}, {password:HashedPassword})
+
+	  if(updateFromOwner.acknowledged) {
+	  res.status(200).json({Message:"OTP verifyed and email is also reset successfully"}) 
+	  return 
+	  }else if(updateFromUsers.acknowledged){
+          res.status(200).json({Message:"OTP verifyed and email is also reset successfully"}) 
+
 	}
 
 
-    await OtpModel.deleteOne({email:email}) 
-	res.status(200).json({Message:"OTP verifyed successfully"}) 
 
 
 }
 
 export default { Login, Register ,verifyOtp, SendOTP};
+
+
+
+
+
+
+
 
