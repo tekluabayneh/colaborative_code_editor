@@ -10,6 +10,8 @@ import passport from "passport"
 import session from "express-session"
 import {configuregoogleAuth, configuregithubstrateg } from "./controllers/outh.controller";
 import Owners from "./models/Owners";
+import { warn } from "console";
+import { find } from "cypress/types/lodash";
 const app = express();
 
 type user ={
@@ -53,14 +55,12 @@ passport.serializeUser((user:user, done) => {
 });
 
 
-passport.deserializeUser(async (user, done) => {
+passport.deserializeUser(async (id, done) => {
   try {
-    let result = [0]
-    if (result.length > 0) {
-      return done(null, result[0]);
-    } else {
-      return done(null, false);
-    }
+const findUser = await Owners.findOne({id:id})	
+
+ if(!findUser) return  done(null, false)
+      return done(null, findUser) 
   } catch (err) {
     return done(err);
   }
@@ -72,13 +72,13 @@ app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 const RateLimit = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
+  max: 100, 
   message: "Too many requests, please try again later.",
 });
+
 app.use(RateLimit);
 app.use(express.json());
-// app.use(mongoSntisize());
-//
+
 app.get("/", (req: Request, res: Response) => {
   const header = req.headers.authorization;
   console.log("Authorization Header:", header);
