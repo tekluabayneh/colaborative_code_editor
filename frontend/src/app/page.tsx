@@ -1,3 +1,4 @@
+ "use client"
 import "../styles/globals.css"
 import React from "react";
 import NarBar from "../components/NavBar";
@@ -5,8 +6,11 @@ import Footer from "../components/Footer";
 import FAQ from "@/components/FAQ";
 import RealTimeCollaboration from "../components/RealTimeColaboration";
 import LandingTab from "@/components/DashboardTab";
-
+import Link from "next/link";
+import { useState } from "react";
 const LandingPage = () => {
+	const [toggleEditor, setoggleEditor]  = useState(true)
+  console.log("from the main",toggleEditor)
 	return (
 		<div className="min-h-screen bg-black text-white">
 			{/* Navigation Bar */}
@@ -40,12 +44,14 @@ const LandingPage = () => {
 
 					{/* CTA Buttons */}
 					<div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-20">
-						<button className="bg-white text-black px-8 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors">
-							Register 
+						<button className="bg-white cursor-pointer hover:bg-gray-100 text-black px-8 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors">
+						<Link href={"/Auth"}> Register </Link>	
 						</button>
-						<button className="border border-gray-600 text-white px-8 py-3 rounded-md font-medium hover:border-gray-400 transition-colors flex items-center space-x-2">
+						<button className="border border-gray-600 cursor-pointer text-white px-8 py-3 rounded-md font-medium hover:border-gray-400 transition-colors flex items-center space-x-2">
+							<Link href={"/Auth"} className="flex items-center justify-center gap-2"> 
 							<span>Start today for free</span>
 							<span>→</span>
+							</Link>
 						</button>
 					</div>
 				</div>
@@ -62,10 +68,10 @@ const LandingPage = () => {
 				</div>
 
 				{/* landing tab   */}
-				<LandingTab/>
+				<LandingTab toggleEditor={toggleEditor}/>
 				<div className="w-96 h-10 mt-2 p-3 rounded-[10rem] flex items-center justify-center gap-10 mx-auto border border-[]"> 
-					<h1 className="border hover:bg-gray-100/50 cursor-pointer rounded-[5rem] px-1 px-6 font-medium ">video</h1>
-					<h1 className="border hover:bg-gray-100/50 cursor-pointer rounded-[5rem] px-1 px-6 font-medium ">video</h1>
+					<h1 onClick={() => setoggleEditor(false)} className="border hover:bg-gray-100/50 cursor-pointer rounded-[5rem] px-1 px-6 font-medium ">code</h1>
+					<h1 onClick={() => setoggleEditor(true)}  className="border hover:bg-gray-100/50 cursor-pointer rounded-[5rem] px-1 px-6 font-medium ">custom edito</h1>
 				</div>
 
 				{/* FAQ */}
