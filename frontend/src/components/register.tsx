@@ -1,32 +1,46 @@
+"use client"
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { formTypeRegister, FormValues } from "../types/form";
 import  axios from "axios"
 import { validateFormData } from "../utils/formValidate";
+import { useRouter } from "next/navigation";
 type Props = {
 	toogle: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Register = ({ toogle }: Props) => {
+	const router = useRouter()
+
+
 	const { register, handleSubmit, reset, formState: { errors }, } = useForm<FormValues>();
 
-	const SubmitFromData =async (formData:formTypeRegister) => {
+	const SubmitFormData = async (formData: formTypeRegister) => {
+		try {
+			const response = await axios.post("http://localhost:5000/api/auth/register",formData) 
+			toast.success(response.data.message + ",now verify Otp")
+			await axios.post("http://localhost:5000/api/auth/sendOtp", {email:formData.email});
+			localStorage.setItem("email",formData.email)
+			router.push("/verifyOtp")
 
-	const response = await axios.post("http://localhost:5000/api/auth/register",formData) 
-
-		const data = response.data
-		console.log(data)
+		} catch (err) {
+			if (axios.isAxiosError(err)) {
+				console.error(err);
+				toast.error(err.response?.data.Message);
+			} else {
+				toast.error("An unexpected error occurred");
+			}
+		}
 	}
-
 
 	const formSubmit = (data: formTypeRegister): formTypeRegister | void => {
 		if (!validateFormData(data)) {
-			console.log("Invalid form data");
+			toast.error("Invalid Form data")	
 			return;
 		}
-		console.log(data);
-		SubmitFromData(data)
-
+		SubmitFormData(data)
 		reset();
+
 	};
 
 
