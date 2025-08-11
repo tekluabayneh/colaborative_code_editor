@@ -69,68 +69,56 @@ const SendOTP = async (req:Request, res:Response) => {
 
 		// stpre the otp in db 
 		const otp = Tokens.Otp() 
-                const expiresAt = new Date(Date.now() + 5 * 60 * 1000)
+		const expiresAt = new Date(Date.now() + 5 * 60 * 1000)
 		const StoreOtp  = await OtpModel.insertOne({email, otp, expiresAt}) 
-                       
+
 		if(!StoreOtp._id) {
 			res.status(500).json({message:"otp is not stored unsuccessfully"})
 			return  
 		}
-   
-		     const  responseEmail = await sendOtpEmail(email, otp)	
-			console.log(responseEmail)
+
+		const  responseEmail = await sendOtpEmail(email, otp)	
+		console.log(responseEmail)
 
 		res.status(200).json({message:"otp sent successfully"})
-		} catch (error) {
+	} catch (error) {
 		res.status(500).json({message:"internal server error", error}) 	
 	} 
 }
 
 const verifyOtp = async (req:Request, res:Response) => {
-	if(!req.body.email || !req.body.Otp ||  !req.body.newPassword){
+	console.log(req.body)
+	if(!req.body.email || !req.body.Otp){
 		res.status(400).json({message:"email and opt are mandatory"}) 
 		return 
 	}
+	try {
+		const {email, Otp} = req.body
 
-	const {email, Otp, newPassword} = req.body
+		// get the opt from the data and match them and also the email 
+		const Record = await OtpModel.findOne({email:email}) 
+
+		if(!Record?._id) {
+			res.status(400).json({Message:"no OTP found for this email"}) 
+			return 
+		}
 
 
-	// get the opt from the data and match them and also the email 
-	const Record = await OtpModel.findOne({email:email}) 
+		if(Number(Date.now())  > Number(Record.expiresAt)) {
+			res.status(400).json({Message:"OTP expired "}) 
+			return 
+		}
 
-        console.log(Record)
-       
-       if(!Record?._id) {
-		res.status(400).json({Message:"no OTP found for this email"}) 
-		return 
+		if(Record.otp !== Otp) {
+			res.status(400).json({Message:"no OTP found for this email"}) 
+			return 
+		}
+		res.status(200).json({Message:"OTP verifyed successfully"}) 
+
+	} catch (err) {
+		console.log(err)	
+		res.status(500).json({Message:"something went wrong"}) 
 	}
-
-
-	if(Number(Date.now())  > Number(Record.expiresAt)) {
-		res.status(400).json({Message:"OTP expired "}) 
-		return 
-	}
-
-	if(Record.otp !== Otp) {
-		res.status(400).json({Message:"no OTP found for this email"}) 
-		return 
-	}
-    
-          
-          const HashedPassword  = await HashPassword(newPassword)
-          const updateFromOwner = await Owners.updateOne({email}, {password:HashedPassword})
-          const updateFromUsers = await Owners.updateOne({email}, {password:HashedPassword})
-
-	  if(updateFromOwner.acknowledged) {
-	  res.status(200).json({Message:"OTP verifyed and email is also reset successfully"}) 
-	  return 
-	  }else if(updateFromUsers.acknowledged){
-          res.status(200).json({Message:"OTP verifyed and email is also reset successfully"}) 
-
-	}
-
-
-
 
 }
 
