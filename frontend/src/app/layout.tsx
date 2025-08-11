@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../styles/globals.css"
 import {FileSystemProvider } from "../context/FileTreeContext"
+import { Toaster } from 'react-hot-toast';
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({
       >
         <FileSystemProvider>
         {children}
+		<Toaster/>
         </FileSystemProvider>
       </body>
     </html>
