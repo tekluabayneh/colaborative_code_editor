@@ -1,8 +1,8 @@
 import express from "express";
 import authController from "../controllers/auth.controller";
 import AuthMiddleware from "../middlewares/auth.middleware";
-const { Login, Register , verifyOtp, SendOTP} = authController;
-const { ResgisterValidate, LoginValidate } = AuthMiddleware;
+const { Login, Register , ResetPassword, verifyOtp, SendOTP, sendRestLink } = authController;
+const { ResgisterValidate, LoginValidate ,ResetPasswordValidate } = AuthMiddleware;
 const AuthRouter = express.Router();
 
 AuthRouter.post("/auth/login", LoginValidate, Login);
@@ -12,5 +12,9 @@ AuthRouter.post("/auth/register", ResgisterValidate, Register);
 AuthRouter.post("/auth/sendOtp", SendOTP )
 
 AuthRouter.post("/auth/verifyOtp", verifyOtp)
+
+AuthRouter.get("/auth/sendRestLink", sendRestLink)
+
+AuthRouter.post("/auth/ResetPassword", ResetPasswordValidate, ResetPassword)
 
 export default AuthRouter;
