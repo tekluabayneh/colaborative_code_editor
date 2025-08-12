@@ -13,12 +13,14 @@ const Register = ({ toogle }: Props) => {
 	const router = useRouter()
 
 
-	const { register, handleSubmit, reset, formState: { errors }, } = useForm<FormValues>();
+	const { register, handleSubmit, reset, formState: { errors , isValid}, } = useForm<FormValues>({
+		mode:"onChange"
+	});
 
 	const SubmitFormData = async (formData: formTypeRegister) => {
 		try {
 			const response = await axios.post("http://localhost:5000/api/auth/register",formData) 
-			toast.success(response.data.message + ",now verify Otp")
+			toast.success(response.data.message + ", now verify Otp")
 			await axios.post("http://localhost:5000/api/auth/sendOtp", {email:formData.email});
 			localStorage.setItem("email",formData.email)
 			router.push("/verifyOtp")
@@ -26,7 +28,7 @@ const Register = ({ toogle }: Props) => {
 		} catch (err) {
 			if (axios.isAxiosError(err)) {
 				console.error(err);
-				toast.error(err.response?.data.Message);
+				toast.error(err.response?.data.message);
 			} else {
 				toast.error("An unexpected error occurred");
 			}
@@ -35,7 +37,9 @@ const Register = ({ toogle }: Props) => {
 
 	const formSubmit = (data: formTypeRegister): formTypeRegister | void => {
 		if (!validateFormData(data)) {
+
 			toast.error("Invalid Form data")	
+
 			return;
 		}
 		SubmitFormData(data)
@@ -145,9 +149,19 @@ const Register = ({ toogle }: Props) => {
 					</p>
 				</div>
 
-				<button data-testid="Register_button" className="bg-black text-white border border-[#333] rounded cursor-pointer px-45 py-2 font-semibold hover:bg-[#333] transition duaration-300">
+
+
+				<button
+					disabled={!isValid}
+					data-testid="Register_button"
+					className={`bg-black w-full text-white border border-[#333] rounded px-4 py-2 font-semibold transition duration-300
+${isValid ? "hover:bg-[#333] cursor-pointer" : "cursor-not-allowed text-gray-600 bg-gray-800"}`}
+				>
 					Register
 				</button>
+
+
+
 
 				<div
 					onClick={() => toogle(true)}
