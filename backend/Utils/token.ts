@@ -5,6 +5,10 @@ const GenerateUsertoken = (): string => {
     return nanoid(32);
 }
 
+const ResetPasswordLink =() => { 
+return nanoid(10) 
+}
+
 const SignUser_JWT_Token = (email: string, secretKey: string): string => {
     return jwt.sign({email}, secretKey, { expiresIn: "1h" });
 }
@@ -14,4 +18,4 @@ return nanoid(6)
 }
 
 
-export default { SignUser_JWT_Token, GenerateUsertoken , Otp}
+export default { SignUser_JWT_Token, GenerateUsertoken , Otp, ResetPasswordLink}
