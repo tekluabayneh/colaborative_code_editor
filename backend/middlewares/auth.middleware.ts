@@ -53,6 +53,7 @@ const ResetPasswordValidate =  async (req:Request, res:Response, next:NextFuncti
 		res.status(400).json({message:`user is not found with the email of ${email} `})
 		return 
 	}
+next()
 }
 
 
