@@ -75,6 +75,11 @@ const isUserAlreadyRegistered = async (email: string): Promise<boolean> => {
 const isUserRoleOwnerOrUser = async (email:string) => {
 const Owners_user = await Owners.findOne({email:email})
 const users_user =  await Users.findOne({email:email})
+
+	if(!Owners_user && !users_user) { 
+		return null 
+	}      
+
 	// is the result of owners is empty we know its user
 	if(Owners_user){
          return { role:Owners_user.role, isOwner:true, Owners_user }
@@ -84,6 +89,7 @@ const users_user =  await Users.findOne({email:email})
 	}
 
 }
+
 
 const isPasswordMatch = async(password:string, hasedapssword:string): Promise<boolean> => {
    return compareSync(password,hasedapssword) 
