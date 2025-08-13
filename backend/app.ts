@@ -10,8 +10,6 @@ import passport from "passport"
 import session from "express-session"
 import {configuregoogleAuth, configuregithubstrateg } from "./controllers/outh.controller";
 import Owners from "./models/Owners";
-import { warn } from "console";
-import { find } from "cypress/types/lodash";
 const app = express();
 
 type user ={
@@ -67,12 +65,11 @@ const findUser = await Owners.findOne({id:id})
 });
 
 
-// Middleware to set security-related HTTP headers
 app.use(helmet());
 app.use(express.urlencoded({ extended: true }));
 const RateLimit = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, 
+  windowMs: 5 * 60 * 1000, 
+  max: 10, 
   message: "Too many requests, please try again later.",
 });
 
