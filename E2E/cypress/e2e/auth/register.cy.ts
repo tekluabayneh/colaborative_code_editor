@@ -50,7 +50,7 @@ describe("form test", () => {
 
 
 
-	it("it should  get 200 success message ", () => {
+	it.only("it should  get 200 success message ", () => {
                  fillRegisterForm("jone","fake_2@gmail.com","fake_work_ma")
 
 		cy.get(`[data-testid="Register_button"]`).should("not.be.disabled")
@@ -61,5 +61,9 @@ describe("form test", () => {
 
 	})
 
+
+	it.only("should throw invalid opt code ", () => { 
+	
+	})
 
 })
