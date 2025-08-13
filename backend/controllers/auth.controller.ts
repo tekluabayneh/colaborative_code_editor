@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { UpdateResult } from "mongoose";
 import Tokens from '../Utils/token';
 import checkRole from "../middlewares/role.middleware";
 import Owners from '../models/Owners';
@@ -9,6 +10,13 @@ import OtpModel from '../models/Otp';
 import {sendOtpEmail,sendResetPasswordLink } from '../services/email.service';
 import ResetLinkModel from '../models/ResetPassword';
 
+interface ResetLinkRequestBody {
+	email:string 
+}
+interface success { 
+	message:string,
+	err?:any
+} 
 
 const Register = async (req: Request, res: Response) => {
 	const { email, password, userName } = req.body;
@@ -78,7 +86,7 @@ const SendOTP = async (req:Request, res:Response) => {
 			res.status(500).json({message:"otp is not stored unsuccessfully"})
 			return  
 		}
-		 await sendOtpEmail(email, otp)	
+		await sendOtpEmail(email, otp)	
 		res.status(200).json({message:"otp sent successfully"})
 	} catch (error) {
 		res.status(500).json({message:"internal server error", error}) 	
@@ -120,48 +128,95 @@ const verifyOtp = async (req:Request, res:Response) => {
 
 }
 
-
-  const sendRestLink = async (req:Request, res:Response) => { 
-  if (!req.body.email) {
-	  return res.status(400).json({ message: "email is required" });
-       }
-                const  { email } = req.body 
-
-	const checkUserExistFromUsers = await Users.findOne({email:email}) 
-	const checkUserExistFromOwners = await Owners.findOne({email:email}) 
-
-	if(!checkUserExistFromUsers || checkUserExistFromOwners) { 
-		res.status(400).json({message:`user is not found with the email of ${email} `})
+const sendResetLink = async (req:Request<{}, {}, ResetLinkRequestBody>, res:Response<success>) => { 
+	if (!req.body || !req.body.email) {
+		res.status(400).json({ message: "email is required" });
 		return 
 	}
 
-		const restpassworToken  = Tokens.ResetPasswordLink()
-        	const expiresAt = new Date(Date.now() + 5 * 60 * 1000)
-		const StoreToken = await ResetLinkModel.insertOne({email, restpassworToken, expiresAt}) 
-                   
-          	if(!StoreToken._id) {
+	const  { email } = req.body 
+	try {
+
+		const checkUserExistFromUsers = await Users.findOne({email:email}) 
+		const checkUserExistFromOwners = await Owners.findOne({email:email}) 
+
+		if(!checkUserExistFromUsers && !checkUserExistFromOwners) { 
+			res.status(400).json({message:`user is not found with the email of ${email} `})
+			return 
+		}
+
+		const token = Tokens.ResetPasswordLink()
+		const expiresAt = new Date(Date.now() + 5 * 60 * 1000)
+		const StoreToken = await ResetLinkModel.insertOne({email, token, expiresAt}) 
+
+		if(!StoreToken._id) {
 			res.status(500).json({message:"internal server error"})
 			return  
 		}
-const  resetLink:string = `http://localhost:3000/ResetPassword?token=${restpassworToken}&email=${email}`
+		const  resetLink:string = `http://localhost:3000/ResetPassword?token=${token}&email=${email}`
 
-	    sendResetPasswordLink(email, resetLink)
+		sendResetPasswordLink(email, resetLink)
 
-	res.status(200).json({message:"reset-password send successfully"})
-  }
-
-
-
-const ResetPassword = async (req:Request, res:Response) => { 
- const {newPassword, email,} = req.body 
-	// =>  example link https://yourapp.com/reset-password?token=uniqueTokenHere&email=user@example.com
-
-        // get the toek and user emamil from the query and validate them 
-	// check the user link toke from the query parametere and also exprition time 
-	// the other route will check if the passord is rest and we will redirect them to login page 
-	//
+		res.status(200).json({message:"reset-password send successfully"})
+	} catch (err) {
+		res.status(500).json({message:"internal server error", err})
+		return 
+	}
 
 }
 
 
-export default {ResetPassword, Login, Register ,verifyOtp, SendOTP, sendRestLink};
+
+const ResetPassword = async (req:Request, res:Response) => { 
+
+	if(!req.body.newPassword || !req.query.token || !req.query.email){ 
+		res.status(400).json({message:"all input are mandatory"})
+		return
+	}
+
+	const {newPasswod} = req.body 
+	const {token, email,} = req.query
+
+	const findToken = ResetLinkModel.findOne({email:email})
+
+	if(!findToken){ 
+		res.status(400).json({message:"user not found"})
+		return 
+	}
+
+        const StoredToken = await ResetLinkModel.findOne({email:email})
+
+	if(!token || token !== StoredToken?.token){
+		res.status(401).json({ message: "Invalid or expired token" });
+		return 
+	}
+
+
+
+	let updatePassword:UpdateResult
+	let isUser
+	if(typeof email == "string"){  
+		isUser = await validator.isUserRoleOwnerOrUser(email) 
+	}
+	const HashedPassword = await HashPassword(newPasswod)
+
+
+	if(isUser && !isUser.isOwner){ 
+		updatePassword = await Users.updateOne({email:email}, {passord:HashedPassword})
+		if(updatePassword.acknowledged){ 
+			res.status(200).json({message:"password reset successfully"})
+			return 
+		}
+	} else { 
+		// in this can we know its ownser 
+		updatePassword  =await Owners.updateOne({email:email}, {passord:HashedPassword})
+		if(updatePassword.acknowledged){ 
+			res.status(200).json({message:"password reset successfully"})
+			return 
+		}
+	}
+
+}
+
+
+export default {sendResetLink, ResetPassword, Login, Register ,verifyOtp, SendOTP};
