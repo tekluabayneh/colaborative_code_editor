@@ -4,6 +4,11 @@ import Users from "../models/user";
 import Owners from "../models/Owners";
 
 const ResgisterValidate = async ( req: Request, res: Response, next: NextFunction) => {
+	if(!req.body.email || !req.body.password || !req.body.userName){ 
+		res.status(400).json({ message: "all input are mandatory" });
+		 return 
+	}
+
 	const { email, password, userName } = req.body;
 
 	if (!validateAuthRequest.ValidateRegister(req).isValid) {
@@ -23,6 +28,11 @@ const ResgisterValidate = async ( req: Request, res: Response, next: NextFunctio
 };
 
 const LoginValidate = async ( req: Request, res: Response, next: NextFunction) => {
+	if(!req.body.email || !req.body.password){ 
+		res.status(400).json({ message: "all input are mandatory" });
+		 return 
+	}
+
 	const { email, password } = req.body;
 
 	if (!validateAuthRequest.ValidateLogin(req)) {
@@ -40,20 +50,22 @@ const LoginValidate = async ( req: Request, res: Response, next: NextFunction) =
 
 
 const ResetPasswordValidate =  async (req:Request, res:Response, next:NextFunction) => { 
-	if(!req.body.newPassword || !req.body.email){ 
-		res.status(400).json({message:"newPassword and email are required"})
-		return 
+       const body = req.body || {};
+	if(!body.newPassword || !req.query.token || !req.query.email){ 
+		res.status(400).json({message:"all input are mandatory"})
+		return
 	}
-	const {newPassword, email} = req.body
+
+	const {email} = req.query
 
 	const checkUserExistFromUsers = await Users.findOne({email:email}) 
 	const checkUserExistFromOwners = await Owners.findOne({email:email}) 
 
-	if(!checkUserExistFromUsers || checkUserExistFromOwners) { 
+	if(!checkUserExistFromUsers && !checkUserExistFromOwners) { 
 		res.status(400).json({message:`user is not found with the email of ${email} `})
 		return 
 	}
-next()
+	next()
 }
 
 
