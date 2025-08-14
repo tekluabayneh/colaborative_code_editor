@@ -1,15 +1,25 @@
 "use client"
 import { useState } from "react";
 import { Mail, ArrowLeft, CheckCircle, Loader2 } from "lucide-react";
+import axios, { isAxiosError } from "axios";
+import toast from "react-hot-toast";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    try {
+    const response = await axios.post("http://localhost:5000/api/auth/sendRestLink",{email:email}) 
+    toast.success(response?.data.message) 
+    } catch (err) {
+      if(isAxiosError(err)){ 
+       toast.error(err.response?.data.message) 
+    } }
+
     setTimeout(() => {
       setIsLoading(false);
       setIsSubmitted(true);
@@ -114,7 +124,7 @@ const ForgotPassword = () => {
                     </form>
 
                     <div className="text-center">
-                      <a href="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                      <a href="/Auth" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
                         <ArrowLeft className="w-4 h-4" /> Back to Login
                       </a>
                     </div>
