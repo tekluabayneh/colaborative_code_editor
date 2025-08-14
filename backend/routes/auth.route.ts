@@ -13,8 +13,8 @@ AuthRouter.post("/auth/sendOtp", SendOTP )
 
 AuthRouter.post("/auth/verifyOtp", verifyOtp)
 
-AuthRouter.get("/auth/sendRestLink", sendResetLink)
+AuthRouter.post("/auth/sendRestLink", sendResetLink)
 
-AuthRouter.post("/auth/ResetPassword", ResetPasswordValidate, ResetPassword)
+AuthRouter.post("/auth/ResetPassword", ResetPasswordValidate, ResetPassword) 
 
 export default AuthRouter;
