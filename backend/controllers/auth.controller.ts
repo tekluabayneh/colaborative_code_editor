@@ -165,58 +165,53 @@ const sendResetLink = async (req:Request<{}, {}, ResetLinkRequestBody>, res:Resp
 
 }
 
+const ResetPassword = async (req: Request, res: Response) => {
+	const { newPassword } = req.body;
+	const { token, email } = req.query;
+     try {
+     	console.log(email, token, newPassword);
 
-
-const ResetPassword = async (req:Request, res:Response) => { 
-
-	if(!req.body.newPassword || !req.query.token || !req.query.email){ 
-		res.status(400).json({message:"all input are mandatory"})
-		return
+	if (typeof email !== "string" || typeof token !== "string") {
+		res.status(400).json({ message: "Invalid request" });
+			return 
 	}
 
-	const {newPasswod} = req.body 
-	const {token, email,} = req.query
-
-	const findToken = ResetLinkModel.findOne({email:email})
-
-	if(!findToken){ 
-		res.status(400).json({message:"user not found"})
-		return 
+	const storedToken = await ResetLinkModel.findOne({ email });
+	if (!storedToken) {
+		res.status(400).json({ message: "User not found" });
+			return 
 	}
 
-        const StoredToken = await ResetLinkModel.findOne({email:email})
-
-	if(!token || token !== StoredToken?.token){
+	if (token !== storedToken.token) {
 		res.status(401).json({ message: "Invalid or expired token" });
-		return 
+			return
 	}
 
-
-
-	let updatePassword:UpdateResult
-	let isUser
-	if(typeof email == "string"){  
-		isUser = await validator.isUserRoleOwnerOrUser(email) 
-	}
-	const HashedPassword = await HashPassword(newPasswod)
-
-
-	if(isUser && !isUser.isOwner){ 
-		updatePassword = await Users.updateOne({email:email}, {passord:HashedPassword})
-		if(updatePassword.acknowledged){ 
-			res.status(200).json({message:"password reset successfully"})
+	const isUser = await validator.isUserRoleOwnerOrUser(email);
+	if (!isUser) {
+		res.status(400).json({ message: "User not found" });
 			return 
-		}
-	} else { 
-		// in this can we know its ownser 
-		updatePassword  =await Owners.updateOne({email:email}, {passord:HashedPassword})
-		if(updatePassword.acknowledged){ 
-			res.status(200).json({message:"password reset successfully"})
-			return 
-		}
 	}
 
-}
+	const hashedPassword = await HashPassword(newPassword);
+
+	let updateResult: UpdateResult;
+	if (!isUser.isOwner) {
+		updateResult = await Users.updateOne({ email }, { password: hashedPassword });
+	} else {
+		updateResult = await Owners.updateOne({ email }, { password: hashedPassword });
+	}
+
+	if (updateResult.acknowledged) {
+		res.status(200).json({ message: "Password reset successfully" });
+			return
+	} 
+		res.status(500).json({ message: "Something went wrong" });
+     } catch (err) {
+	res.status(500).json({ message: "Something went wrong" });
+     }
+
+};
 
 
 export default {sendResetLink, ResetPassword, Login, Register ,verifyOtp, SendOTP};
