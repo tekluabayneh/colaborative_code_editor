@@ -18,10 +18,10 @@ const EmailVerificationPage = () => {
 	const handleVerification = async () => {
 		setIsLoading(true)
 		try {
-		  const response = await verifyOtp(code, email);
-			if(response?.status !== 200){ 
-			 toast.error(response?.data.message)
-			return 
+		     const res = await verifyOtp(code, email);
+			if(res?.status !== 200) {
+                         	setIsLoading(false)	
+				return 
 			}
 			setIsVerified(true)  
 			setIsLoading(false)	
@@ -29,7 +29,6 @@ const EmailVerificationPage = () => {
 		} catch (err) {
 			setIsLoading(false)	
 			setError((err as Error).message);
-			toast.error(error)
 		}
 	};
 
@@ -82,7 +81,7 @@ const EmailVerificationPage = () => {
 								Enter verification code
 							</Label>
 							<div className="flex justify-center">
-								<InputOTP
+								<InputOTP data-testid="otp_input"
 									maxLength={6}
 									value={code}
 									onChange={(value) => {
@@ -108,6 +107,8 @@ const EmailVerificationPage = () => {
 						)}
 
 						<Button
+                                                   data-testid="btn_verify"
+
 							onClick={handleVerification}
 							disabled={isLoading || code.length !== 6 }
 							className="w-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 hover:opacity-90 transition-all duration-300 shadow-lg text-white disabled:opacity-50 disabled:cursor-not-allowed"
@@ -125,7 +126,7 @@ const EmailVerificationPage = () => {
 						{/* Resend Code */}
 						<div className="text-center space-y-3">
 							<p className="text-gray-300 text-sm">Didn't receive the code?</p>
-							<button
+							<button 
 								onClick={handleVerification}
 								disabled={isLoading}
 								className="text-cyan-400 cursor-pointer hover:text-cyan-300 transition-colors duration-300 text-sm font-medium disabled:opacity-50"
