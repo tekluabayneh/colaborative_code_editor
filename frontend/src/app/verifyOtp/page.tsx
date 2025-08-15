@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '../../components/ui/Button';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { Label } from '@/components/ui/label';
@@ -13,7 +13,11 @@ const EmailVerificationPage = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isVerified, setIsVerified] = useState(false);
 	const [error, setError] = useState('');
-        const email = localStorage.getItem("email")!
+        const [email, setEmail] = useState("") 
+
+        useEffect(() => { 
+	  setEmail(localStorage.getItem("email")!) 
+	  },[])
 
 	const handleVerification = async () => {
 		setIsLoading(true)
