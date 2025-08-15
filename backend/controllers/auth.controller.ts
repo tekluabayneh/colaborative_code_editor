@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { UpdateResult } from "mongoose";
 import Tokens from '../Utils/token';
-import checkRole from "../middlewares/role.middleware";
 import Owners from '../models/Owners';
 import HashPassword from '../Utils/hash';
 import validator from "../Utils/validator"
@@ -9,7 +8,6 @@ import Users from '../models/user';
 import OtpModel from '../models/Otp'; 
 import {sendOtpEmail,sendResetPasswordLink } from '../services/email.service';
 import ResetLinkModel from '../models/ResetPassword';
-
 interface ResetLinkRequestBody {
 	email:string 
 }
@@ -41,27 +39,41 @@ const Login = async (req: Request, res: Response) => {
 	const { email, password} = req.body;
 
 	// check usr role get the role from the db using the email
-	const UserRole = await checkRole(email); 
+	const UserRole = validator.isUserRoleOwnerOrUser(email); 
 
 	const HashedPassword = await Owners.findOne({email:email})
 
-	if(HashedPassword?.password){
+         if(!HashedPassword){ 
+	res.status(400).json({message:"user not found"})
+	    return 
+	}
+
+
+	if(HashedPassword.password){
 		if(!await validator.isPasswordMatch(password, HashedPassword.password)){
-			res.status(404).json({Message:"pasword is not correct"})
+			res.status(404).json({message:"password is not correct"})
 			return
 		}
 
 	}
+           
+	const token = Tokens.SignUser_JWT_Token(HashedPassword.email, HashedPassword?.role, process.env.JWT_SECRET_KEY!)
 
-	const token = Tokens.SignUser_JWT_Token(email, process.env.JWT_SECRET_KEY!)
-	res.status(200).json({message:"user login successfully", userRole:UserRole, token:token})
+        res.cookie("accessToken", token,{ 
+         httpOnly:true,
+         sameSite:"strict",
+	 secure:process.env.NODE_ENV == "production",
+         maxAge:100,
+	})
+
+	res.status(200).json({message:"user login successfully"})
 
 }
 
 const SendOTP = async (req:Request, res:Response) => {
 	/// check if the user email exixt if not send them they should first register 
 	if(!req.body?.email){
-		res.status(400).json({Message:"email is required if you want to reset your password "}) 
+		res.status(400).json({message:"email is required if you want to reset your password "}) 
 		return 
 	}
 
@@ -73,7 +85,7 @@ const SendOTP = async (req:Request, res:Response) => {
 
 
 		if(!checkuserFromOwners && !checkusrFromUsers){ 
-			res.status(400).json({Message:"user is not found with the provided email check your email again "}) 
+			res.status(400).json({message:"user is not found with the provided email check your email again "}) 
 			return 
 		}   
 
@@ -105,25 +117,25 @@ const verifyOtp = async (req:Request, res:Response) => {
 		const Record = await OtpModel.findOne({email:email}) 
 
 		if(!Record?._id) {
-			res.status(400).json({Message:"no OTP found for this email"}) 
+			res.status(400).json({message:"no OTP found for this email"}) 
 			return 
 		}
 
 
 		if(Number(Date.now())  > Number(Record.expiresAt)) {
-			res.status(400).json({Message:"OTP expired "}) 
+			res.status(400).json({message:"OTP expired "}) 
 			return 
 		}
 
 		if(Record.otp !== Otp) {
-			res.status(400).json({Message:"no OTP found for this email"}) 
+			res.status(400).json({message:"no OTP found for this email"}) 
 			return 
 		}
-		res.status(200).json({Message:"OTP verifyed successfully"}) 
+		res.status(200).json({message:"OTP verifyed successfully"}) 
 
 	} catch (err) {
 		console.log(err)	
-		res.status(500).json({Message:"something went wrong"}) 
+		res.status(500).json({message:"something went wrong"}) 
 	}
 
 }
@@ -169,7 +181,6 @@ const ResetPassword = async (req: Request, res: Response) => {
 	const { newPassword } = req.body;
 	const { token, email } = req.query;
      try {
-     	console.log(email, token, newPassword);
 
 	if (typeof email !== "string" || typeof token !== "string") {
 		res.status(400).json({ message: "Invalid request" });
