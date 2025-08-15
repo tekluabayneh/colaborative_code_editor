@@ -1,4 +1,4 @@
-import mongoose, { Model } from "mongoose";
+import mongoose from "mongoose";
 
 const InviteSchema = new mongoose.Schema({
   token: {
@@ -12,10 +12,6 @@ const InviteSchema = new mongoose.Schema({
     unique: true,
   },
   role: {
-    type: String,
-    required: true,
-  },
-  ProjectId: {
     type: String,
     required: true,
   },
@@ -33,6 +29,8 @@ const InviteSchema = new mongoose.Schema({
   },
 });
 
-const InviteTokenSchema = mongoose.model("InviteToken", InviteSchema);
+InviteSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
-export default InviteTokenSchema;
+const InviteToken = mongoose.model("InviteToken", InviteSchema);
+
+export default InviteToken;
