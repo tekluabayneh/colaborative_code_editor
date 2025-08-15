@@ -5,13 +5,20 @@ import { formTypeLogin } from "../types/form";
 import { validateFormData } from "../utils/formValidate"
 import { useRouter } from "next/navigation";
 import axios from "axios";
+
 type Props = {
 	toogle: React.Dispatch<React.SetStateAction<boolean>>
 }
-const Login = ({ toogle }: Props) => {
-	const router = useRouter()
 
-	const { register, handleSubmit, reset, formState: { errors } } = useForm < formTypeLogin > ()
+const Login = ({ toogle }: Props) => {
+	const router = useRouter() 
+	const { register, handleSubmit, reset, watch, formState: { errors } } = useForm < formTypeLogin > ()
+
+          const passwordValue = watch("password") || "";
+          const emailValue = watch("email") || "";
+
+
+
 
 	const SubmitFormData = async (formData: formTypeLogin) => {
 		try {
@@ -23,9 +30,9 @@ const Login = ({ toogle }: Props) => {
 		} catch (err) {
 			if (axios.isAxiosError(err)) {
 				console.error(err.response);
-				toast.error(err.response?.data.Message);
+				toast.error(err.response?.data.message);
 			} else {
-				toast.error("An unexpected error occurred");
+				toast.error("An unexpected error occurred come back later");
 			}
 		}
 	};
@@ -100,9 +107,16 @@ const Login = ({ toogle }: Props) => {
 						<p className="text-red-500">{errors.password ? errors.password.message : ""}</p>
 					</div>
 					<div className="mb-4">
-						<button  data-testid="testid_login_button" className="bg-black text-white border  border-[#333] rounded cursor-pointer px-48 py-2 font-semibold hover:bg-[#333] transition duaration-300">
-							Login
-						</button>
+<button
+  disabled={passwordValue.length < 6 || emailValue.length < 10}
+  data-testid="testid_login_button"
+  className={`${
+     passwordValue.length < 6 || emailValue.length < 10 ? "cursor-not-allowed text-gray-500 bg-gray-600"
+      : "bg-black text-white border border-[#333] rounded cursor-pointer hover:bg-[#333] transition duration-300"
+  } px-48 py-2 font-semibold`}
+>
+  Login
+</button>
 
 						<div data-testid="DontHave_Account" onClick={() => toogle(false)} className="text-purple-200 ml-30 cursor-pointer text-sm hover:underline mt-7">Don't Have an Account? Register</div>
 					</div>
