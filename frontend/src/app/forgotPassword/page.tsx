@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Mail, ArrowLeft, CheckCircle, Loader2 } from "lucide-react";
 import axios, { isAxiosError } from "axios";
 import toast from "react-hot-toast";
-
+import { checkEmailValidity} from "@/utils/formValidate";
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -11,8 +11,13 @@ const ForgotPassword = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+         if(!checkEmailValidity(email) || !email) { 
+		 toast.error("email is required") 
+		 return 
+		}
+
     try {
+    setIsLoading(true);
     const response = await axios.post("http://localhost:5000/api/auth/sendRestLink",{email:email}) 
     toast.success(response?.data.message) 
     } catch (err) {
@@ -25,7 +30,6 @@ const ForgotPassword = () => {
       setIsSubmitted(true);
     }, 1200);
   };
-
   const handleBack = () => {
     setIsSubmitted(false);
     setEmail("");
