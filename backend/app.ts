@@ -8,8 +8,12 @@ import AuthRouter from "./routes/auth.route";
 import OAuthRouter from "./routes/OAuth.route";
 import passport from "passport"
 import session from "express-session"
+import inviteRouter from "./routes/invite.route";
 import {configuregoogleAuth, configuregithubstrateg } from "./controllers/outh.controller";
 import Owners from "./models/Owners";
+import GloblaError from "./middlewares/error.middleware"
+ 
+  
 const app = express();
 
 type user ={
@@ -89,5 +93,9 @@ app.use("/api", AuthRouter);
 // OAuth 
 app.use("/api", OAuthRouter);
 
+// invite user 
+app.use("/api",  inviteRouter);
+
+app.use(GloblaError)
 
 export default app;
