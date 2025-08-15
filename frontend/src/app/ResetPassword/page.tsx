@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 const ResetPassword = () => {
 	const [showNew, setShowNew] = useState(false);
-	const [showConfirm, setShowConfirm] = useState(false);
+	const [showConfirm, setShowConfirm] = useState(true);
 	const [newPassword, setnewPassword] = useState("") 
 	const [confirmPassword, setconfirmPassword] = useState("")
 	const [urlParams, setUrlParams] = useState<URLSearchParams | null >(null);
@@ -16,6 +16,7 @@ const ResetPassword = () => {
 	},[])
 
 	const handelSubmit = async () => { 
+
 		if(newPassword !== confirmPassword){ 
 			toast.error("password does not match") 
 			return 
@@ -34,7 +35,7 @@ const ResetPassword = () => {
 			return;
 		}
 		try {
-			
+
 			const mainUrl = `http://localhost:5000/api/auth/ResetPassword?token=${token}&email=${email}`
 			const response = await axios.post(mainUrl,{newPassword:newPassword})
 			toast.success(response.data.message)
