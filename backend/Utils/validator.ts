@@ -101,6 +101,7 @@ export default {
   VerifyJwtToken,
   isUserAlreadyRegistered,
   isUserRoleOwnerOrUser ,
+  validateEmailAndPassword,
 isPasswordMatch
 };
 
