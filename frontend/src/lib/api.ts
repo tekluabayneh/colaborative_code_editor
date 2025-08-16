@@ -6,7 +6,7 @@ export async function verifyOtp(code: string,email:string) {
 		return response 
 	} catch (err) {
 		if(axios.isAxiosError(err)){ 
-               toast.error(err.response?.data.Message)
+               toast.error(err.response?.data.message)
 		return 
 		}
 	}
