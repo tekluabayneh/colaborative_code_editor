@@ -4,6 +4,11 @@ import Users from "../models/user";
 import Owners from "../models/Owners";
 import Jwt, { JwtPayload } from "jsonwebtoken";
 
+interface UserPayload extends JwtPayload{ 
+	email:string,
+	role:string,
+}
+
 const ResgisterValidate = async ( req: Request, res: Response, next: NextFunction) => {
 	if(!req.body.email || !req.body.password || !req.body.userName){ 
 		res.status(400).json({ message: "all input are mandatory" });
@@ -70,7 +75,8 @@ const ResetPasswordValidate =  async (req:Request, res:Response, next:NextFuncti
 }
 
 const authenticate = (req:Request, res:Response, next:NextFunction) =>{ 
-	const token = req.cookies.accessToken  
+	const token = req.cookies.accessToken
+         console.log(token)
 
 	if(!token || Array.isArray(token)){ 
 		res.status(401).json({ message: "Not authenticated" });
@@ -79,17 +85,16 @@ const authenticate = (req:Request, res:Response, next:NextFunction) =>{
 
 	try {
 
-		const decoded = Jwt.verify(token, process.env.JWT_SECRET_KEY!) as JwtPayload
-
+		const decoded = Jwt.verify(token, process.env.JWT_SECRET_KEY!) as UserPayload 
+                 console.log(decoded)
 		if(typeof decoded == "object" && decoded.email && decoded.role){ 
-			req.user = decoded 
+			req.token = {email:decoded.email,role:decoded.role} 
 			next()
-		}else{ 
-			res.status(403).json({ message: "Invalid token payload" }); 
 		}
 
 	} catch (error) {
-		res.status(403).json({ message: "Invalid or expired token" });	
+		res.clearCookie("accessToken");
+		res.status(403).json({ message: "Invalid or expired token", error });
 	} 
 
 }
