@@ -22,9 +22,11 @@ const Login = ({ toogle }: Props) => {
 
 	const SubmitFormData = async (formData: formTypeLogin) => {
 		try {
-			const response = await axios.post("http://localhost:5000/api/auth/login", formData);
+			const response = await axios.post("http://localhost:5000/api/auth/login", formData,   { withCredentials: true });
 			toast.success(response.data.message + ", now verify OTP");
+
 			await axios.post("http://localhost:5000/api/auth/sendOtp", {email:formData.email});
+
 			localStorage.setItem("email",formData.email)
 			router.push("/verifyOtp");
 		} catch (err) {
