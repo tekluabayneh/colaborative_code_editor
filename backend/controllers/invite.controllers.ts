@@ -54,46 +54,45 @@ const sendInvite = async (req:Request, res:Response) => {
 
 const acceptInvite = async (req: Request, res: Response) => {
   if (!req.body.email || !req.query.token || !req.query.role) {
-    return res.status(400).json({ message: "Email, token, and role are required" });
+    res.status(400).json({ message: "Email, token, and role are required" });
+		return
   }
 
   const { userName, email, password } = req.body;
   const role = String(req.query.role);
   const token = String(req.query.token);
 
-  // 1. Check invite token
   const checkUser = await InviteToken.findOne({ email });
   if (!checkUser) {
-    return res.status(400).json({ message: "Invite not found" });
+    res.status(400).json({ message: "Invite not found" });
+		return
   }
 
-  // 2. Verify role & email match
-  if (checkUser.role !== role || checkUser.email !== email) {
-    return res.status(403).json({ message: "Invalid invite details" });
+  if (checkUser.role !== role || checkUser.email !== email || checkUser.token !== token) {
+    res.status(403).json({ message: "Invalid invite details" });
+		return 
   }
 
-  // 3. Check expiry
-  if (checkUser.expireAt && checkUser.expireAt.getTime() < Date.now()) {
-    return res.status(410).json({ message: "Invite link expired" });
+  if (checkUser.expireAt && checkUser.expireAt < Date.now()) {
+    res.status(410).json({ message: "Invite link expired" });
+		return 
   }
 
-  // 4. Check if user already exists
   const isUserExist = await validator.isUserRoleOwnerOrUser(email);
   if (isUserExist) {
-    return res.status(409).json({ message: "User already exists" });
+    res.status(409).json({ message: "User already exists" });
+		return
   }
 
-  // 5. Validate email & password format
   const isInputValid = validator.validateEmailAndPassword(email, password);
   if (!isInputValid) {
-    return res.status(400).json({ message: "Invalid email or password" });
+    res.status(400).json({ message: "Invalid email or password" });
+		return
   }
 
   try {
-    // 6. Hash password
     const hashedPassword = HashPassword(password) 
 
-    // 7. Store new user
     const StoreUser = await Users.insertOne({
       userName,
       email,
@@ -102,17 +101,19 @@ const acceptInvite = async (req: Request, res: Response) => {
       createdAt: new Date()
     });
 
-    // 8. Cleanup invite token
     await InviteToken.deleteOne({ email });
 
-    if (StoreUser.insertedId) {
-      return res.status(201).json({ message: "Welcome! You are now a member 🎉" });
+    if (StoreUser._id){
+      res.status(201).json({ message: "Welcome! You are now a member" });
+			return 
     } else {
-      return res.status(500).json({ message: "Failed to create user" });
+      res.status(500).json({ message: "Failed to create user" });
+			return 
     }
   } catch (error) {
     console.error("AcceptInvite error:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error" });
+		return
   }
 };
 
