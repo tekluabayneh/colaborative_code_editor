@@ -61,9 +61,10 @@ const Login = async (req: Request, res: Response) => {
 
         res.cookie("accessToken", token,{ 
          httpOnly:true,
-         sameSite:"strict",
-	 secure:process.env.NODE_ENV == "production",
-         maxAge:100,
+         sameSite:"lax",
+	 secure:false,
+         maxAge:100 * 60 * 60 * 60,
+	 signed:false,
 	})
 
 	res.status(200).json({message:"user login successfully"})
@@ -71,9 +72,8 @@ const Login = async (req: Request, res: Response) => {
 }
 
 const SendOTP = async (req:Request, res:Response) => {
-	/// check if the user email exixt if not send them they should first register 
 	if(!req.body?.email){
-		res.status(400).json({message:"email is required if you want to reset your password "}) 
+		res.status(400).json({message:"email is required if you want to reset your password"}) 
 		return 
 	}
 
