@@ -15,10 +15,12 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@types/cookie-parser": "^1.4.9",
     "@types/express-session": "^1.18.2",
     "@types/nodemailer": "^6.4.17",
     "bcryptjs": "^3.0.2",
     "concurrently": "^9.2.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
