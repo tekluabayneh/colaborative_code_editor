@@ -12,6 +12,8 @@ import inviteRouter from "./routes/invite.route";
 import {configuregoogleAuth, configuregithubstrateg } from "./controllers/outh.controller";
 import Owners from "./models/Owners";
 import GloblaError from "./middlewares/error.middleware"
+import cookieParser from "cookie-parser";
+
  
   
 const app = express();
@@ -20,17 +22,16 @@ type user ={
 	_id?:number
 }
 
-// Middleware to enable cors
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:3000", 
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials:true,
   })
 );
 
 
-// session
 app.use(
   session({
     secret: "my-secret",
@@ -70,6 +71,7 @@ const findUser = await Owners.findOne({id:id})
 
 
 app.use(helmet());
+app.use(cookieParser()); 
 app.use(express.urlencoded({ extended: true }));
 const RateLimit = rateLimit({
   windowMs: 5 * 60 * 1000, 
