@@ -7,7 +7,7 @@ const {authenticate} = authenticateMiddleware
 const  inviteRouter = express.Router() 
 
 
-inviteRouter.post("/auth/invite", authenticate, authorizeRoles("Admin","Ownder"), sendInvite)
+inviteRouter.post("/auth/invite", authenticate, authorizeRoles("Admin","Owner"), sendInvite)
 
 inviteRouter.post("/auth/acceptInvite", acceptInvite)
 
