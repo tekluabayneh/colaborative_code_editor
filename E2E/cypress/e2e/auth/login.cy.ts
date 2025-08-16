@@ -40,6 +40,7 @@ describe("login test ", () => {
 
 	cy.contains("user login successfully, now verify OTP",{timeout:1000}).should("be.visible") 
 	cy.url().should("include", "verifyOtp")
+       
 });
 
 
