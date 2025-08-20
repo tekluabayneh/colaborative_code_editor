@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-const userSchema = new mongoose.Schema({
-    usrName: {
+import mongoose , {Schema }  from "mongoose";
+const userSchema:Schema = new mongoose.Schema({
+    userName: {
         type: String,
         required: true,
         trim: true
@@ -21,11 +21,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ["Editor", "Admin", "Reviewer", "Read_only"],
     },
-    OnwenersId: {
+    invitedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Onwser",
         required: true
-    }
+    },
+   createdAt:{ 
+	type:Date,
+	}
 
 })
 
