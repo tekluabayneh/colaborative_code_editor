@@ -76,7 +76,6 @@ const ResetPasswordValidate =  async (req:Request, res:Response, next:NextFuncti
 
 const authenticate = (req:Request, res:Response, next:NextFunction) =>{ 
 	const token = req.cookies.accessToken
-         console.log(token)
 
 	if(!token || Array.isArray(token)){ 
 		res.status(401).json({ message: "Not authenticated" });
@@ -86,9 +85,8 @@ const authenticate = (req:Request, res:Response, next:NextFunction) =>{
 	try {
 
 		const decoded = Jwt.verify(token, process.env.JWT_SECRET_KEY!) as UserPayload 
-                 console.log(decoded)
 		if(typeof decoded == "object" && decoded.email && decoded.role){ 
-			req.token = {email:decoded.email,role:decoded.role} 
+			req.token = {email:decoded.email, role:decoded.role} 
 			next()
 		}
 
