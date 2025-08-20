@@ -1,28 +1,31 @@
 import { Request, Response, NextFunction } from "express";
 
+const authorizeRoles = (...roles: string[]) => {
 
-const authorizeRoles = (...role:string[]) => {
-	return (req:Request ,res:Response, next:NextFunction) => {
-		try {
-				if(!req.token){ 
-			res.status(401).json({ message: "Not authenticated" });
-			return
-		}
-             console.log("log from authorizeRoles",req.token)
-		if(!role.includes(req.token.role)){
-                  console.log("problem here",req.token)
-			res.status(403).json({ message: "Forbidden: insufficient role" });
-			return
-		}
+  return (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!req.token || !req.token.role) { 
+        res.status(401).json({ message: "Not authenticated" });
+        return;
+      }
 
-		next()
-		} catch (error) { 
-		console.log(error)
-		}
+      const token = req.token;
+      console.log("log from authorizeRoles", token);
 
-	} 
-} 
+      const hasRole = roles.some(r => r.toLowerCase() === token.role.toLowerCase());
 
+      if (!hasRole) {
+        res.status(403).json({ message: "Forbidden: insufficient role" });
+        return;
+      }
 
-export default authorizeRoles 
+      next();
+    } catch (error) { 
+      res.status(500).json({ message: "internal server error", error });
+      console.log("error here ma", error);
+    }
+  };
+};
+
+export default authorizeRoles;
 
