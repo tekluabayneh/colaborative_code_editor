@@ -7,7 +7,7 @@ const GlobalError = (err: any, req: Request, res: Response, next: NextFunction) 
     res.status(statusCode).json({
         success: false,
         message,
-        ...(process.env.NODE_ENV === "development" && { stack: err.stack }) // optional
+        ...(process.env.NODE_ENV === "development" && { stack: err.stack }) 
     });
 };
 

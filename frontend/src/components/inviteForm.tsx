@@ -3,13 +3,12 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Mail, Shield, Send, CheckCircle, Sparkles, Crown, Eye } from 'lucide-react';
+import { Mail, Edit3, Shield, Send, CheckCircle, Pen, Sparkles, Crown, Eye } from 'lucide-react';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export default function InviteForm() {
-  const [formData, setFormData] = useState({
-    email: '',
-    role: 'user'
-  });
+  const [formData, setFormData] = useState({ email: '', role: 'user' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState('');
 
@@ -20,18 +19,22 @@ export default function InviteForm() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
+  try {
+      e.preventDefault();
     setIsSubmitting(true);
     setSubmittedEmail('');
-    
-    // Simulate API call to send invitation
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    console.log('Sending invitation:', formData);
+
+const response = await axios.post("http://localhost:5000/api/auth/invite", {role:formData.role, email:formData.email}, {withCredentials:true})
     setSubmittedEmail(formData.email);
-    setFormData({ email: '', role: 'user' }); // Reset form
-    setIsSubmitting(false);
+    setFormData({ email: '', role: 'user' }); 
+    toast.success(response.data.message)
+    setIsSubmitting(true);
+
+  } catch (error:any) {
+  setIsSubmitting(false);
+	toast.error(error.response.data.message)
+  }
   };
 
   const getRoleIcon = (role:string) => {
@@ -155,36 +158,54 @@ export default function InviteForm() {
                     <SelectValue placeholder="Choose access level" />
                   </div>
                 </SelectTrigger>
-                <SelectContent className="bg-gray-900 border-white/20 backdrop-blur-xl">
-                  <SelectItem value="user" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    <div className="flex items-center gap-3">
-                      <Shield className="w-4 h-4 text-blue-400" />
-                      <div>
-                        <div className="font-medium">User</div>
-                        <div className="text-xs text-gray-400">Standard access with core functionality</div>
-                      </div>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="admin" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    <div className="flex items-center gap-3">
-                      <Crown className="w-4 h-4 text-amber-400" />
-                      <div>
-                        <div className="font-medium">Admin</div>
-                        <div className="text-xs text-gray-400">Full system access and management privileges</div>
-                      </div>
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="viewer" className="text-white hover:bg-white/10 focus:bg-white/10">
-                    <div className="flex items-center gap-3">
-                      <Eye className="w-4 h-4 text-emerald-400" />
-                      <div>
-                        <div className="font-medium">Viewer</div>
-                        <div className="text-xs text-gray-400">Read-only access for observation and reporting</div>
-                      </div>
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+<SelectContent className="bg-gray-900 border-white/20 backdrop-blur-xl">
+
+  {/* Read-only */}
+  <SelectItem value="Read_only" className="text-white hover:bg-white/10 focus:bg-white/10">
+    <div className="flex items-center gap-3">
+      <Eye className="w-4 h-4 text-blue-400" />
+      <div>
+        <div className="font-medium">Read-only</div>
+        <div className="text-xs text-gray-400">Can only view content without making changes</div>
+      </div>
+    </div>
+  </SelectItem>
+
+  {/* Reviewer */}
+  <SelectItem value="Reviewer" className="text-white hover:bg-white/10 focus:bg-white/10">
+    <div className="flex items-center gap-3">
+      <Pen className="w-4 h-4 text-purple-400" />
+      <div>
+        <div className="font-medium">Reviewer</div>
+        <div className="text-xs text-gray-400">Can review and comment, but not edit directly</div>
+      </div>
+    </div>
+  </SelectItem>
+
+  {/* Editor */}
+  <SelectItem value="Editor" className="text-white hover:bg-white/10 focus:bg-white/10">
+    <div className="flex items-center gap-3">
+      <Edit3 className="w-4 h-4 text-emerald-400" />
+      <div>
+        <div className="font-medium">Editor</div>
+        <div className="text-xs text-gray-400">Can create and modify content</div>
+      </div>
+    </div>
+  </SelectItem>
+
+  {/* Admin */}
+  <SelectItem value="Admin" className="text-white hover:bg-white/10 focus:bg-white/10">
+    <div className="flex items-center gap-3">
+      <Crown className="w-4 h-4 text-amber-400" />
+      <div>
+        <div className="font-medium">Admin</div>
+        <div className="text-xs text-gray-400">Full access including system management</div>
+      </div>
+    </div>
+  </SelectItem>
+</SelectContent>
+
+                             </Select>
             </div>
 
             {/* Submit button with premium animation */}

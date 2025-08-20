@@ -15,8 +15,14 @@ const EmailVerificationPage = () => {
 	const [error, setError] = useState('');
         const [email, setEmail] = useState("") 
 
-        useEffect(() => { 
-	  setEmail(localStorage.getItem("email")!) 
+        useEffect(() => {
+		const email_from_local = localStorage.getItem("email")
+	        const email_from_url =new  URLSearchParams(window.location.search).get("email")
+	       const finalEmail = email_from_url || email_from_local
+		   if(finalEmail){ 
+		setEmail(finalEmail)
+		localStorage.setItem("email", finalEmail)
+		}
 	  },[])
 
 	const handleVerification = async () => {

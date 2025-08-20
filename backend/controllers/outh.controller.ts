@@ -1,8 +1,8 @@
 import {Strategy as googlesterategy, type Profile} from "passport-google-oauth20"
 import {Strategy as githubsterategy  } from "passport-github2"
 import { type PassportStatic } from "passport"
-import owners from "../models/Owners"
-
+import Owners from "../models/Owners"
+import {Request} from "express"
 interface usertype {
 	userName:string,
 	 email:string,
@@ -26,9 +26,10 @@ export const configuregoogleAuth = (passport:PassportStatic) => {
 		new googlesterategy( {
 			clientID:process.env.GOOGLE_CLIENTID ?? "",
 			clientSecret:process.env.GOOGLE_CLIENTSECRET ?? "",
-			callbackURL:process.env.GOOGLE_CALBACKURL, 
+			callbackURL:process.env.GOOGLE_CALBACKURL,
+			passReqToCallback:true
 		},
-			async (accesstoken:string, refrechtoken:string, profile:Profile,done:(error:any, user:any)=> void ) => { try {
+			async (req:Request, accesstoken:string, refrechtoken:string, profile:Profile,done:(error:any, user:any)=> void ) => { try {
                                    const userName = profile.name?.familyName
                                    if(!userName) return done(null, false) 
 
@@ -38,18 +39,18 @@ export const configuregoogleAuth = (passport:PassportStatic) => {
 					photo:GetPhoto(profile)
 				}
 
-				console.log(user) 
 
 				// check if user exist in db 
-				const checkqueryfromowner = await owners.find({email:user.email})
+				const checkqueryfromowner = await Owners.findOne({email:user.email})
 
 				console.log(checkqueryfromowner)
 
-				if (checkqueryfromowner) return done(null, user)
+				if (!checkqueryfromowner?._id){
+				   const userdata = await Owners.insertOne(user)
+				    if(userdata._id) return done(null, user)
+				}
 
-				const userdata = await owners.insertOne(user)
-
-				if(userdata) return done(null, user)
+					return done(null, user)
 
 
 			} catch (error) {
@@ -69,9 +70,10 @@ export const configuregithubstrateg = (passport:PassportStatic) => {
 			clientID: process.env.GITHUB_CLIENTID!,
 			clientSecret: process.env.GITHUB_CLIENTSECRET!,
 			callbackURL:process.env.GITHUB_CLLBACKURL!,
+			passReqToCallback:true,
 			scope: ["user:email"]
 		},
-			async (accesstoken:string, refrechtoken:string, profile:Profile,done:(error:any,user:any)=> void ) => {
+			async (req:Request,accesstoken:string, refrechtoken:string, profile:Profile,done:(error:any,user:any)=> void ) => {
 				try {
 					let username
 					if(!profile._json.name) return done(null, false)
@@ -83,19 +85,18 @@ export const configuregithubstrateg = (passport:PassportStatic) => {
 						photo: GetPhoto(profile)
 					};
 
-                                console.log(profile)
 
-				   console.log(user)
+			              console.log(user)
 
 					// check if the user exist
-					const checkqueryfromowner = await owners.findOne({email:user.email})
+					const checkqueryfromowner = await Owners.findOne({email:user.email})
 
-					if(checkqueryfromowner) return  done(null, user) 
+					if(!checkqueryfromowner?._id) { 
+					const userdata = await Owners.insertOne(user)
+					if(userdata._id) return  done(null, user)
+					}
 
-					const userdata = await owners.insertOne(user)
-					if(!userdata) return  done(null, null)
-					if(userdata) return done(null, user)
-
+					return  done(null, user) 
 				} catch (error) {
 					console.log("error while sign in with github")
 					done(error, null)

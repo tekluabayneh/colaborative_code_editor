@@ -20,7 +20,7 @@ const InviteSchema = new mongoose.Schema({
     required: true,
   },
   expireAt: {
-    type: Number,
+    type: Date, 
     required: true,
   },
   used: {
