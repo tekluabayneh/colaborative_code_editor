@@ -1,18 +1,27 @@
-import Link from "next/link"
+"use client"
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/input';
+import { Mail,LogIn, Send,Smile, Lock } from 'lucide-react';
 import toast from 'react-hot-toast';
+import Link from "next/link"
 import { useForm } from "react-hook-form";
 import { formTypeLogin } from "../types/form";
 import { validateFormData } from "../utils/formValidate"
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { FaGoogle ,FaGithub} from 'react-icons/fa';
+
 
 type Props = {
-	toogle: React.Dispatch<React.SetStateAction<boolean>>
+	setisLogin: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Login = ({ toogle }: Props) => {
+
+export default function Login({setisLogin}:Props) {
+         const [isSubmitting, setIsSubmitting] = useState(false);
 	const router = useRouter() 
-	const { register, handleSubmit, reset, watch, formState: { errors } } = useForm < formTypeLogin > ()
+	const { register, handleSubmit, reset, watch} = useForm < formTypeLogin > ()
 
           const passwordValue = watch("password") || "";
           const emailValue = watch("email") || "";
@@ -22,14 +31,17 @@ const Login = ({ toogle }: Props) => {
 
 	const SubmitFormData = async (formData: formTypeLogin) => {
 		try {
+			setIsSubmitting(true)
 			const response = await axios.post("http://localhost:5000/api/auth/login", formData,   { withCredentials: true });
 			toast.success(response.data.message + ", now verify OTP");
 
 			await axios.post("http://localhost:5000/api/auth/sendOtp", {email:formData.email});
 
 			localStorage.setItem("email",formData.email)
+                        setIsSubmitting(false)
 			router.push("/verifyOtp");
 		} catch (err) {
+                        setIsSubmitting(false)
 			if (axios.isAxiosError(err)) {
 				console.error(err.response);
 				toast.error(err.response?.data.message);
@@ -50,83 +62,109 @@ const Login = ({ toogle }: Props) => {
 		reset()
 	}
 
-	return (
+  return (
+    <div className="relative">
+      {/* Floating decorative elements */}
+      <div className="absolute -top-8 -right-8 w-16 h-16 bg-gradient-to-br from-violet-500/10 to-purple-600/10 rounded-2xl rotate-12 blur-lg"></div>
+      <div className="absolute -bottom-6 -left-6 w-12 h-12 bg-gradient-to-br from-blue-500/10 to-cyan-600/10 rounded-xl -rotate-12 blur-lg"></div>
+      
+      {/* Main form card */}
+      <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-2xl rounded-3xl border border-white/10 p-10 shadow-2xl">
+        <div className="space-y-8">
+          {/* Form header */}
+          <div className="text-center space-y-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-violet-500/20 to-purple-600/20 rounded-2xl border border-violet-500/30">
+              <Send className="w-4 h-4 text-violet-300" />
+              <span className="text-sm font-medium text-violet-200">You New to Here?</span>
+            </div>
 
-		<div className="w-full h-screen flex items-center justify-center relative">
-			<div className="flex flex-col w-full items-center justify-center min-h-screen bg-black">
+						<h2 className="text-3xl font-light text-white">Welcome Back</h2>
 
-
-				<div className="absolute top-3 left-5 ">
-					<h1 className="hidden md:flex text-2xl font-bold leading-none">CodeSync!</h1> </div>
-
-				<h1 className="text-3xl font-bold leading-none m-0">Welcome!</h1>
-				<p className="text-white ml-1">Login to continue to CodeSync</p>
-				<div className="flex flex-col items-center justify-center mt-4 gap-3">
-					<div className="flex items-center justify-center">
-						<button className="bg-black text-white border border-[#333] rounded cursor-pointer px-36 py-2 font-semibold hover:bg-[#333] transition duaration-300">
-							Login with Google
-						</button>
-					</div>
-					<div className="flex items-center justify-center">
-						<button className="bg-black text-white border border-[#333] rounded cursor-pointer px-36 py-2 font-semibold hover:bg-[#333] transition duaration-300">
-							Login with Github
-						</button>
-					</div>
-
-
-				</div>
-				<div className="flex items-center justify-center mt-6">
-					<span className="bg-white  w-23 mr-1 md:w-32 h-0.5"></span>
-					Or
-					<span className="bg-white  w-23 ml-1 md:w-32 h-0.5"></span>
-				</div>
-
-				<form onSubmit={handleSubmit(formSubmit)} className="p-6 m-1 rounded shadow-md w-[30rem] ">
-					<div className="mb-4">
-						<label className="block text-white text-sm font-bold mb-2" htmlFor="email">Email </label>
-						<input data-testid="testid_email_login"  {...register("email", {
-							required: "email is mandatory"
-						})} placeholder="Your email address" className="w-full p-3 mb-1 placeholder-white border-1 outline-none focus:ring-1 border-purple-200 rounded" />
-						<p className="text-red-500">{errors.email ? errors.email.message : ""}</p>
-						<div className="flex items-center justify-between">
-							<label className="block text-white mt-1 text-sm font-bold mb-2" htmlFor="password">Password</label>
-							<Link href="/forgotPassword" className="text-purple-200 text-sm hover:underline">Forgot password?</Link>
-						</div>
-
-						<input data-testid="testid_password_login"
-							{...register("password", {
-								required: "password is mandatory",
-								minLength: {
-									value: 6,
-									message: "Password must be at least 6 characters"
-								},
-								maxLength: {
-									value: 30,
-									message: "Password must be less than 20 characters"
-								},
-							})}
-							placeholder="Your password " className="w-full p-3 mb-1 placeholder-white border-1 outline-none focus:ring-1 border-purple-200 rounded" />
-						<p className="text-red-500">{errors.password ? errors.password.message : ""}</p>
-					</div>
-					<div className="mb-4">
-<button
-  disabled={passwordValue.length < 6 || emailValue.length < 10}
-  data-testid="testid_login_button"
-  className={`${
-     passwordValue.length < 6 || emailValue.length < 10 ? "cursor-not-allowed text-gray-500 bg-gray-600"
-      : "bg-black text-white border border-[#333] rounded cursor-pointer hover:bg-[#333] transition duration-300"
-  } px-48 py-2 font-semibold`}
->
-  Login
-</button>
-
-						<div data-testid="DontHave_Account" onClick={() => toogle(false)} className="text-purple-200 ml-30 cursor-pointer text-sm hover:underline mt-7">Don't Have an Account? Register</div>
-					</div>
-				</form>
+			<div className="text-gray-300 flex px-1 overflow-hidden items-center justify-center gap-20 font-light bg-gradient-to-r from-violet-500/20 to-purple-600/20 rounded-2xl border border-violet-500/30 py-2">
+                             <FaGoogle className="w-7 h-7 text-blue-500 cursor-pointer" />
+<FaGithub className="w-7 h-7 text-white cursor-pointer" />
+</div>
 
 
-			</div >
-		</div >
-	)
+
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit(formSubmit)} className="space-y-6">
+            {/* Email field with sophisticated styling */}
+            <div className="space-y-3">
+              <label htmlFor="email" className="text-sm font-medium text-gray-200 flex items-center gap-2">
+                <Mail className="w-4 h-4 text-violet-300" />
+                Email Address
+              </label>
+              <div className="relative">
+                <Input
+                  id="email"
+                  type="email"
+		 {...register("email", { required: "email is mandatory"})}
+                  placeholder="colleague@company.com"
+                  className="h-14 rounded-2xl border-white/20 bg-white/5 backdrop-blur-sm text-white placeholder:text-gray-400 focus:border-violet-400/50 focus:ring-violet-400/20 transition-all duration-300 pl-4 pr-12"
+                  required
+                />
+                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gradient-to-r from-violet-400 to-purple-400 rounded-full animate-pulse"></div>
+              </div>
+            </div>
+         <div className="space-y-3">
+              <label htmlFor="email" className="text-sm font-medium text-gray-200 flex items-center gap-2 justify-between">
+             <span className='flex gap-1'>   <Lock className="w-4 h-4 text-violet-300" /> Password 	</span>
+	<Link href="/forgotPassword" className="text-purple-200 text-sm hover:underline">Forgot password?</Link>
+  
+              </label>
+              <div className="relative">
+                <Input
+                  id="Password"
+                  type="password"
+		 {...register("password", { required: "password is mandatory"})}
+                  placeholder="............."
+                  className="h-14  placeholder:text-2xl rounded-2xl border-white/20 bg-white/5 backdrop-blur-sm text-white placeholder:text-gray-400 focus:border-violet-400/50 focus:ring-violet-400/20 transition-all duration-300 pl-4 pr-12"
+                  required
+                />
+                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gradient-to-r from-violet-400 to-purple-400 rounded-full animate-pulse"></div>
+              </div>
+            </div>
+            <Button
+	    disabled={isSubmitting || emailValue.length < 10 || passwordValue.length < 6 }
+              type="submit"
+              className={`group relative w-full h-14 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white rounded-2xl font-medium shadow-2xl hover:shadow-violet-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden`}
+            >
+              {/* Button background animation */}
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+              
+            {isSubmitting ? (
+  <div className="flex items-center gap-3">
+    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+    <span>Signing you in...</span>
+  </div>
+) : (
+  <div className="flex items-center gap-3">
+    <LogIn className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+    <span>Login</span>
+  </div>
+)}
+ 
+            </Button>
+	  <div className='flex items-center justify-center gap-2 text-gray-300'>
+							<span> Don't You Have Account Yet ? </span>
+<Smile className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" /> 
+		<span onClick={() => setisLogin(false)} className='underline cursor-pointer'>Register</span>
+		</div>
+          </form>
+
+          {/* Footer note with sophisticated styling */}
+          <div className="text-center pt-6 border-t border-white/10">
+            <p className="text-xs text-gray-400 font-light">
+     Sign in to access your account and continue where you left off
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
-export default Login;
+
+
