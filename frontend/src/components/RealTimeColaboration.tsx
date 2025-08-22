@@ -1,129 +1,157 @@
+import React from 'react';
+import { Code, Users, Zap } from 'lucide-react';
+
 const RealTimeCollaboration = () => {
   return (
-    <div className="w-full min-h-screen bg-gray-900 text-white p-8 flex items-center rounded-lg">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        {/* Left side - Text content */}
-        <div className="space-y-6">
-          <h1 className="text-4xl lg:text-5xl font-bold text-white">
-            Real-time collaboration.
-          </h1>
-          <p className="text-lg text-gray-400 leading-relaxed">
-            Edit code and see updates while collaborating with other users in real-time.
-          </p>
-        </div>
-
-        {/* Right side - Code editor mockup */}
-        <div className="bg-gray-800 rounded-lg overflow-hidden shadow-2xl">
-          {/* Header */}
-          <div className="bg-white px-4 py-3 flex items-center gap-2">
-            <div className="w-5 h-5 bg-purple-500 rounded flex items-center justify-center">
-              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
-              </svg>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 py-16 lg:py-24">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          {/* Content Section */}
+          <div className="space-y-8">
+            <div className="inline-flex items-center gap-3 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full">
+              <Zap className="w-4 h-4 text-blue-400" />
+              <span className="text-sm font-medium text-blue-300">Real-time Collaboration</span>
             </div>
-            <span className="text-gray-900 font-medium">Interview with Jon</span>
+            
+            <div className="space-y-6">
+              <h1 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent leading-tight">
+                Code together,
+                <br />
+                ship faster.
+              </h1>
+              
+              <p className="text-xl text-gray-300 leading-relaxed max-w-lg">
+                Experience seamless real-time collaboration. See changes instantly as your team codes together.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-6 pt-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <Code className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-gray-300">Live editing</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
+                  <Users className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-gray-300">Team presence</span>
+              </div>
+            </div>
           </div>
 
-          {/* Code content */}
-          <div className="bg-gray-900 p-4 font-mono text-sm">
-            <div className="flex">
-              {/* Line numbers */}
-              <div className="text-gray-500 select-none mr-4 text-right">
-                <div>1</div>
-                <div>2</div>
-                <div>3</div>
-                <div>4</div>
-                <div>5</div>
-                <div>6</div>
-                <div>7</div>
-                <div>8</div>
-                <div>9</div>
-                <div>10</div>
-                <div>11</div>
-                <div>12</div>
+          {/* Code Editor Mockup */}
+          <div className="relative">
+            <div className="bg-slate-800/80 backdrop-blur-sm rounded-2xl border border-slate-700/50 shadow-2xl overflow-hidden">
+              {/* Editor Header */}
+              <div className="bg-slate-700/50 px-6 py-4 border-b border-slate-600/50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex gap-1.5">
+                      <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+                      <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                      <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                    </div>
+                    <span className="text-sm text-gray-300 font-medium">App.jsx</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex -space-x-2">
+                      <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full border-2 border-slate-800 flex items-center justify-center">
+                        <span className="text-xs font-bold text-white">J</span>
+                      </div>
+                      <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full border-2 border-slate-800 flex items-center justify-center">
+                        <span className="text-xs font-bold text-white">S</span>
+                      </div>
+                    </div>
+                    <span className="text-xs text-gray-400">2 online</span>
+                  </div>
+                </div>
               </div>
 
-              {/* Code */}
-              <div className="flex-1 relative">
-                <div>
-                  <span className="text-purple-400">import</span>
-                  <span className="text-white"> {"("} </span>
-                  <span className="text-green-400">useState</span>
-                  <span className="text-white"> {")"} </span>
-                  <span className="text-purple-400">from</span>
-                  <span className="text-orange-400"> "react"</span>
-                  <span className="text-white">;</span>
-                </div>
-                
-                <div className="mt-1"></div>
-                
-                <div>
-                  <span className="text-purple-400">export</span>
-                  <span className="text-white"> </span>
-                  <span className="text-purple-400">default</span>
-                  <span className="text-white"> </span>
-                  <span className="text-purple-400">function</span>
-                  <span className="text-white"> </span>
-                  <span className="text-yellow-400">MyApp</span>
-                  <span className="text-white">{"()"} {"{"}</span>
-                </div>
-                
-                <div className="ml-4 mt-1">
-                  <span className="text-purple-400">return</span>
-                  <span className="text-white"> {"("}</span>
-                </div>
-                
-                <div className="ml-8 mt-1">
-                  <span className="text-white">{"<"}</span>
-                  <span className="text-red-400">div</span>
-                  <span className="text-white">{">"}</span>
-                </div>
-                
-                <div className="ml-12 mt-1 flex items-center">
-                  <span className="text-white">{"<"}</span>
-                  <span className="text-red-400">h1</span>
-                  <span className="text-white">{">"}</span>
-                  <span className="text-white">Counter: </span>
-                  <span className="bg-pink-500 text-white px-1 rounded text-xs relative">
-                    Sophie
-                  </span>
-                  <span className="text-white">update separately{"</"}</span>
-                  <span className="text-red-400">h1</span>
-                  <span className="text-white">{">"}</span>
-                </div>
-                
-                <div className="ml-12 mt-1">
-                  <span className="text-white">{"<"}</span>
-                  <span className="text-red-400">MyButton</span>
-                  <span className="text-white"> {"/>"}</span>
-                </div>
-                
-                <div className="ml-12 mt-1">
-                  <span className="text-white">{"<"}</span>
-                  <span className="text-red-400">MyButton</span>
-                  <span className="text-white"> {"/>"}</span>
-                </div>
-                
-                <div className="ml-8 mt-1">
-                  <span className="text-white">{"</"}</span>
-                  <span className="text-red-400">div</span>
-                  <span className="text-white">{">"}</span>
-                </div>
-                
-                <div className="ml-4 mt-1">
-                  <span className="text-white">{");"}</span>
-                </div>
-                
-                <div className="mt-1">
-                  <span className="text-white">{"}"}</span>
+              {/* Code Content */}
+              <div className="bg-slate-900/80 p-6 font-mono text-sm relative">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-4">
+                    <span className="text-gray-500 w-6 text-right">1</span>
+                    <span className="text-purple-400">import</span>
+                    <span className="text-gray-300">React from</span>
+                    <span className="text-green-400">'react'</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-4">
+                    <span className="text-gray-500 w-6 text-right">2</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-4">
+                    <span className="text-gray-500 w-6 text-right">3</span>
+                    <span className="text-purple-400">function</span>
+                    <span className="text-yellow-300">App</span>
+                    <span className="text-gray-300">() {'{'}</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-4">
+                    <span className="text-gray-500 w-6 text-right">4</span>
+                    <span className="ml-4 text-purple-400">return</span>
+                    <span className="text-gray-300">(</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-4 relative">
+                    <span className="text-gray-500 w-6 text-right">5</span>
+                    <span className="ml-8 text-gray-300">&lt;</span>
+                    <span className="text-red-400">div</span>
+                    <span className="text-blue-400">className</span>
+                    <span className="text-gray-300">=</span>
+                    <span className="text-green-400">"app"</span>
+                    <span className="text-gray-300">&gt;</span>
+                    <div className="absolute -top-1 right-0 bg-blue-500 text-white px-2 py-1 rounded text-xs animate-pulse">
+                      Jon editing
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-4">
+                    <span className="text-gray-500 w-6 text-right">6</span>
+                    <span className="ml-12 text-gray-300">&lt;</span>
+                    <span className="text-red-400">h1</span>
+                    <span className="text-gray-300">&gt;</span>
+                    <span className="bg-purple-500/20 border border-purple-500/40 px-1 rounded">
+                      <span className="text-gray-300">Collaborative</span>
+                    </span>
+                    <span className="text-gray-300"> App&lt;</span>
+                    <span className="text-red-400">h1</span>
+                    <span className="text-gray-300">&gt;</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-4">
+                    <span className="text-gray-500 w-6 text-right">7</span>
+                    <span className="ml-8 text-gray-300">&lt;</span>
+                    <span className="text-red-400">div</span>
+                    <span className="text-gray-300">&gt;</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-4">
+                    <span className="text-gray-500 w-6 text-right">8</span>
+                    <span className="ml-4 text-gray-300">)</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-4">
+                    <span className="text-gray-500 w-6 text-right">9</span>
+                    <span className="text-gray-300">{'}'}</span>
+                  </div>
                 </div>
 
-                {/* Jon's cursor indicator */}
-                <div className="absolute top-0 left-0 bg-green-500 text-white px-1 rounded text-xs">
-                  Jon
+                {/* Cursor indicators */}
+                <div className="absolute top-20 right-8">
+                  <div className="bg-purple-500 text-white px-2 py-1 rounded-full text-xs font-medium animate-bounce">
+                    Sophie
+                  </div>
                 </div>
               </div>
             </div>
+
+            {/* Decorative elements */}
+            <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-xl"></div>
+            <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-xl"></div>
           </div>
         </div>
       </div>
