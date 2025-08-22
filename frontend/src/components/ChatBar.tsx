@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Users, Minimize2, MessageCircle } from 'lucide-react';
+import { Send,X, Users} from 'lucide-react';
 
 interface Message {
   id: string;
@@ -17,8 +17,7 @@ interface User {
   isOnline: boolean;
 }
 
-export const ChatSidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
+export const ChatSidebar = ({setIsChatOpen}) => {
   const [messageText, setMessageText] = useState('');
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -61,6 +60,7 @@ export const ChatSidebar = () => {
     scrollToBottom();
   }, [messages]);
 
+
   const handleSendMessage = () => {
     if (messageText.trim()) {
       const newMessage: Message = {
@@ -90,48 +90,14 @@ export const ChatSidebar = () => {
     });
   };
 
-  if (isCollapsed) {
-    return (
-      <div className="h-full absolute top-0 right-0 w-12 bg-gray-900 border-r border-gray-700 flex flex-col items-center py-4">
-        <button
-          onClick={() => setIsCollapsed(false)}
-          className="p-2 rounded-md hover:bg-gray-800 transition-colors"
-        >
-          <MessageCircle className="w-5 h-5 text-gray-400" />
-        </button>
-        <div className="mt-4 space-y-2">
-          {onlineUsers.filter(u => u.isOnline).map((user) => (
-            <div
-              key={user.id}
-              className="w-8 h-8 rounded-full bg-blue-600 text-white text-xs font-medium flex items-center justify-center relative"
-            >
-              {user.avatar}
-              {user.isOnline && (
-                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-gray-900 rounded-full"></div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="h-full w-80 bg-gray-900 border-r border-gray-700 flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-700">
-        <div className="flex items-center space-x-2">
-          <MessageCircle className="w-5 h-5 text-blue-500" />
-          <h2 className="text-sm font-semibold text-white">Team Chat</h2>
-        </div>
-        <button
-          onClick={() => setIsCollapsed(true)}
-          className="p-1 rounded hover:bg-gray-800 transition-colors"
-        >
-          <Minimize2 className="w-4 h-4 text-gray-400" />
-        </button>
-      </div>
-
+            <div className="flex items-center justify-between p-4 border-b border-gray-700">
+              <button onClick={() => setIsChatOpen(false)} className="p-2 cursor-pointer hover:bg-gray-800 rounded-lg transition-colors" >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
       {/* Online Users */}
       <div className="p-3 border-b border-gray-700">
         <div className="flex items-center space-x-2 mb-2">
