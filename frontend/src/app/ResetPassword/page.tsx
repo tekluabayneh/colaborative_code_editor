@@ -52,7 +52,8 @@ const ResetPassword = () => {
 
 	return (
 		<>
-			<div className="dark">
+			<div className="bg-white/10">
+				
 				<div className="relative min-h-screen bg-background text-foreground overflow-hidden">
 					<div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-primary/10 via-background to-background" />
 					<div className="pointer-events-none absolute -top-40 -left-40 h-[32rem] w-[32rem] rounded-full bg-primary/20 blur-3xl opacity-40" />
@@ -62,7 +63,7 @@ const ResetPassword = () => {
 						<div className="relative w-full max-w-md">
 							<div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-br from-primary/25 via-accent/15 to-muted/15 blur-2xl opacity-70 motion-safe:animate-pulse" />
 
-							<div className="relative rounded-2xl border border-border/40 bg-card/10 backdrop-blur-2xl shadow-2xl shadow-primary/10 p-8 transition-transform duration-300 hover:scale-[1.01]">
+							<div className="relative rounded-2xl border border-white/40 bg-card/10 backdrop-blur-2xl shadow-2xl shadow-primary/10 p-8 transition-transform duration-300 hover:scale-[1.01]">
 								<div className="space-y-8">
 									<div className="space-y-2 text-center">
 										<div role="heading" aria-level={1} className="text-2xl font-semibold tracking-tight">
