@@ -99,7 +99,7 @@ export default function Register({setisLogin}:Props) {
 						required: "userName is mandatory",
 					})}
 
-                  placeholder="colleague@company.com"
+                  placeholder="Jone"
                   className="h-14 rounded-2xl border-white/20 bg-white/5 backdrop-blur-sm text-white placeholder:text-gray-400 focus:border-violet-400/50 focus:ring-violet-400/20 transition-all duration-300 pl-4 pr-12"
                   required
                 />
