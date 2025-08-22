@@ -1,30 +1,24 @@
 
 export const faqItems = [
     {
-      question: "What can I use Codefile for?",
-      answer: "Codefile can be used for sharing code snippets, collaborating on programming projects, getting code reviews, and storing your code securely in the cloud."
+        question: "What is CodeSync?",
+        answer: "CodeSync is a platform that provides ready-made AI copilots and collaboration tools like comments and multiplayer editing, designed to be easily integrated into your existing products. It helps you enhance user engagement and accelerate your business growth."
     },
     {
-      question: "How long does a file last?",
-      answer: "Files are stored permanently unless you choose to delete them. We provide reliable cloud storage to ensure your code is always accessible."
+        question: "How do I integrate CodeSync into my application?",
+        answer: "Integration is simple. We provide a comprehensive set of APIs and SDKs that you can use to embed our features. Our detailed documentation will guide you through every step of the process, from setup to full implementation."
     },
     {
-      question: "How can I delete a file?",
-      answer: "You can delete a file by clicking on the delete button in your file manager or using the delete option in the file menu."
+        question: "What programming languages and frameworks are supported?",
+        answer: "Our tools are framework-agnostic and can be integrated into any web application, regardless of the technology stack. We have dedicated guides for popular frameworks like React, Vue, and Angular, but the core functionality works anywhere you can run JavaScript."
     },
     {
-      question: "How can I compile or run the code?",
-      answer: "Our platform provides built-in compilation and execution environment for multiple programming languages. Simply click the run button in the editor."
+        question: "Is there a free trial available?",
+        answer: "Yes! You can start for free to explore our core features and see how CodeSync can benefit your product. Our free tier is generous and allows for full integration on a smaller scale. You can upgrade at any time to unlock more features and higher usage limits."
     },
     {
-      question: "Can anyone see a file I created?",
-      answer: "By default, your files are private. You can choose to make them public or share them with specific collaborators using our sharing features."
-    },
-    {
-      question: "Can I prevent a file of being modified by other people?",
-      answer: "Yes, you have full control over permissions. You can set files to read-only for collaborators or restrict editing access entirely."
+        question: "Can I customize the look and feel of the components?",
+        answer: "Absolutely. All our components are designed to be highly customizable. You can style them using CSS to match your product's branding perfectly. We provide base styles that you can easily override."
     }
-  ];
-
-
+];
 
