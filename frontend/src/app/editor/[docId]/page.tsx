@@ -4,7 +4,6 @@ import React,{useState} from "react";
 import { ChatSidebar } from "@/components/ChatBar";
 import CodeEditor from  "../../../components/Editor"
 import FileSystem from "@/components/FileSystem";
-import { Toaster } from "react-hot-toast";
 import NameInputModal from "../../../components/ui/CreateFolderModal" 
 import { useFileSystem } from "@/context/FileTreeContext";
 import { FilePlus, FolderPlus, Menu, X } from 'lucide-react';
@@ -15,17 +14,7 @@ const Home = () => {
 
   return (
     <div className="w-full h-screen bg-gray-950 text-gray-100 flex relative overflow-hidden">
-      <Toaster 
-        position="top-right"
-        toastOptions={{
-          style: {
-            background: '#1f2937',
-            color: '#f9fafb',
-            border: '1px solid #374151'
-          }
-        }}
-      />
-      
+     
       {/* File System Overlay - Mobile/Tablet */}
       {isFileSystemOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
@@ -38,7 +27,7 @@ const Home = () => {
               <h2 className="text-lg font-semibold text-gray-100">Explorer</h2>
               <button
                 onClick={() => setIsFileSystemOpen(false)}
-                className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                className="p-2 hover:bg-gray-800 rounded-lg cursor-pointer transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -121,7 +110,7 @@ const Home = () => {
           </div>
           <button
             onClick={() => setIsChatOpen(!isChatOpen)}
-            className="xl:hidden px-3 py-1.5 bg-blue-500/10 cursor-pointer hover:bg-blue-500/20 text-blue-400 rounded-lg transition-colors text-sm font-medium"
+            className="xl px-3 py-1.5 bg-blue-500/10 cursor-pointer hover:bg-blue-500/20 text-blue-400 rounded-lg transition-colors text-sm font-medium"
           >
             Chat {isChatOpen ? 'Hide' : 'Show'}
           </button>
@@ -135,7 +124,7 @@ const Home = () => {
 
       {/* Chat Sidebar - Mobile Overlay */}
       {isChatOpen && (
-        <div className="fixed inset-0 z-40 xl:hidden">
+        <div className="fixed inset-0 z-40 ">
           <div className="absolute inset-0 " onClick={() => setIsChatOpen(false)} />
           <div className="absolute right-0 top-0 h-full w-80 border-l border-gray-700 shadow-2xl">
          
@@ -145,17 +134,6 @@ const Home = () => {
           </div>
         </div>
       )}
-
-      {/* Chat Sidebar - Desktop */}
-      <div className="hidden xl:flex xl:w-80 border-l border-gray-700 flex-col">
-        <div className="flex items-center justify-between p-4 border-b border-gray-700">
-          <h2 className="text-lg font-semibold text-gray-100">chat with collegue</h2>
-        </div>
-        <div className="flex-1 overflow-hidden">
-          <ChatSidebar />
-        </div>
-      </div>
-
       {/* Create Modal */}
       {isModabolen && <NameInputModal />}
     </div>
