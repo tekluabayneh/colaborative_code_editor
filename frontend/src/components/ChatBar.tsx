@@ -93,7 +93,7 @@ export const ChatSidebar = ({setIsChatOpen}) => {
 
   return (
     <div className="h-full w-80 bg-gray-900 border-r border-gray-700 flex flex-col">
-            <div className="flex items-center justify-between p-4 border-b border-gray-700">
+            <div className="flex items-center justify-between z-10 p-4 border-b border-gray-700">
               <button onClick={() => setIsChatOpen(false)} className="p-2 cursor-pointer hover:bg-gray-800 rounded-lg transition-colors" >
                 <X className="w-5 h-5" />
               </button>
