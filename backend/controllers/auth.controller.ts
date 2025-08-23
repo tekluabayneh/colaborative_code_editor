@@ -135,6 +135,8 @@ const verifyOtp = async (req:Request, res:Response) => {
 			res.status(400).json({message:"no OTP found for this email"}) 
 			return 
 		}
+
+		await OtpModel.deleteOne({email})
 		res.status(200).json({message:"OTP verifyed successfully"}) 
 
 	} catch (err) {
