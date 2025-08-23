@@ -1,19 +1,19 @@
-// models/Content.js
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
+import mongoose, { Schema, Document, Types } from "mongoose";
 
-const DocumentSchema= new Schema({
-	_id: {
-		type: Schema.Types.ObjectId, // this should be same id as the folder/file id
-		required: true 
-	}, 
-	content: { 
-		type: String, 
-		required: true },
-	owner: {
-		type: Schema.Types.ObjectId, 
-		ref: "User", 
-		required: true } 
-}, { timestamps: true });
+interface IDocument extends Document {
+  content: string;
+  language?: string;
+  ownerType: "User" | "Owner";            
+  ownerId: Types.ObjectId;                // who owns this content
+}
 
-export const Document = mongoose.model("Documents", DocumentSchema);
+const DocumentSchema: Schema<IDocument> = new Schema({
+  content: { type: String, required: true },
+  language: { type: String, required:true, default: "plaintext" },
+  ownerType: { type: String, required: true, enum: ["User", "Owner"] },
+  ownerId: { type: Schema.Types.ObjectId, required: true, refPath: "ownerType" },
+});
+
+const Document = mongoose.model("Document", DocumentSchema);
+export default Document;
+
