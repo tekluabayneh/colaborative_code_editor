@@ -20,15 +20,14 @@ const ForgotPassword = () => {
     setIsLoading(true);
     const response = await axios.post("http://localhost:5000/api/auth/sendRestLink",{email:email}) 
     toast.success(response?.data.message) 
+      setIsSubmitted(true);
+      setIsLoading(false);
     } catch (err) {
       if(isAxiosError(err)){ 
        toast.error(err.response?.data.message) 
-    } }
-
-    setTimeout(() => {
       setIsLoading(false);
-      setIsSubmitted(true);
-    }, 1200);
+      setIsSubmitted(false);
+    } }
   };
   const handleBack = () => {
     setIsSubmitted(false);
