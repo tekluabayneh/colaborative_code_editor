@@ -61,6 +61,17 @@ export default function Login({setisLogin}:Props) {
 		SubmitFormData(data)
 		reset()
 	}
+     
+   const GoogleOAuth  = async () => { 
+       window.location.href = "http://localhost:5000/api/github"
+	} 
+
+   const GighutOAuth  = async () => { 
+       window.location.href = "http://localhost:5000/api/github"
+
+	} 
+
+
 
   return (
     <div className="relative">
@@ -79,10 +90,12 @@ export default function Login({setisLogin}:Props) {
             </div>
 
 						<h2 className="text-3xl font-light text-white">Welcome Back</h2>
+<div className="text-gray-300 flex px-1 overflow-hidden items-center justify-center gap-20 font-light bg-gradient-to-r from-violet-500/20 to-purple-600/20 rounded-2xl border border-violet-500/30 py-2">
+                             <FaGoogle  onClick={() => GoogleOAuth()} className="w-7 h-7 text-blue-500 cursor-pointer" />
 
-			<div className="text-gray-300 flex px-1 overflow-hidden items-center justify-center gap-20 font-light bg-gradient-to-r from-violet-500/20 to-purple-600/20 rounded-2xl border border-violet-500/30 py-2">
-                             <FaGoogle className="w-7 h-7 text-blue-500 cursor-pointer" />
-<FaGithub className="w-7 h-7 text-white cursor-pointer" />
+
+                            <FaGithub onClick={() => GighutOAuth() } className="w-7 h-7 text-white cursor-pointer" />
+
 </div>
 
 
