@@ -33,15 +33,16 @@ const FAQ = () => {
                 {faqItems.map((item, index) => (
                     <div 
                         key={index} 
-                        className="bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm transition-all duration-300 hover:bg-white/10"
-                    >
+                        className="bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm transition-all duration-300 hover:bg-white/10" >
                         <button
                             onClick={() => toggleItem(index)}
+			    data-testid={`testid_${index}`}
                             className="w-full py-5 px-6 flex justify-between items-center text-left gap-4"
                         >
                             <span className="text-lg font-medium text-white">{item.question}</span>
                             <div className="w-7 h-7 flex-shrink-0 flex items-center justify-center bg-white/10 rounded-full">
                                 <Plus 
+				   data-testid={`plus_btn_${index}`}
                                     className={`w-5 h-5 text-gray-300 transition-transform cursor-pointer duration-300 ${
                                         openItems.includes(index) ? 'rotate-45' : 'rotate-0'
                                     }`} 
@@ -49,13 +50,13 @@ const FAQ = () => {
                             </div>
                         </button>
 
-                        <div
+                        <div data-testid={`indicator_${index}`}
                             style={{
                                 display: 'grid',
                                 gridTemplateRows: openItems.includes(index) ? '1fr' : '0fr',
                                 transition: 'grid-template-rows 0.5s ease-in-out'
-                            }}
-                        >
+                            }}>
+
                             <div className="overflow-hidden">
                                 <div className="px-6 pb-5 pt-2">
                                     <p className="text-gray-400 leading-relaxed">{item.answer}</p>
