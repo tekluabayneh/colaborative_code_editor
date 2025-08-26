@@ -1,0 +1,1642 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`check if the landing page is rendeinng the component propely check if component are render 1`] = `
+<div>
+  <div
+    class="z-10 relative min-h-screen bg-black text-white"
+  >
+    <div
+      class="fixed -z-10 inset-0 bg-gradient-to-br from-purple-900/20 via-black to-pink-900/20"
+    />
+    <div
+      class="fixed -z-10 inset-0 bg-gradient-to-tr from-black via-transparent to-purple-800/10"
+    />
+    <div
+      class="fixed -z-10 top-0 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl"
+    />
+    <div
+      class="fixed -z-10 bottom-0 right-1/4 w-96 h-96 bg-pink-600/10 rounded-full blur-3xl"
+    />
+    <div
+      class="z-50"
+    >
+      <header
+        class="sticky top-0 mb-5 z-50 backdrop-blur-lg bg-black/50 border-b border-white/10"
+      >
+        <div
+          class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        >
+          <div
+            class="flex justify-between items-center h-20"
+          >
+            <div
+              class="flex-shrink-0"
+            >
+              <a
+                class="flex items-center space-x-2"
+                href="/"
+              >
+                <div
+                  class="w-8 h-8 flex items-center justify-center rounded-lg bg-gradient-to-r from-purple-600 to-pink-600"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="lucide lucide-code w-5 h-5 text-white"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m16 18 6-6-6-6"
+                    />
+                    <path
+                      d="m8 6-6 6 6 6"
+                    />
+                  </svg>
+                </div>
+                <span
+                  class="text-white font-semibold text-2xl"
+                >
+                  CodeSync
+                </span>
+              </a>
+            </div>
+            <nav
+              class="hidden md:flex items-center space-x-4"
+            >
+              <a
+                href="/product"
+              >
+                Product
+              </a>
+              <a
+                href="/resources"
+              >
+                Resources
+              </a>
+              <a
+                href="/DocDashboard"
+              >
+                Docs
+              </a>
+            </nav>
+            <div
+              class="hidden md:block"
+            >
+              <a
+                href="/Auth"
+              >
+                <button
+                  class="group cursor-pointer relative inline-flex items-center justify-center px-6 py-2.5 overflow-hidden font-semibold text-white rounded-lg bg-gray-900/80 transition-all duration-300 hover:bg-gray-900 shadow-md hover:shadow-lg hover:shadow-purple-500/20"
+                >
+                  <div
+                    class="absolute top-0 right-full w-full h-full bg-gradient-to-r from-purple-600 to-pink-600 transform group-hover:translate-x-full transition-transform duration-500"
+                  />
+                  <span
+                    class="relative"
+                  >
+                    Sign In
+                  </span>
+                </button>
+              </a>
+            </div>
+            <div
+              class="md:hidden flex items-center"
+            >
+              <button
+                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-menu h-6 w-6"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M4 12h16"
+                  />
+                  <path
+                    d="M4 18h16"
+                  />
+                  <path
+                    d="M4 6h16"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+    <main
+      class="max-w-7xl mx-auto px-2 sm:px-3 z-50"
+    >
+      <div
+        class="flex justify-center mb-12"
+      >
+        <div
+          class="flex items-center space-x-2 text-sm text-gray-400"
+        >
+          <span>
+            New
+          </span>
+          <span
+            class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
+          >
+            CodeSync 0.1 is here
+          </span>
+          <span>
+            →
+          </span>
+        </div>
+      </div>
+      <div
+        class="text-center mb-8"
+      >
+        <h1
+          class="text-5xl md:text-7xl font-bold mb-6 leading-tight"
+        >
+          Ready-made AI copilots and
+          <br />
+          collaboration for your product
+        </h1>
+        <p
+          class="text-xl text-gray-400 max-w-3xl mx-auto mb-12 leading-relaxed"
+        >
+          CodeSync gives you ready-made features like AI Copilots, Comments, and
+           
+          <span
+            class="text-purple-400"
+          >
+            Multiplayer Editing
+          </span>
+           to make your product more engaging and grow your business.
+        </p>
+        <div
+          class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-24"
+        >
+          <button
+            class="group relative overflow-hidden bg-white text-black px-10 py-4 rounded-xl font-semibold text-lg hover:scale-105 transition-all duration-300 shadow-2xl shadow-white/20"
+          >
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-gray-100 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            />
+            <a
+              class="relative z-10"
+              href="/Auth"
+            >
+              Register Now
+            </a>
+          </button>
+          <button
+            class="group relative overflow-hidden border-2 border-white/20 text-white px-10 py-4 rounded-xl font-semibold text-lg hover:border-white/40 transition-all duration-300 bg-white/5 backdrop-blur-sm"
+          >
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            />
+            <a
+              class="relative z-10 flex items-center space-x-3"
+              href="/Auth"
+            >
+              <span>
+                Start today for free
+              </span>
+              <span
+                class="group-hover:translate-x-1 transition-transform duration-300 text-purple-400"
+              >
+                →
+              </span>
+            </a>
+          </button>
+        </div>
+      </div>
+      <div
+        class="flex justify-center mb-16 z-10"
+      >
+        <div
+          class="relative"
+        >
+          <div
+            class="backdrop-blur-md bg-white/10 border border-white/20 rounded-xl px-8 py-4 shadow-lg"
+          >
+            <h1
+              class="text-4xl font-extrabold bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]"
+            >
+              Next-Gen Monaco Editor — Supercharged with AI
+            </h1>
+          </div>
+        </div>
+      </div>
+      <div
+        class="HeroCarousel-content p-10 px-2 flex items-center rounded-md  w-full min-h-screen relative overflow-hidden"
+        style="background: radial-gradient(141.53% 114.68% at 87.46% 55.27%, #9A7CFF 36.75%, rgba(14, 10, 162, 0) 100%);"
+      >
+        <div
+          class="absolute top-0 left-0 w-full h-32 pointer-events-none bg-gradient-to-b from-[#9A7CFF]/50 to-transparent blur-2xl"
+        />
+        <div
+          class="absolute bottom-0 left-0 w-full h-32 pointer-events-none bg-gradient-to-t from-[#9A7CFF]/50 to-transparent blur-2xl"
+        />
+        <div
+          class="relative  w-full h-full p-4 bg-white/15 border border-solid border-[#8c93fb] border-r-0 border-b-0 rounded-lg shadow-[0_0_40px_rgba(154,124,255,0.6)]"
+        >
+          <img
+            alt="image of CodeSync preview"
+            class="w-full md:h-screen md:object-contain md:object-fill rounded-lg"
+            data-nimg="1"
+            decoding="async"
+            height="40"
+            loading="lazy"
+            src="/_next/image?url=%2Fimg.jpg&w=96&q=75"
+            srcset="/_next/image?url=%2Fimg.jpg&w=48&q=75 1x, /_next/image?url=%2Fimg.jpg&w=96&q=75 2x"
+            style="color: transparent;"
+            width="40"
+          />
+        </div>
+      </div>
+      <div
+        class="flex justify-center mb-20 mt-4"
+      >
+        <div
+          class="backdrop-blur-sm bg-white/5 border border-white/10 rounded-full p-2 flex items-center gap-2"
+        >
+          <button
+            class="px-8 py-3 rounded-full font-medium transition-all duration-300 cursor-pointer text-gray-300 hover:text-white hover:bg-white/10"
+          >
+            Code Editor
+          </button>
+          <button
+            class="px-8 py-3 rounded-full font-medium transition-all duration-300 cursor-pointer bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-600/30"
+          >
+            Custom Editor
+          </button>
+        </div>
+      </div>
+      <section
+        class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8"
+      >
+        <div
+          class="text-center mb-16"
+        >
+          <div
+            class="inline-flex items-center justify-center gap-3 mb-4"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-circle-question-mark w-8 h-8 text-purple-400"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"
+              />
+              <path
+                d="M12 17h.01"
+              />
+            </svg>
+            <h2
+              class="text-4xl md:text-5xl font-extrabold text-white"
+            >
+              Frequently Asked Questions
+            </h2>
+          </div>
+          <p
+            class="text-lg text-gray-400"
+          >
+            Have questions? We have answers. If you can't find what you're looking for, feel free to
+             
+            <a
+              class="font-medium bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent hover:brightness-125 transition"
+              href="#"
+            >
+              contact us
+            </a>
+            .
+          </p>
+        </div>
+        <div
+          class="space-y-4"
+        >
+          <div
+            class="bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm transition-all duration-300 hover:bg-white/10"
+          >
+            <button
+              class="w-full py-5 px-6 flex justify-between items-center text-left gap-4"
+            >
+              <span
+                class="text-lg font-medium text-white"
+              >
+                What is CodeSync?
+              </span>
+              <div
+                class="w-7 h-7 flex-shrink-0 flex items-center justify-center bg-white/10 rounded-full"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-plus w-5 h-5 text-gray-300 transition-transform cursor-pointer duration-300 rotate-45"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 12h14"
+                  />
+                  <path
+                    d="M12 5v14"
+                  />
+                </svg>
+              </div>
+            </button>
+            <div
+              style="display: grid; grid-template-rows: 1fr; transition: grid-template-rows 0.5s ease-in-out;"
+            >
+              <div
+                class="overflow-hidden"
+              >
+                <div
+                  class="px-6 pb-5 pt-2"
+                >
+                  <p
+                    class="text-gray-400 leading-relaxed"
+                  >
+                    CodeSync is a platform that provides ready-made AI copilots and collaboration tools like comments and multiplayer editing, designed to be easily integrated into your existing products. It helps you enhance user engagement and accelerate your business growth.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm transition-all duration-300 hover:bg-white/10"
+          >
+            <button
+              class="w-full py-5 px-6 flex justify-between items-center text-left gap-4"
+            >
+              <span
+                class="text-lg font-medium text-white"
+              >
+                How do I integrate CodeSync into my application?
+              </span>
+              <div
+                class="w-7 h-7 flex-shrink-0 flex items-center justify-center bg-white/10 rounded-full"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-plus w-5 h-5 text-gray-300 transition-transform cursor-pointer duration-300 rotate-0"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 12h14"
+                  />
+                  <path
+                    d="M12 5v14"
+                  />
+                </svg>
+              </div>
+            </button>
+            <div
+              style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.5s ease-in-out;"
+            >
+              <div
+                class="overflow-hidden"
+              >
+                <div
+                  class="px-6 pb-5 pt-2"
+                >
+                  <p
+                    class="text-gray-400 leading-relaxed"
+                  >
+                    Integration is simple. We provide a comprehensive set of APIs and SDKs that you can use to embed our features. Our detailed documentation will guide you through every step of the process, from setup to full implementation.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm transition-all duration-300 hover:bg-white/10"
+          >
+            <button
+              class="w-full py-5 px-6 flex justify-between items-center text-left gap-4"
+            >
+              <span
+                class="text-lg font-medium text-white"
+              >
+                What programming languages and frameworks are supported?
+              </span>
+              <div
+                class="w-7 h-7 flex-shrink-0 flex items-center justify-center bg-white/10 rounded-full"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-plus w-5 h-5 text-gray-300 transition-transform cursor-pointer duration-300 rotate-0"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 12h14"
+                  />
+                  <path
+                    d="M12 5v14"
+                  />
+                </svg>
+              </div>
+            </button>
+            <div
+              style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.5s ease-in-out;"
+            >
+              <div
+                class="overflow-hidden"
+              >
+                <div
+                  class="px-6 pb-5 pt-2"
+                >
+                  <p
+                    class="text-gray-400 leading-relaxed"
+                  >
+                    Our tools are framework-agnostic and can be integrated into any web application, regardless of the technology stack. We have dedicated guides for popular frameworks like React, Vue, and Angular, but the core functionality works anywhere you can run JavaScript.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm transition-all duration-300 hover:bg-white/10"
+          >
+            <button
+              class="w-full py-5 px-6 flex justify-between items-center text-left gap-4"
+            >
+              <span
+                class="text-lg font-medium text-white"
+              >
+                Is there a free trial available?
+              </span>
+              <div
+                class="w-7 h-7 flex-shrink-0 flex items-center justify-center bg-white/10 rounded-full"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-plus w-5 h-5 text-gray-300 transition-transform cursor-pointer duration-300 rotate-0"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 12h14"
+                  />
+                  <path
+                    d="M12 5v14"
+                  />
+                </svg>
+              </div>
+            </button>
+            <div
+              style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.5s ease-in-out;"
+            >
+              <div
+                class="overflow-hidden"
+              >
+                <div
+                  class="px-6 pb-5 pt-2"
+                >
+                  <p
+                    class="text-gray-400 leading-relaxed"
+                  >
+                    Yes! You can start for free to explore our core features and see how CodeSync can benefit your product. Our free tier is generous and allows for full integration on a smaller scale. You can upgrade at any time to unlock more features and higher usage limits.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="bg-white/5 border border-white/10 rounded-xl backdrop-blur-sm transition-all duration-300 hover:bg-white/10"
+          >
+            <button
+              class="w-full py-5 px-6 flex justify-between items-center text-left gap-4"
+            >
+              <span
+                class="text-lg font-medium text-white"
+              >
+                Can I customize the look and feel of the components?
+              </span>
+              <div
+                class="w-7 h-7 flex-shrink-0 flex items-center justify-center bg-white/10 rounded-full"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-plus w-5 h-5 text-gray-300 transition-transform cursor-pointer duration-300 rotate-0"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 12h14"
+                  />
+                  <path
+                    d="M12 5v14"
+                  />
+                </svg>
+              </div>
+            </button>
+            <div
+              style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.5s ease-in-out;"
+            >
+              <div
+                class="overflow-hidden"
+              >
+                <div
+                  class="px-6 pb-5 pt-2"
+                >
+                  <p
+                    class="text-gray-400 leading-relaxed"
+                  >
+                    Absolutely. All our components are designed to be highly customizable. You can style them using CSS to match your product's branding perfectly. We provide base styles that you can easily override.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div
+        class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden"
+      >
+        <div
+          class="max-w-7xl mx-auto px-6 py-16 lg:py-24"
+        >
+          <div
+            class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center"
+          >
+            <div
+              class="space-y-8"
+            >
+              <div
+                class="inline-flex items-center gap-3 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-zap w-4 h-4 text-blue-400"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"
+                  />
+                </svg>
+                <span
+                  class="text-sm font-medium text-blue-300"
+                >
+                  Real-time Collaboration
+                </span>
+              </div>
+              <div
+                class="space-y-6"
+              >
+                <h1
+                  class="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent leading-tight"
+                >
+                  Code together,
+                  <br />
+                  ship faster.
+                </h1>
+                <p
+                  class="text-xl text-gray-300 leading-relaxed max-w-lg"
+                >
+                  Experience seamless real-time collaboration. See changes instantly as your team codes together.
+                </p>
+              </div>
+              <div
+                class="flex items-center gap-6 pt-4"
+              >
+                <div
+                  class="flex items-center gap-3"
+                >
+                  <div
+                    class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-code w-5 h-5 text-white"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="m16 18 6-6-6-6"
+                      />
+                      <path
+                        d="m8 6-6 6 6 6"
+                      />
+                    </svg>
+                  </div>
+                  <span
+                    class="text-gray-300"
+                  >
+                    Live editing
+                  </span>
+                </div>
+                <div
+                  class="flex items-center gap-3"
+                >
+                  <div
+                    class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-users w-5 h-5 text-white"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
+                      />
+                      <path
+                        d="M16 3.128a4 4 0 0 1 0 7.744"
+                      />
+                      <path
+                        d="M22 21v-2a4 4 0 0 0-3-3.87"
+                      />
+                      <circle
+                        cx="9"
+                        cy="7"
+                        r="4"
+                      />
+                    </svg>
+                  </div>
+                  <span
+                    class="text-gray-300"
+                  >
+                    Team presence
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="relative"
+            >
+              <div
+                class="bg-slate-800/80 backdrop-blur-sm rounded-2xl border border-slate-700/50 shadow-2xl overflow-hidden"
+              >
+                <div
+                  class="bg-slate-700/50 px-6 py-4 border-b border-slate-600/50"
+                >
+                  <div
+                    class="flex items-center justify-between"
+                  >
+                    <div
+                      class="flex items-center gap-3"
+                    >
+                      <div
+                        class="flex gap-1.5"
+                      >
+                        <div
+                          class="w-3 h-3 bg-red-400 rounded-full"
+                        />
+                        <div
+                          class="w-3 h-3 bg-yellow-400 rounded-full"
+                        />
+                        <div
+                          class="w-3 h-3 bg-green-400 rounded-full"
+                        />
+                      </div>
+                      <span
+                        class="text-sm text-gray-300 font-medium"
+                      >
+                        App.jsx
+                      </span>
+                    </div>
+                    <div
+                      class="flex items-center gap-2"
+                    >
+                      <div
+                        class="flex -space-x-2"
+                      >
+                        <div
+                          class="w-6 h-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full border-2 border-slate-800 flex items-center justify-center"
+                        >
+                          <span
+                            class="text-xs font-bold text-white"
+                          >
+                            J
+                          </span>
+                        </div>
+                        <div
+                          class="w-6 h-6 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full border-2 border-slate-800 flex items-center justify-center"
+                        >
+                          <span
+                            class="text-xs font-bold text-white"
+                          >
+                            S
+                          </span>
+                        </div>
+                      </div>
+                      <span
+                        class="text-xs text-gray-400"
+                      >
+                        2 online
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="bg-slate-900/80 p-6 font-mono text-sm relative"
+                >
+                  <div
+                    class="space-y-1"
+                  >
+                    <div
+                      class="flex items-center gap-4"
+                    >
+                      <span
+                        class="text-gray-500 w-6 text-right"
+                      >
+                        1
+                      </span>
+                      <span
+                        class="text-purple-400"
+                      >
+                        import
+                      </span>
+                      <span
+                        class="text-gray-300"
+                      >
+                        React from
+                      </span>
+                      <span
+                        class="text-green-400"
+                      >
+                        'react'
+                      </span>
+                    </div>
+                    <div
+                      class="flex items-center gap-4"
+                    >
+                      <span
+                        class="text-gray-500 w-6 text-right"
+                      >
+                        2
+                      </span>
+                    </div>
+                    <div
+                      class="flex items-center gap-4"
+                    >
+                      <span
+                        class="text-gray-500 w-6 text-right"
+                      >
+                        3
+                      </span>
+                      <span
+                        class="text-purple-400"
+                      >
+                        function
+                      </span>
+                      <span
+                        class="text-yellow-300"
+                      >
+                        App
+                      </span>
+                      <span
+                        class="text-gray-300"
+                      >
+                        () 
+                        {
+                      </span>
+                    </div>
+                    <div
+                      class="flex items-center gap-4"
+                    >
+                      <span
+                        class="text-gray-500 w-6 text-right"
+                      >
+                        4
+                      </span>
+                      <span
+                        class="ml-4 text-purple-400"
+                      >
+                        return
+                      </span>
+                      <span
+                        class="text-gray-300"
+                      >
+                        (
+                      </span>
+                    </div>
+                    <div
+                      class="flex items-center gap-4 relative"
+                    >
+                      <span
+                        class="text-gray-500 w-6 text-right"
+                      >
+                        5
+                      </span>
+                      <span
+                        class="ml-8 text-gray-300"
+                      >
+                        &lt;
+                      </span>
+                      <span
+                        class="text-red-400"
+                      >
+                        div
+                      </span>
+                      <span
+                        class="text-blue-400"
+                      >
+                        className
+                      </span>
+                      <span
+                        class="text-gray-300"
+                      >
+                        =
+                      </span>
+                      <span
+                        class="text-green-400"
+                      >
+                        "app"
+                      </span>
+                      <span
+                        class="text-gray-300"
+                      >
+                        &gt;
+                      </span>
+                      <div
+                        class="absolute -top-1 right-0 bg-blue-500 text-white px-2 py-1 rounded text-xs animate-pulse"
+                      >
+                        Jon editing
+                      </div>
+                    </div>
+                    <div
+                      class="flex items-center gap-4"
+                    >
+                      <span
+                        class="text-gray-500 w-6 text-right"
+                      >
+                        6
+                      </span>
+                      <span
+                        class="ml-12 text-gray-300"
+                      >
+                        &lt;
+                      </span>
+                      <span
+                        class="text-red-400"
+                      >
+                        h1
+                      </span>
+                      <span
+                        class="text-gray-300"
+                      >
+                        &gt;
+                      </span>
+                      <span
+                        class="bg-purple-500/20 border border-purple-500/40 px-1 rounded"
+                      >
+                        <span
+                          class="text-gray-300"
+                        >
+                          Collaborative
+                        </span>
+                      </span>
+                      <span
+                        class="text-gray-300"
+                      >
+                         App&lt;
+                      </span>
+                      <span
+                        class="text-red-400"
+                      >
+                        h1
+                      </span>
+                      <span
+                        class="text-gray-300"
+                      >
+                        &gt;
+                      </span>
+                    </div>
+                    <div
+                      class="flex items-center gap-4"
+                    >
+                      <span
+                        class="text-gray-500 w-6 text-right"
+                      >
+                        7
+                      </span>
+                      <span
+                        class="ml-8 text-gray-300"
+                      >
+                        &lt;
+                      </span>
+                      <span
+                        class="text-red-400"
+                      >
+                        div
+                      </span>
+                      <span
+                        class="text-gray-300"
+                      >
+                        &gt;
+                      </span>
+                    </div>
+                    <div
+                      class="flex items-center gap-4"
+                    >
+                      <span
+                        class="text-gray-500 w-6 text-right"
+                      >
+                        8
+                      </span>
+                      <span
+                        class="ml-4 text-gray-300"
+                      >
+                        )
+                      </span>
+                    </div>
+                    <div
+                      class="flex items-center gap-4"
+                    >
+                      <span
+                        class="text-gray-500 w-6 text-right"
+                      >
+                        9
+                      </span>
+                      <span
+                        class="text-gray-300"
+                      >
+                        }
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="absolute top-20 right-8"
+                  >
+                    <div
+                      class="bg-purple-500 text-white px-2 py-1 rounded-full text-xs font-medium animate-bounce"
+                    >
+                      Sophie
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-xl"
+              />
+              <div
+                class="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full blur-xl"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div
+      class="z-10"
+    >
+      <footer
+        class="bg-footer-bg border-t border-footer-border"
+      >
+        <div
+          class="max-w-7xl mx-auto px-6 py-16"
+        >
+          <div
+            class="flex items-center justify-between mb-12"
+          >
+            <div
+              class="flex items-center gap-8"
+            >
+              <div
+                class="flex items-center gap-2"
+              >
+                <div
+                  class="w-6 h-6 bg-footer-heading rounded-sm"
+                />
+                <span
+                  class="text-footer-heading font-semibold text-lg"
+                >
+                  CodeSync
+                </span>
+              </div>
+              <div
+                class="flex items-center gap-2 text-sm"
+              >
+                <div
+                  class="w-2 h-2 bg-green-500 rounded-full"
+                />
+                <span
+                  class="text-footer-text"
+                >
+                  All systems operational
+                </span>
+              </div>
+            </div>
+            <div
+              class="flex items-center gap-4"
+            >
+              <div
+                class="flex items-center gap-3"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-github w-5 h-5 text-footer-text hover:text-footer-link-hover cursor-pointer transition-colors"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
+                  />
+                  <path
+                    d="M9 18c-4.51 2-5-2-7-2"
+                  />
+                </svg>
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-message-circle w-5 h-5 text-footer-text hover:text-footer-link-hover cursor-pointer transition-colors"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"
+                  />
+                </svg>
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-twitter w-5 h-5 text-footer-text hover:text-footer-link-hover cursor-pointer transition-colors"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"
+                  />
+                </svg>
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-linkedin w-5 h-5 text-footer-text hover:text-footer-link-hover cursor-pointer transition-colors"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                  />
+                  <rect
+                    height="12"
+                    width="4"
+                    x="2"
+                    y="9"
+                  />
+                  <circle
+                    cx="4"
+                    cy="4"
+                    r="2"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div
+            class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-8"
+          >
+            <div
+              class="space-y-4"
+            >
+              <h3
+                class="text-footer-heading font-medium text-sm"
+              >
+                Ready-made features
+              </h3>
+              <ul
+                class="space-y-3"
+              >
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    AI Copilots
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Comments
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Multiplayer Editing
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Notifications
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Presence
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div
+              class="space-y-4"
+            >
+              <h3
+                class="text-footer-heading font-medium text-sm"
+              >
+                Platform
+              </h3>
+              <ul
+                class="space-y-3"
+              >
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Monitoring Dashboard
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Realtime Infrastructure
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div
+              class="space-y-4"
+            >
+              <h3
+                class="text-footer-heading font-medium text-sm"
+              >
+                Solutions
+              </h3>
+              <ul
+                class="space-y-3"
+              >
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    People platforms
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Sales tools
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Startups
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div
+              class="space-y-4"
+            >
+              <h3
+                class="text-footer-heading font-medium text-sm"
+              >
+                Use cases
+              </h3>
+              <ul
+                class="space-y-3"
+              >
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Multiplayer forms
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Multiplayer text editor
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Multiplayer creative tools
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Multiplayer whiteboard
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Comments
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Sharing and permissions
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div
+              class="space-y-4"
+            >
+              <h3
+                class="text-footer-heading font-medium text-sm"
+              >
+                Resources
+              </h3>
+              <ul
+                class="space-y-3"
+              >
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Documentation
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Examples
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    React components
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Tutorial
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Guides
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Release notes
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div
+              class="space-y-4"
+            >
+              <h3
+                class="text-footer-heading font-medium text-sm"
+              >
+                Technologies
+              </h3>
+              <ul
+                class="space-y-3"
+              >
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Next.js
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    React
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    JavaScript
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Redux
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Yjs
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Tiptap
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    BlockNote
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Slate
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Monaco
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div
+              class="space-y-4"
+            >
+              <h3
+                class="text-footer-heading font-medium text-sm"
+              >
+                Company
+              </h3>
+              <ul
+                class="space-y-3"
+              >
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Pricing
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Customers
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Changelog
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Contact us
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Careers
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Terms of service
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Privacy policy
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Security
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Trust center
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="text-footer-text text-sm hover:text-footer-link-hover transition-colors duration-200 cursor-pointer"
+                    href="#"
+                  >
+                    Subprocessors
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+`;
