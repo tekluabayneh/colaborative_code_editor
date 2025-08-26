@@ -3,10 +3,10 @@ import mongoose, { Schema, Document, Types } from "mongoose";
 // Node interface
 interface INode extends Document {
   name: string;
-  folderId: string;                      // for folders
-  contentId: Types.ObjectId;             // reference to Document collection
-  ownerType: "User" | "Owner";            // dynamic reference collection
-  ownerId: Types.ObjectId;                // refPath
+  folderId: string;                    
+  contentId: Types.ObjectId;            
+  ownerType: "User" | "Owner" | "Admin";           
+  ownerId: Types.ObjectId;                
   nodes?: INode[];                        // recursive child nodes
 }
 
