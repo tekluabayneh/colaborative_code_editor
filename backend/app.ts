@@ -10,6 +10,7 @@ import passport from "passport"
 import session from "express-session"
 import inviteRouter from "./routes/invite.route";
 import {configuregoogleAuth, configuregithubstrateg } from "./controllers/outh.controller";
+import DocumentRouter from "./routes/document.route";
 import Owners from "./models/Owners";
 import GloblaError from "./middlewares/error.middleware"
 import cookieParser from "cookie-parser";
@@ -97,6 +98,11 @@ app.use("/api", OAuthRouter);
 
 // invite user 
 app.use("/api",  inviteRouter);
+
+
+// document route 
+app.use("/api",DocumentRouter)
+
 
 app.use(GloblaError)
 
