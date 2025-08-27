@@ -2,10 +2,10 @@ import { Response, Request } from "express";
 import Documents from "../models/Document";
 import FolderTree from "../models/FolderStuture";
 import validator from "../Utils/validator"
+import Owners from "../models/Owners";
 
 
 class DocumentController { 
-
 
 
 	async GetAllFolderTree (req:Request, res:Response): Promise<void> { 
@@ -20,51 +20,106 @@ class DocumentController {
 
 			// check if the user is found 
 			if(!IsRoleUser){ 
-				res.status(400).json({message:"user is not found"})
+				res.status(404).json({message:"user is not found"})
 				return 
 			} 
 
-
 			// if the user is is not Owner get his owner id and fetch its folder tree 
-
+			let findOwnerId 
 			if(IsRoleUser.role !== "Owner"){ 
-				// get the invited by field herer invitedBy
-
-				res.send("use is nto ownder")
-				return 
-
+				const invitedBy = IsRoleUser.users_user?.invitedBy
+				findOwnerId = await Owners.findOne({_id:invitedBy})   
+			}else{ 
+				findOwnerId = IsRoleUser?.Owners_user?._id 
 			}
-			await FolderTree.insertOne({"name": "Home", "folderId": "uuid-home", "ownerType": "Owner", "ownerId": "PLACEHOLDER_OWNER_ID", "nodes": []}) 
-			res.send(IsRoleUser) // get the user email and check its role first and if the user is user get the owner it its owner get folder tree that are related to it and send them 
 
+			// now get all the folder tree taht are labed with ownder id  
+			const fileTree = await FolderTree.find({"ownerId":findOwnerId}) 
+
+			res.send(fileTree)
 		} catch (error) {
-			res.send(error)		
-			console.log(error)
+			console.error(error);
+			res.status(500).json({ message: "Internal server error" });	
 		}
 	}
 
 
-		async GetdocumetnById (req:Request, res:Response):Promise<void> { 
+	async GetdocumetnById (req:Request, res:Response):Promise<void> { 
+		if(!req.params.DocId) { 
+			res.status(400).json({message:"documetId is mandatory"}) 
+			return 
+		}
 
-			if(!req.body.email || !req.body.documetId) { 
-				res.status(400).json({message:"documetId and email are mandatory"}) 
+		try {
+			const { DocId } = req.query as {DocId:string} 
+			const documentData =   await Documents.findOne({"contentId":DocId})
+			if(!documentData){ 
+				res.status(400).json({message:"documetId is not found"}) 
 				return 
 			}
-			try {
-				const { documetId, email, } = req.body as {email:string, documetId:string} 
 
-				const documentData =   await Documents.findOne({email:email})
+			const data = {ownerId:documentData.ownerId, FileExtenstion:documentData.language, content:documentData.content}
+			res.status(200).json({message:"data is send successfully",data}) 
 
-				res.status(200).json({message:"data is send successfully", FileName:"",FileExtenstion:"", content:""}) 
-
-			} catch (error) {
-
-			}
-
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ message: "Internal server error" });
 		}
+
+	}
+
+
+
+	async DeletedocumentById(req:Request, res:Response):Promise<void>{ 
+		try {
+
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ message: "Internal server error" });
+		}
+	} 
+
+	async UpdatedocumentById(req:Request, res:Response):Promise<void>{ 
+
+		try {
+
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ message: "Internal server error" });
+		}
+	} 
+
+
+	async UpdateFolder_or_file_name(req:Request, res:Response): Promise<void> { 
+		if(!req.body.folderId || !req.body.newName){ 
+			res.status(400).json({ message: "folder id is mandatory"});
+			return 
+		} 
+
+		try {
+			const {folderId, newName} = req.body
+
+			const findFolder = await FolderTree.findOne({folderId:folderId}) 
+
+			if(!findFolder){ 
+				res.status(400).json({ message: "folder is not found"});
+				return 
+			} 
+
+			folderId.name = newName 
+			findFolder.save()
+
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ message: "Internal server error" });
+		}
+	} 
 
 }
 
-	const DocController = new DocumentController() 
+const DocController = new DocumentController() 
 
-	export default DocController 
+export default DocController 
+
+
+
