@@ -137,6 +137,7 @@ const EmailVerificationPage = () => {
 						<div className="text-center space-y-3">
 							<p className="text-gray-300 text-sm">Didn't receive the code?</p>
 							<button 
+								data-testid="resend_btn"
 								onClick={handleVerification}
 								disabled={isLoading}
 								className="text-cyan-400 cursor-pointer hover:text-cyan-300 transition-colors duration-300 text-sm font-medium disabled:opacity-50"
