@@ -12,6 +12,9 @@ const Home = () => {
   const [isFileSystemOpen, setIsFileSystemOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
+
+
+
   return (
     <div className="w-full h-screen bg-gray-950 text-gray-100 flex relative overflow-hidden">
      
