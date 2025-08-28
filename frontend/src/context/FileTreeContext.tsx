@@ -3,6 +3,7 @@ import React, {createContext, ReactNode, useContext, useState , useEffect} from 
 import { fileTree as intialTree } from "@/data/FolderTree";
 import { toast } from "react-hot-toast";
 import { Node , FileSystemContextType } from "@/types/Node";
+import axios from "axios";
 const generateId = () => crypto.randomUUID();
 const FileSystemContext = createContext<FileSystemContextType | null>(null);
 
@@ -11,11 +12,29 @@ export const  FileSystemProvider =({children}:{children:ReactNode}) => {
     const [name, setName] = useState("");
     const [isModabolen, setisModalopen] = useState(false)
     const [isFile, setisFile] = useState(false)
-    const [fileTree, setFileTree] = useState<Node[]>(intialTree);
+    const [fileTree, setFileTree] = useState<Node[]>();
+    const email = "fake@gmail.com" 
+
+useEffect(() => {
+  const handleFetchFileTree = async (email: string) => {
+  try {
+    const response = await axios.post("http://localhost:5000/api/doc/GetAllFolderTree", {
+      email: email},{ withCredentials: true});
+     setFileTree(response.data)
+    console.log(fileTree);
+  } catch (err) {
+    console.error("Error fetching file tree:", err);
+  }
+
+}
+handleFetchFileTree(email)
+},[])
+
+
 
 useEffect(() => {
   console.log("✅ File Tree Updated", JSON.stringify(fileTree, null, 2));
-}, [fileTree]);
+}, [fileTree]) ;
 
     const handleSubmit = () => {
         const FolderId:string | null = localStorage.getItem("folderId")
