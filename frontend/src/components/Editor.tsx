@@ -40,7 +40,6 @@ export default function CodeEditor() {
 
 		return (
 			<div className="w-full h-screen">
-				<input type="file" onChange={(e) => HandleFileChange(e)} />
 				<Editor
 					height="100%"
 					defaultLanguage="javascript"
