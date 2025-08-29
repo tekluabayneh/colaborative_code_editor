@@ -125,7 +125,7 @@ export default function Login({setisLogin}:Props) {
          <div className="space-y-3">
               <label htmlFor="email" className="text-sm font-medium text-gray-200 flex items-center gap-2 justify-between">
              <span className='flex gap-1'>   <Lock className="w-4 h-4 text-violet-300" /> Password 	</span>
-	<Link href="/forgotPassword" className="text-purple-200 text-sm hover:underline">Forgot password?</Link>
+	<Link data-testid="forgot_btn" href="/forgotPassword" className="text-purple-200 text-sm hover:underline">Forgot password?</Link>
   
               </label>
               <div className="relative">

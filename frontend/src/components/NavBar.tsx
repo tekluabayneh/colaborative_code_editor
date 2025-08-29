@@ -28,7 +28,7 @@ const NarBar = () => {
                     {/* Desktop Sign In Button */}
                     <div className="hidden md:block">
                         <Link href="/Auth">
-                            <button className="group cursor-pointer relative inline-flex items-center justify-center px-6 py-2.5 overflow-hidden font-semibold text-white rounded-lg bg-gray-900/80 transition-all duration-300 hover:bg-gray-900 shadow-md hover:shadow-lg hover:shadow-purple-500/20">
+                            <button  data-testid="signin_btn" className="group cursor-pointer relative inline-flex items-center justify-center px-6 py-2.5 overflow-hidden font-semibold text-white rounded-lg bg-gray-900/80 transition-all duration-300 hover:bg-gray-900 shadow-md hover:shadow-lg hover:shadow-purple-500/20">
                                 <div className="absolute top-0 right-full w-full h-full bg-gradient-to-r from-purple-600 to-pink-600 transform group-hover:translate-x-full transition-transform duration-500"></div>
                                 <span className="relative">Sign In</span>
                             </button>
@@ -57,8 +57,8 @@ const NarBar = () => {
                     </div>
                     <div className="pt-4 pb-3 border-t border-gray-800">
                         <div className="px-5">
-                             <Link href="/Auth">
-                                <button className="w-full text-left group relative inline-flex items-center justify-center px-4 py-2.5 overflow-hidden font-semibold text-white rounded-md bg-gray-800 transition-all duration-300 hover:bg-gray-700">
+                             <Link  href="/Auth">
+                                <button data-testid="signin_btn" className="w-full text-left group relative inline-flex items-center justify-center px-4 py-2.5 overflow-hidden font-semibold text-white rounded-md bg-gray-800 transition-all duration-300 hover:bg-gray-700">
                                     <div className="absolute top-0 right-full w-full h-full bg-gradient-to-r from-purple-600 to-pink-600 transform group-hover:translate-x-full transition-transform duration-500"></div>
                                     <span className="relative">Sign In</span>
                                 </button>

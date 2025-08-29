@@ -110,7 +110,7 @@ const ForgotPassword = () => {
 
                       <button
                         type="submit"
-                        disabled={isLoading}
+                        disabled={isLoading && email?.length < 6}
                         className="w-full rounded-lg bg-white text-black  cursor-pointer px-4 py-3 text-sm font-medium transition-all duration-300 hover:translate-y-[-1px] hover:shadow-xl hover:shadow-primary/20 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background disabled:opacity-60 disabled:cursor-not-allowed"
                       >
                         <div className="flex items-center justify-center gap-2">
