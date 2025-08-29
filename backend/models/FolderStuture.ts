@@ -1,29 +1,30 @@
 import mongoose, { Schema, Document, Types } from "mongoose";
 
-// Node interface
-interface INode extends Document {
+export interface INode extends Document {
   name: string;
-  folderId: string;                    
-  contentId: Types.ObjectId;            
-  ownerType: "User" | "Owner" | "Admin";           
-  ownerId: Types.ObjectId;                
-  nodes?: INode[];                        // recursive child nodes
+  folderId: string; 
+  contentId?: Types.ObjectId | null;
+  ownerType: "User" | "Owner" | "Admin";
+  ownerId: Types.ObjectId;
+  parentId?: Types.ObjectId | null; 
 }
 
-// Node schema (recursive)
-const NodeSchema: Schema<INode> = new Schema({
+const FolderTreeSchema = new Schema<INode>({
   name: { type: String, required: true },
-  folderId: { type: String , required:true},
-  contentId: { type: Schema.Types.ObjectId, required:true,ref: "Document" }, // only for files
-  ownerType: { type: String, required: true, enum: ["User", "Owner"] },
+  folderId: { type: String, required: true, unique: true },
+
+  // File reference (optional)
+  contentId: { type: Schema.Types.ObjectId, ref: "Document", default: null },
+
+  // Owner
+  ownerType: { type: String, required: true, enum: ["User", "Owner", "Admin"] },
   ownerId: { type: Schema.Types.ObjectId, required: true, refPath: "ownerType" },
-  nodes: [this],
-});
 
-// FolderTree schema
-const FolderTreeSchema = new Schema({
-  root: [NodeSchema],
-});
+  // Parent reference (optional)
+  parentId: { type: Schema.Types.ObjectId, ref: "FolderTree", default: null }
+}, { timestamps: true });
 
-const FolderTree = mongoose.model("FolderTree", FolderTreeSchema);
+const FolderTree = mongoose.model<INode>("FolderTree", FolderTreeSchema);
+
 export default FolderTree;
+
