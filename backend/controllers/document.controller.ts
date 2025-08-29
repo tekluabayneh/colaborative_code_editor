@@ -1,19 +1,47 @@
 import { Response, Request } from "express";
 import Documents from "../models/Document";
-import FolderTree from "../models/FolderStuture";
 import validator from "../Utils/validator"
 import Owners from "../models/Owners";
+import FolderTree, { INode } from "../models/FolderStuture";
+import { Types } from "mongoose";
 
-interface DocumentType{ 
+type ObId = Types.ObjectId
+
+interface folderToBeDeletedTypes{ 
 	_id:string, 
 	name:string,
 	folderId:string,
-	contentId: string | null,
+	contentId: ObId | null,
 	ownerType:string ,
 	ownerId:string, 
-	nodes?:DocumentType[]
+	parentId:string,
+       nodes:folderToBeDeletedTypes[]
 } 
 
+
+
+async function getSubtree(folderId: string): Promise<folderToBeDeletedTypes | null> {
+	const root = await FolderTree.findOne({"folderId":folderId}).lean();
+	if (!root) return null;
+
+	async function fetchChildren(node: INode): Promise<INode> {
+		const children = await FolderTree.find({ parentId: node._id }).lean();
+		//@ts-ignore 
+		node.nodes = [];
+
+		for (const child of children) {
+			const childWithDescendants = await fetchChildren(child);
+			//@ts-ignore 
+			node.nodes.push(childWithDescendants);
+		}
+		console.log("node file", JSON.stringify(node, null, 2));
+
+		return node;
+
+	}
+	// @ts-ignore
+	return fetchChildren(root);
+}
 
 const GetAllOwnerFolderTree =  async (req:Request, res:Response) => { 
 	const {email} = req.body as {email:string} 
@@ -44,6 +72,8 @@ const GetAllOwnerFolderTree =  async (req:Request, res:Response) => {
 
 class DocumentController { 
 
+
+	// ======================================//////=====================================
 	async GetAllFolderTree (req:Request, res:Response): Promise<void> { 
 		if(!req.body.email){ 
 			res.status(400).json({message:"email is mandatory"}) 
@@ -56,9 +86,10 @@ class DocumentController {
 			if(!fileTree){ 
 				res.status(404).json({ message: "folder tree are not found" });	
 				return 
-			} 
+			}
 
-			res.send(fileTree)
+			const result  = await getSubtree(fileTree[0].folderId)
+			res.send([result])
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ message: "Internal server error" });	
@@ -66,6 +97,7 @@ class DocumentController {
 	}
 
 
+	// ======================================//////=====================================
 	async GetdocumetnById (req:Request, res:Response):Promise<void> { 
 		if(!req.params.DocId) { 
 			res.status(400).json({message:"documetId is mandatory"}) 
@@ -73,8 +105,10 @@ class DocumentController {
 		}
 
 		try {
-			const { DocId } = req.query as {DocId:string} 
-			const documentData =   await Documents.findOne({"contentId":DocId})
+			const { DocId } = req.params as {DocId:string} 
+
+			const documentData = await Documents.findById(DocId)
+
 			if(!documentData){ 
 				res.status(400).json({message:"documetId is not found"}) 
 				return 
@@ -91,170 +125,52 @@ class DocumentController {
 	}
 
 
-	// async DeletedocumentById(req: Request, res: Response): Promise<void> {
-	// 	const { folderId } = req.params as { folderId: string };
-	// 	const { email } = req.body;
-	//
-	// 	if (!folderId || !email) {
-	// 		res.status(404).json({ message: "folderId and email are required" });
-	// 		return;
-	// 	}
-	//
-	// 	try {
-	// 		// Collect IDs of documents to be deleted
-	// 		const Ides: string[] = [];
-	//
-	// 		// Get the full folder tree for this owner
-	// 		const AllfileTree = await GetAllOwnerFolderTree(req, res);
-	//
-	// 		if (!AllfileTree || AllfileTree.length === 0) {
-	// 			res.status(404).json({ message: "folder tree not found" });
-	// 			return;
-	// 		}
-	//
-	// 		// Recursive function to find and delete folder nodes
-	// 		function deleteFolder(nodes: DocumentType[], folderId: string): DocumentType[] {
-	// 			return nodes.filter(node => {
-	// 				if (node.folderId === folderId) return false; // remove this node
-	// 				if (node.nodes) node.nodes = deleteFolder(node.nodes, folderId);
-	// 				return true;
-	// 			});
-	// 		}
-	//
-	// 		// Recursive function to collect all content IDs in a folder
-	// 		function collectContentIds(nodes?: DocumentType[]) {
-	// 			if (!nodes) return;
-	// 			for (const node of nodes) {
-	// 				if (node.contentId) Ides.push(node.contentId);
-	// 				if (node.nodes) collectContentIds(node.nodes);
-	// 			}
-	// 		}
-	//
-	// 		// Traverse all root folders
-	// 		for (const root of AllfileTree) {
-	// 			// @ts-ignore
-	// 			if (!root || !root.nodes) continue;
-	//
-	// 			// Collect content IDs from the folder to delete
-	// 			// @ts-ignore 
-	// 			const folderToDelete = root.nodes.find(node => node.folderId === folderId) || null;
-	// 			if (folderToDelete) collectContentIds([folderToDelete]);
-	//
-	// 			// Remove the folder from the tree
-	// 			// root.nodes = deleteFolder(root.nodes, folderId);
-	//
-	// 			// Update the root document in MongoDB
-	// 			// await FolderTree.updateOne( { _id: root._id }, { $set: { nodes: root.nodes } });
-	// 		}
-	//
-	// 		console.log("Collected content IDs:", Ides);
-	//
-	// 		// Delete all documents corresponding to collected content IDs
-	// 		for (const contentId of Ides) {
-	// 			if (contentId !== "null") {
-	// 				await Documents.deleteOne({ contentId });
-	// 			}
-	// 		}
-	//
-	// 		// Delete the folder itself if it’s a root folder
-	// 		// await FolderTree.deleteOne({ folderId });
-	//
-	// 		res.status(200).json({ message: "Folder and nested documents deleted successfully" });
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 		res.status(500).json({ message: "Internal server error" });
-	// 	}
-	// }
-
-
-
-
+	// ======================================//////=====================================
 	async DeletedocumentById(req:Request, res:Response):Promise<void>{ 
 		if(!req.params.folderId || !req.body.email){ 
-		res.status(404).json({ message: "folder id and email  are required" });
-		   return 
+			res.status(404).json({ message: "folder id and email  are required" });
+			return 
 		} 
 
-	             type oneTy = { 
+		type oneTy = { 
 			folderId:string,
 		} 
 
 		const {folderId} = req.params as {folderId:string} satisfies oneTy
 		try {
+			const docs = await  FolderTree.find({folderId:folderId})
+			console.log(docs)
 
-
-	               // collect ids of document to be delted
-	               const Ides:string[] = [] 
-		const AllfileTree =  await GetAllOwnerFolderTree(req, res)
-	               let findFileById:DocumentType[] | null 
-
-	                       if(!AllfileTree){ 
-				res.status(404).json({ message: "folder tree are not found" });	
+			const folderToBeDeleted = await getSubtree(folderId)
+			if(!folderToBeDeleted){ 
+			res.status(500).json({ message: "folders are not found" });
 				return 
+			} 
+                        const IDS:ObId[] = [] 
+                        const FolderIDS:string[] = []
+
+                         // collect contentId to be deleted  
+			 function  collectIds(items:folderToBeDeletedTypes) { 
+				  if(items.contentId) IDS.push(items?.contentId)
+				  FolderIDS.push(items.folderId)
+				if(items.nodes && items.nodes.length > 0){ 
+				 for(let ids of items.nodes){ 
+                                        collectIds(ids) 
 				} 
-
-			//
-			// function deleteFolder(nodes: DocumentType[], folderId: string): DocumentType[] {
-			//   return nodes.filter(node => {
-			//     if (node.folderId === folderId) return false;
-			//     if (node.nodes) node.nodes = deleteFolder(node.nodes, folderId);
-			//     return true;
-			//   });
-			// }
-			//
-			//                             for (const root of AllfileTree) {
-			// 	if(!root && !root.nodes) return 
-			//
-			//                             root.nodes = deleteFolder(root.nodes, folderId);
-			//                             await FolderTree.deleteOne({ _id: root._id }, { $set: { nodes: root.nodes } });
-			//
-			//  // @ts-expect-error thsi is error
-			//          findFileById = await FolderTree.find({folderId:folderId}).lean<DocumentType>()
-			//
-			// }
-			//
-
-				 // @ts-expect-error thsi is error
-			         findFileById = await FolderTree.find({folderId:folderId}).lean<DocumentType>()
-
-			 // iterate over folders and get all the document of id  to be delted
-			 const getDocumenId = (nodes?:DocumentType[]) => { 
-				if(!nodes) return 
-				for(let node of nodes){ 
-				        Ides.push(node.contentId ?? "null") 
-				       if(node.nodes && node.nodes.length > 0){ 
-						getDocumenId(node.nodes)
-				}} 
 			} 
-
-			if(!findFileById){ 
-				res.status(404).json({ message: "file or fodler are not found " });
-			   return 
 			} 
+                         
+		      collectIds(folderToBeDeleted)
+                     
+                    for(let id of IDS){ 
+                   await Documents.deleteOne({_id:id})
+		    }
 
-			getDocumenId(findFileById)
+                    for(let id of FolderIDS){ 
+			   await FolderTree.deleteOne({folderId:id})
+		    }  
 
-			console.log("contentId",Ides)  
-			console.log("folderId",findFileById)  
-
-			// this is response is for debug 
-			res.send({folder:findFileById, "and this is the intire folder":AllfileTree}) 
-
-				//   for(let ids of Ides){ 
-				// await  Documents.deleteOne({folderId:ids})
-				// } 
-
-	        // delte the folder by its id since we are delting the folder it will also delte nested child file
-	                             await FolderTree.deleteOne({folderId:folderId}) 
-		} catch (error) {
-			console.error(error);
-			res.status(500).json({ message: "Internal server error" });
-		}
-	} 
-
-	async UpdatedocumentById(req:Request, res:Response):Promise<void>{ 
-
-		try {
+			res.send({do:docs, result:folderToBeDeleted, ids:IDS, folder:FolderIDS}) 
 
 		} catch (error) {
 			console.error(error);
@@ -262,26 +178,55 @@ class DocumentController {
 		}
 	} 
 
-
+	// ======================================//////=====================================
 	async UpdateFolder_or_file_name(req:Request, res:Response): Promise<void> { 
-		if(!req.body.folderId || !req.body.newName){ 
-			res.status(400).json({ message: "folder id is mandatory"});
+		console.log(req.body)
+		if(!req.body.folderId ||  !req.body.newContent || req.body.isFolder === undefined || !req.body.DocId ){ 
+			res.status(400).json({ message: "all input are mandatory"});
 			return 
+		} 
+		type oneTy = { 
+			DocId:string,
+			folderId:string, 
+			isFolder:boolean,
+			newContent:string
+
 		} 
 
 		try {
-			const {folderId, newName} = req.body
+			const {DocId, folderId, newContent, isFolder} = req.body as {DocId:string, newContent:string, folderId:string,  isFolder:boolean} satisfies oneTy
 
-			const findFolder = await FolderTree.findOne({folderId:folderId}) 
+			// if the update is only folder name  
+			if(isFolder){ 
+				const findFolder = await FolderTree.findOne({folderId:folderId}) 
 
-			if(!findFolder){ 
-				res.status(400).json({ message: "folder is not found"});
+				if(!findFolder){ 
+					res.status(400).json({ message: "folder is not found"});
+					return 
+				} 
+                               
+				findFolder.name = newContent 
+				findFolder.save()
+
+				res.status(400).json({ message: "folder name is updated", findFolder});
+				return 
+
+
+			} 
+                        
+			const documentData = await Documents.findById(DocId)
+
+			if(!documentData){ 
+				res.status(400).json({message:"documetId is not found"}) 
 				return 
 			} 
 
-			folderId.name = newName 
-			findFolder.save()
 
+		       documentData.content =  newContent	
+                      documentData.save()
+
+
+			res.status(500).json({ message: "wored success" });
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ message: "Internal server error" });
