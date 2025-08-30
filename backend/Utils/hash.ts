@@ -6,5 +6,6 @@ const HashPassword = async (password: string, saltRounds: number = 10): Promise<
     const hashedPassword = hashSync(password, Gensalt);
     return hashedPassword;
 }
+
 export default HashPassword
 

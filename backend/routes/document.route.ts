@@ -12,7 +12,6 @@ DocumentRouter.put("/doc/UpdateFolderOrFileName", (req, res) => DocController.Up
 
 DocumentRouter.delete("/doc/DeleteDocument/:folderId", (req, res) => DocController.DeletedocumentById(req, res))
 
-// DocumentRouter.put("/doc/UpdateDocument/:DocId", (req, res) => DocController.UpdatedocumentById(req, res))
 
 
 export default DocumentRouter
