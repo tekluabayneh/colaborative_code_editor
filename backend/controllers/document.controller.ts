@@ -34,7 +34,6 @@ async function getSubtree(folderId: string): Promise<folderToBeDeletedTypes | nu
 			//@ts-ignore 
 			node.nodes.push(childWithDescendants);
 		}
-		console.log("node file", JSON.stringify(node, null, 2));
 
 		return node;
 
@@ -139,7 +138,6 @@ class DocumentController {
 		const {folderId} = req.params as {folderId:string} satisfies oneTy
 		try {
 			const docs = await  FolderTree.find({folderId:folderId})
-			console.log(docs)
 
 			const folderToBeDeleted = await getSubtree(folderId)
 			if(!folderToBeDeleted){ 
@@ -180,7 +178,6 @@ class DocumentController {
 
 	// ======================================//////=====================================
 	async UpdateFolder_or_file_name(req:Request, res:Response): Promise<void> { 
-		console.log(req.body)
 		if(!req.body.folderId ||  !req.body.newContent || req.body.isFolder === undefined || !req.body.DocId ){ 
 			res.status(400).json({ message: "all input are mandatory"});
 			return 

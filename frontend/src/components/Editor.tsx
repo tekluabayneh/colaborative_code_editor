@@ -1,59 +1,64 @@
-
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import Editor, { Monaco } from "@monaco-editor/react";
 import axios from "axios";
-
+import {useFileTree } from "../context/EditorContext"
 export default function CodeEditor() {
-	const editorRef = useRef<any>(null);
-   
-
-        // fetch all the folder tree of the user  
+	const {CurrentFileInEditor, SaveFileContentToDb} = useFileTree()
+	// fetch all the folder tree of the user  
 	// first when user click diffretn file it need to change  language 
 	// second when user click diffent file it need to load those file 
 	// thired when user  click (CTL + S)  it need to save those file to db 
 	// four when user 
 	//
-
-		// store editor instance
-		const handleEditorDidMount = (editor: any, monaco: Monaco) => {
-			editorRef.current = editor;
-		};
-
-	// handle when user change file 
-	const HandleFileChange = async(e:React.ChangeEvent<HTMLInputElement>) => { 
-		const contentResponse = await axios.post("get the documetn by documetn id", {withCredential:true}) 
-                 const {FileName,FileExtenstion, content} = contentResponse.data
-
-			editorRef.current.setValue(content); 
-			monaco.editor.setModelLanguage(editorRef.current.getModel(), FileExtenstion);
-
-		//  here this is mistake we dont get the file form the local machine it from db so the idea need to be teack 
-		//  first make request witht the document id 
-		//  and load the documetn in the editor with teh extension of the file
-	} 
+	const editorRef = useRef<any>(null);
+	const monacoRef = useRef<any>(null);
 
 
-	// handle when user type code in the editor
-	const HandleONchnageFile = () => { 
-				} 
+	const handleEditorDidMount = (editor: any, monaco: Monaco) => {
+		editorRef.current = editor;
+		monacoRef.current = monaco;
+	};
+
+	const handleFileChange = (file: {FileExtenstion: string; content: string }) => {
+		if(!file) return 
+		if (!editorRef.current || !monacoRef.current) return;
+		editorRef.current.setValue(file.content);
+		const model = editorRef.current.getModel();
+		if (model) {
+	const extensionToLanguage = { js: "javascript", ts: "typescript", py: "python", html: "html", };
+	const language = extensionToLanguage[file.FileExtenstion] || "javascript";
+	monacoRef.current.editor.setModelLanguage(editorRef.current.getModel(), language);
+
+		}
+	};
+
+	useEffect(() => {
+
+		// @ts-expect-error data has the type 
+		if (CurrentFileInEditor?.data) {
+			// @ts-expect-error data has the type 
+			handleFileChange(CurrentFileInEditor.data);
+		}
+	}, [CurrentFileInEditor]);
 
 
-		return (
-			<div className="w-full h-screen">
-				<Editor
-					height="100%"
-					defaultLanguage="javascript"
-					defaultValue={`//Welcome to your VS Code-like editor\nfunction hello() {\n  console.log("Hello, world!");\n}`}
-					theme="vs-dark"
-					options={{
-						fontSize: 14,
-						minimap: { enabled: false },
-						wordWrap: "on",
-						automaticLayout: true,
-					}}
-					onMount={handleEditorDidMount}
-				/>
-			</div>
-		);
-	}
+
+	return (
+		<div className="w-full h-screen">
+			<Editor
+				height="100%"
+				defaultLanguage="javascript"
+				defaultValue={`//Welcome to your VS Code-like editor\nfunction hello() {\n  console.log("Hello, world!");\n}`}
+				theme="vs-dark"
+				options={{
+					fontSize: 14,
+					minimap: { enabled: false },
+					wordWrap: "on",
+					automaticLayout: true,
+				}}
+				onMount={handleEditorDidMount}
+			/>
+		</div>
+	);
+}
 

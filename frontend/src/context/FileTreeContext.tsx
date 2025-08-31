@@ -27,7 +27,7 @@ useEffect(() => {
 
 }
 handleFetchFileTree(email)
-},[email, fileTree, fileTree])
+},[email])
 
 
 

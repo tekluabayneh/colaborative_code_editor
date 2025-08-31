@@ -6,8 +6,13 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {Node} from "../types/Node"
 import { useState , useEffect} from 'react';
 import { useFileSystem } from '@/context/FileTreeContext';
+import axios from 'axios';
+import {DocumentType} from "../types/document"
+import {useFileTree } from "../context/EditorContext"
+
 export function FilesystemItem({ node }: { node: Node }) {
     const { CreateFile_and_FolderWithin} = useFileSystem()
+    const { DeleteFile,DeleteFolder, updateFileToEditor, SaveFileContentToDb } = useFileTree()
     const [isOpen, setIsOpen] = useState(false);
     const [isRightClick, setisRightClick] = useState(false);
 
@@ -32,6 +37,21 @@ useEffect(() => {
         setisRightClick(false)
     })
 
+const fetchcontentFile = async (node:DocumentType) => { 
+  if (!node.contentId) {
+    console.log("This is a folder, no content to fetch");
+    return;
+  }
+
+  console.log("Fetching file content for:", node.contentId);
+  const result = await axios.get(
+    `http://localhost:5000/api/doc/GetSingleDocument/${node.contentId}`
+  );
+
+
+  console.log("Result:", result.data);
+	 updateFileToEditor(result.data)
+	} 
 
     return (
         <li key={node.name} className="relative" onClick={(e) => leftClick(e)}>
@@ -54,7 +74,7 @@ useEffect(() => {
             )}
 
 
-            <span  onClick={(e) =>  {setIsOpen(!isOpen) 
+            <div  onClick={(e) =>  {setIsOpen(!isOpen) 
                 leftClick(e)  } }
                 onContextMenu={(e) => CreateFolder_andFile(node,  e)} className="flex items-center gap-0.5 py-1 cursor-pointer">
                 {node.nodes && node.nodes.length > 0 && (
@@ -68,18 +88,14 @@ useEffect(() => {
                         </motion.span>
                     </button>
                 )}
-
-                {node.nodes ? (
-                    <FolderIcon
-                        className={`size-6 text-sky-500 ${
-node.nodes.length === 0 ? 'ml-[12px]' : ''
-}`}
-                    />
+          {/* @ts-expect-error nodes always exist */}
+                {node?.nodes?.length > 0  ? (
+                    <FolderIcon className={`size-6 text-sky-500 ${ node.nodes.length === 0 ? 'ml-[12px]' : '' }`} />
                 ) : (
                         <DocumentIcon className="ml-[12px] size-6 text-gray-200" />
                     )}
-                {node.name}
-            </span>
+            <span onClick={() => fetchcontentFile(node)}> {node.name} </span>
+            </div>
 
             <AnimatePresence>
                 {isOpen && (

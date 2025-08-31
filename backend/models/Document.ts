@@ -4,7 +4,7 @@ interface IDocument extends Document {
   content: string;
   language?: string;
   ownerType: "User" | "Owner";            
-  ownerId: Types.ObjectId;                // who owns this content
+  ownerId: Types.ObjectId;                
 }
 
 const DocumentSchema: Schema<IDocument> = new Schema({

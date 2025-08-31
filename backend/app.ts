@@ -74,13 +74,14 @@ const findUser = await Owners.findOne({id:id})
 app.use(helmet());
 app.use(cookieParser()); 
 app.use(express.urlencoded({ extended: true }));
+
 const RateLimit = rateLimit({
   windowMs: 5 * 60 * 1000, 
   max: 10, 
   message: "Too many requests, please try again later.",
 });
 
-app.use(RateLimit);
+// app.use(RateLimit);
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
