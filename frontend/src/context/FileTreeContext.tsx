@@ -1,6 +1,5 @@
 "use client"
 import React, {createContext, ReactNode, useContext, useState , useEffect} from "react";
-import { fileTree as intialTree } from "@/data/FolderTree";
 import { toast } from "react-hot-toast";
 import { Node , FileSystemContextType } from "@/types/Node";
 import axios from "axios";
