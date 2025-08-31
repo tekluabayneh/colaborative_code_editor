@@ -8,6 +8,7 @@ import Users from '../models/user';
 import OtpModel from '../models/Otp'; 
 import {sendOtpEmail,sendResetPasswordLink } from '../services/email.service';
 import ResetLinkModel from '../models/ResetPassword';
+
 interface ResetLinkRequestBody {
 	email:string 
 }
@@ -26,11 +27,11 @@ const Register = async (req: Request, res: Response) => {
 	const AddOwner = await Owners.insertOne(userInfo)
 
 	if (!AddOwner || !AddOwner._id) {
-		res.status(400).json({ error: 'User was not registered correctly' });
+		res.status(400).json({ message: 'User was not registered correctly' });
 		return;
 	}
 
-	res.status(200).json({ message: 'Registration successful', });
+	res.status(200).json({ message: 'Registration successful'});
 }
 
 

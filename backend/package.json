@@ -9,7 +9,7 @@
     "predev": "npm run build",
     "dev": "concurrently \"npx tsc -watch\" \"nodemon dist/srever.js\" ",
     "serve_ts": "nodemon",
-     "test":"jest"
+     "test":"jest --watch --reporter=verbose"
   },
   "keywords": [],
   "author": "",
