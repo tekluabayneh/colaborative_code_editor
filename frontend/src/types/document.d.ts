@@ -18,6 +18,7 @@ export type FileSyncHandeleContentType = {
    DeleteFolder:() => void, 
   updateFileToEditor:(file:DocumentType) => void,
   SaveFileContentToDb:() => void,
+UpdateFileName_and_folderName:() => void
 };
 
 
