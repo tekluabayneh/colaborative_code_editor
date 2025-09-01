@@ -1,18 +1,12 @@
 import React, { useRef, useEffect } from "react";
 import Editor, { Monaco } from "@monaco-editor/react";
-import axios from "axios";
 import {useFileTree } from "../context/EditorContext"
+import {extensionToLanguage} from "../data/FolderTree"
+
 export default function CodeEditor() {
 	const {CurrentFileInEditor, SaveFileContentToDb} = useFileTree()
-	// fetch all the folder tree of the user  
-	// first when user click diffretn file it need to change  language 
-	// second when user click diffent file it need to load those file 
-	// thired when user  click (CTL + S)  it need to save those file to db 
-	// four when user 
-	//
 	const editorRef = useRef<any>(null);
 	const monacoRef = useRef<any>(null);
-
 
 	const handleEditorDidMount = (editor: any, monaco: Monaco) => {
 		editorRef.current = editor;
@@ -25,10 +19,9 @@ export default function CodeEditor() {
 		editorRef.current.setValue(file.content);
 		const model = editorRef.current.getModel();
 		if (model) {
-	const extensionToLanguage = { js: "javascript", ts: "typescript", py: "python", html: "html", };
 	const language = extensionToLanguage[file.FileExtenstion] || "javascript";
 	monacoRef.current.editor.setModelLanguage(editorRef.current.getModel(), language);
-
+    console.log("Current language:", model.getLanguageId()); 
 		}
 	};
 
@@ -40,6 +33,15 @@ export default function CodeEditor() {
 			handleFileChange(CurrentFileInEditor.data);
 		}
 	}, [CurrentFileInEditor]);
+
+
+
+ useEffect(() =>{
+
+
+
+	},[])
+
 
 
 
