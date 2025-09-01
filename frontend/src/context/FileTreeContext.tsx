@@ -3,7 +3,6 @@ import React, {createContext, ReactNode, useContext, useState , useEffect} from 
 import { toast } from "react-hot-toast";
 import { Node , FileSystemContextType } from "@/types/Node";
 import axios from "axios";
-const generateId = () => crypto.randomUUID();
 const FileSystemContext = createContext<FileSystemContextType | null>(null);
 
 export const  FileSystemProvider =({children}:{children:ReactNode}) => {
@@ -36,20 +35,6 @@ useEffect(() => {
 }, [fileTree]) ;
 
     const handleSubmit = () => {
-        const FolderId:string | null = localStorage.getItem("folderId")
-
-        const newFolder:Node= {
-            folderid:generateId(),
-            name: name,
-            nodes: [],
-
-        }
-
-        const newFile:Node = {
-            name:name 
-        }
-
-        /// if therer is not folder id in the localStorage create the file and also folder in the root level
             if(name == ""){
                 toast("Please enter a folder or file name.", {
                     icon: "⚠️",
@@ -60,55 +45,6 @@ useEffect(() => {
                 });
                 return 
             }
-
-
-    const addToTree = (nodes: Node[]): Node[] => {
-            console.log(FolderId)
-        return nodes.map(node => {
-            if (node.folderid  === FolderId) {
-                    if(node.nodes && node.nodes?.length >  0 ){
-                return {
-                    ...node,
-                    nodes: [...node.nodes, isFile ? newFile : newFolder]
-                };
-            }
-                }else if(node.nodes && node.nodes.length == 0){
-                    return {
-                        ...node,
-                        nodes:[isFile ? newFile : newFolder]
-                } }
-
-
-  
-            if (node.nodes && node.nodes.length >0 ) {
-                return {
-                    ...node,
-                    nodes: addToTree(node.nodes)
-                };
-            }
-
-            return node;
-        });
-    };
-
-
-        if(!FolderId){
-            setFileTree((prev:Node[]) => [...prev, isFile ? newFile : newFolder])
-            setisModalopen(false)
-            setName("")
-            console.log("file are root level")
-            return 
-        }else{
-        // Add to nested folder
-         setFileTree(prev =>  addToTree(prev))
-            setisModalopen(false)
-            setName("")
-        console.log("📁 Created in nested folder")
-
-    setTimeout(() => {
-        localStorage.setItem("folderId","")
-        },900)
-        }
     }
 
 
