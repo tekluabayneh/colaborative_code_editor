@@ -1,14 +1,12 @@
-import { FilesystemItem } from './filesystem-item';
-import { Node } from '@/types/Node';
+import { FilesystemItem } from "./filesystem-item";
+import { Node } from "@/types/Node";
 
-export default function Page({folders}) {
-    console.log("from FileSytem", folders)
+export default function Page({ folders }) {
   return (
     <ul>
-      {folders?.map((node:Node) => (
+      {folders?.map((node: Node) => (
         <FilesystemItem node={node} key={node.name} />
       ))}
     </ul>
   );
 }
-
