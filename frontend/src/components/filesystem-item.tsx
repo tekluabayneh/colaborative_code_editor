@@ -9,6 +9,7 @@ import { useFileSystem } from '@/context/FileTreeContext';
 import axios from 'axios';
 import {DocumentType} from "../types/document"
 import {useFileTree } from "../context/EditorContext"
+import { createPortal } from 'react-dom';
 
 export function FilesystemItem({ node }: { node: Node }) {
     const { CreateFile_and_FolderWithin} = useFileSystem()
@@ -47,9 +48,6 @@ const fetchcontentFile = async (node:DocumentType) => {
   const result = await axios.get(
     `http://localhost:5000/api/doc/GetSingleDocument/${node.contentId}`
   );
-
-
-  console.log("Result:", result.data);
 	 updateFileToEditor(result.data)
 	} 
 
@@ -58,7 +56,8 @@ const fetchcontentFile = async (node:DocumentType) => {
 
 
             {isRightClick && (
-                <div className="absolute top-2 left-16 w-44 p-3 z-50 bg-gray-900 rounded-xl shadow-lg border border-gray-700">
+			createPortal(
+                <div className="absolute top-50 left-36 w-44 p-3 z-50 bg-gray-900 rounded-xl shadow-lg border border-gray-700">
                     <div className="flex flex-col space-y-2">
                         <span   onClick={() => CreateFile_and_FolderWithin(true)  }  className="cursor-pointer text-white text-sm hover:bg-gray-700 px-3 py-2 rounded-md transition">
                             📝 New File
@@ -66,11 +65,17 @@ const fetchcontentFile = async (node:DocumentType) => {
                         <span onClick={() => CreateFile_and_FolderWithin(false)  } className="cursor-pointer text-white text-sm hover:bg-gray-700 px-3 py-2 rounded-md transition">
                             📁 Create Folder
                         </span>
+   <span onClick={() => CreateFile_and_FolderWithin(false)  } className="cursor-pointer text-white text-sm hover:bg-gray-700 px-3 py-2 rounded-md transition">
+                        ✏️ Rename  
+                        </span>
                         <span   onClick={() => Dletefile_and_folder()  }  className="cursor-pointer text-red-400 text-sm hover:bg-red-900 px-3 py-2 rounded-md transition">
                             🗑️ Delete Folder
                         </span>
                     </div>
-                </div>
+                </div>,
+				document.body
+
+				)
             )}
 
 
