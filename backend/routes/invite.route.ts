@@ -1,5 +1,5 @@
 import express from "express"
-import inviteControllers from "../controllers/invite.controllers"
+import inviteControllers from "../controllers/invite.controller"
 import  authorizeRoles from "../middlewares/role.middleware"   
 import  authenticateMiddleware from "../middlewares/auth.middleware"
 const { sendInvite, acceptInvite} = inviteControllers 
