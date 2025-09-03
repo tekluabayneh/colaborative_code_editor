@@ -45,7 +45,7 @@ DocumentRouter.post(
   (req, res) => DocController.newDocument(req, res)
 );
 DocumentRouter.delete(
-  "/doc/DeleteDocument/:folderId",
+  "/doc/DeleteDocument",
   authenticate,
   authorizeRoles("Admin", "Owner"),
   (req, res) => DocController.DeletedocumentById(req, res)
