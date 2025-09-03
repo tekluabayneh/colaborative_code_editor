@@ -13,12 +13,13 @@ import { createPortal } from "react-dom";
 
 export function FilesystemItem({ node }: { node: Node }) {
   const {
-    UpdateFileName_and_folderName,
+    UpdateFileName,
     DeleteFile,
     DeleteFolder,
     CreateFile_and_FolderWithin,
     updateFileToEditor,
     SaveFileContentToDb,
+    Dletefile_and_folder,
   } = useFileTree();
   const [isOpen, setIsOpen] = useState(false);
   const [isRightClick, setisRightClick] = useState(false);
@@ -59,9 +60,17 @@ export function FilesystemItem({ node }: { node: Node }) {
 
   const RenameFolder_or_file = (node: DocumentType) => {
     console.log("this ths this", node);
-    UpdateFileName_and_folderName(node);
+    UpdateFileName(node);
   };
 
+  const setFlag = (flag: string) => {
+    if (flag == "") return;
+    localStorage.setItem("flag", flag);
+  };
+  
+  useEffect(() => {
+    setFlag("");
+  }, [setFlag]);
   return (
     <li key={node.name} className="relative" onClick={(e) => leftClick(e)}>
       {isRightClick &&
@@ -69,25 +78,33 @@ export function FilesystemItem({ node }: { node: Node }) {
           <div className="absolute top-50 left-36 w-44 p-3 z-50 bg-gray-900 rounded-xl shadow-lg border border-gray-700">
             <div className="flex flex-col space-y-2">
               <span
-                onClick={() => CreateFile_and_FolderWithin(true)}
+                onClick={() => {
+                  CreateFile_and_FolderWithin(node), setFlag("newFile");
+                }}
                 className="cursor-pointer text-white text-sm hover:bg-gray-700 px-3 py-2 rounded-md transition"
               >
                 📝 New File
               </span>
               <span
-                onClick={() => CreateFile_and_FolderWithin(false)}
+                onClick={() => {
+                  CreateFile_and_FolderWithin(node), setFlag("createFolder");
+                }}
                 className="cursor-pointer text-white text-sm hover:bg-gray-700 px-3 py-2 rounded-md transition"
               >
                 📁 Create Folder
               </span>
               <span
-                onClick={() => RenameFolder_or_file(node)}
+                onClick={() => {
+                  RenameFolder_or_file(node), setFlag("Rename");
+                }}
                 className="cursor-pointer text-white text-sm hover:bg-gray-700 px-3 py-2 rounded-md transition"
               >
                 ✏️ Rename
               </span>
               <span
-                onClick={() => Dletefile_and_folder()}
+                onClick={() => {
+                  Dletefile_and_folder(node), setFlag("Delete");
+                }}
                 className="cursor-pointer text-red-400 text-sm hover:bg-red-900 px-3 py-2 rounded-md transition"
               >
                 🗑️ Delete Folder
@@ -117,10 +134,10 @@ export function FilesystemItem({ node }: { node: Node }) {
           </button>
         )}
         {/* @ts-expect-error nodes always exist */}
-        {node?.nodes?.length > 0 ? (
+        {node?.nodes?.length > 0 && node.nodes.cnotentId ? (
           <FolderIcon
             className={`size-6 text-sky-500 ${
-              node.nodes.length === 0 ? "ml-[12px]" : ""
+              node?.nodes.length === 0 ? "ml-[12px]" : ""
             }`}
           />
         ) : (
