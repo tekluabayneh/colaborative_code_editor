@@ -15,11 +15,12 @@ export function FilesystemItem({ node }: { node: Node }) {
   const {
     UpdateFileName,
     DeleteFile,
-    DeleteFolder,
-    CreateFile_and_FolderWithin,
+    newDocument,
+    deleteFolder,
+    handelFolderNam_rename,
     updateFileToEditor,
+    Createfolder,
     SaveFileContentToDb,
-    Dletefile_and_folder,
   } = useFileTree();
   const [isOpen, setIsOpen] = useState(false);
   const [isRightClick, setisRightClick] = useState(false);
@@ -33,14 +34,12 @@ export function FilesystemItem({ node }: { node: Node }) {
 
   const CreateFolder_andFile = (node: Node, e: React.MouseEvent) => {
     e.preventDefault();
-    console.log("Right click", node);
     localStorage.setItem("folderId", JSON.stringify(node.folderid!));
     setisRightClick(!isRightClick);
   };
 
   const leftClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log("Right click");
     setisRightClick(false);
   };
 
@@ -50,7 +49,6 @@ export function FilesystemItem({ node }: { node: Node }) {
       return;
     }
 
-    console.log("Fetching file content for:", node.contentId);
     const result = await axios.get(
       `http://localhost:5000/api/doc/GetSingleDocument/${node.contentId}`,
       { withCredentials: true }
@@ -58,16 +56,11 @@ export function FilesystemItem({ node }: { node: Node }) {
     updateFileToEditor(result.data);
   };
 
-  const RenameFolder_or_file = (node: DocumentType) => {
-    console.log("this ths this", node);
-    UpdateFileName(node);
-  };
-
   const setFlag = (flag: string) => {
     if (flag == "") return;
     localStorage.setItem("flag", flag);
   };
-  
+
   useEffect(() => {
     setFlag("");
   }, [setFlag]);
@@ -79,7 +72,7 @@ export function FilesystemItem({ node }: { node: Node }) {
             <div className="flex flex-col space-y-2">
               <span
                 onClick={() => {
-                  CreateFile_and_FolderWithin(node), setFlag("newFile");
+                  newDocument(node), setFlag("newFile");
                 }}
                 className="cursor-pointer text-white text-sm hover:bg-gray-700 px-3 py-2 rounded-md transition"
               >
@@ -87,7 +80,7 @@ export function FilesystemItem({ node }: { node: Node }) {
               </span>
               <span
                 onClick={() => {
-                  CreateFile_and_FolderWithin(node), setFlag("createFolder");
+                  Createfolder(node), setFlag("createFolder");
                 }}
                 className="cursor-pointer text-white text-sm hover:bg-gray-700 px-3 py-2 rounded-md transition"
               >
@@ -95,7 +88,7 @@ export function FilesystemItem({ node }: { node: Node }) {
               </span>
               <span
                 onClick={() => {
-                  RenameFolder_or_file(node), setFlag("Rename");
+                  handelFolderNam_rename(node), setFlag("Rename");
                 }}
                 className="cursor-pointer text-white text-sm hover:bg-gray-700 px-3 py-2 rounded-md transition"
               >
@@ -103,7 +96,7 @@ export function FilesystemItem({ node }: { node: Node }) {
               </span>
               <span
                 onClick={() => {
-                  Dletefile_and_folder(node), setFlag("Delete");
+                  deleteFolder(node), setFlag("Delete");
                 }}
                 className="cursor-pointer text-red-400 text-sm hover:bg-red-900 px-3 py-2 rounded-md transition"
               >
@@ -134,7 +127,7 @@ export function FilesystemItem({ node }: { node: Node }) {
           </button>
         )}
         {/* @ts-expect-error nodes always exist */}
-        {node?.nodes?.length > 0 && node.nodes.cnotentId ? (
+        {node.contentId == null ? (
           <FolderIcon
             className={`size-6 text-sky-500 ${
               node?.nodes.length === 0 ? "ml-[12px]" : ""
@@ -143,7 +136,10 @@ export function FilesystemItem({ node }: { node: Node }) {
         ) : (
           <DocumentIcon className="ml-[12px] size-6 text-gray-200" />
         )}
-        <span onClick={() => fetchcontentFile(node)}> {node.name} </span>
+        <span onClick={() => fetchcontentFile(node as DocumentType)}>
+          {" "}
+          {node.name}{" "}
+        </span>
       </div>
 
       <AnimatePresence>
