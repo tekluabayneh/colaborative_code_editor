@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Mail, Edit3, Shield, Send, CheckCircle, Pen, Sparkles, Crown, Eye } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import {checkEmailValidity} from "../utils/formValidate"
 
 export default function InviteForm() {
   const [formData, setFormData] = useState({ email: '', role: 'user' });
@@ -20,19 +21,32 @@ export default function InviteForm() {
   };
 
   const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-  try {
-      e.preventDefault();
-    setIsSubmitting(true);
-    setSubmittedEmail('');
+		      e.preventDefault();
+			    setIsSubmitting(true);
+	if(!checkEmailValidity(formData.email)){ 
+	     toast.error("invalid email! or missing input")
+		    setIsSubmitting(false);
+			return 
+		} 
 
+ if(formData.role === "" || formData.email === ""){ 
+	     toast.error("missing form input")
+		    setIsSubmitting(false);
+			return
+		} 
+
+
+	
+  try {
+  console.log(formData)
 const response = await axios.post("http://localhost:5000/api/auth/invite", {role:formData.role, email:formData.email}, {withCredentials:true})
     setSubmittedEmail(formData.email);
     setFormData({ email: '', role: 'user' }); 
     toast.success(response.data.message)
-    setIsSubmitting(true);
-
+    setIsSubmitting(false);
+    setSubmittedEmail('');
   } catch (error:any) {
-  setIsSubmitting(false);
+         setIsSubmitting(false);
 	toast.error(error.response.data.message)
   }
   };
@@ -130,11 +144,11 @@ const response = await axios.post("http://localhost:5000/api/auth/invite", {role
                 <Input
                   id="email"
                   type="email"
+		data-testid="email_input"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   placeholder="colleague@company.com"
                   className="h-14 rounded-2xl border-white/20 bg-white/5 backdrop-blur-sm text-white placeholder:text-gray-400 focus:border-violet-400/50 focus:ring-violet-400/20 transition-all duration-300 pl-4 pr-12"
-                  required
                 />
                 <div className="absolute right-4 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gradient-to-r from-violet-400 to-purple-400 rounded-full animate-pulse"></div>
               </div>
@@ -146,7 +160,7 @@ const response = await axios.post("http://localhost:5000/api/auth/invite", {role
                 <Shield className="w-4 h-4 text-blue-300" />
                 Access Level
               </label>
-              <Select onValueChange={(value) => handleInputChange('role', value)} defaultValue={formData.role}>
+              <Select data-testid="select_role"  onValueChange={(value) => handleInputChange('role', value)} defaultValue={formData.role}>
                 <SelectTrigger 
                   id="role" 
                   className="h-14 rounded-2xl border-white/20 bg-white/5 backdrop-blur-sm text-white focus:border-blue-400/50 focus:ring-blue-400/20 transition-all duration-300"
@@ -212,6 +226,7 @@ const response = await axios.post("http://localhost:5000/api/auth/invite", {role
             <Button
               type="submit"
               disabled={isSubmitting}
+		data-testid="send_invite"
               className="group relative w-full h-14 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white rounded-2xl font-medium shadow-2xl hover:shadow-violet-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
             >
               {/* Button background animation */}
