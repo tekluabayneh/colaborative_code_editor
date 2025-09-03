@@ -13,9 +13,16 @@ const FileSystemContext = createContext<FileSystemContextType | null>(null);
 
 export const FileSystemProvider = ({ children }: { children: ReactNode }) => {
   const [fileTree, setFileTree] = useState<Node[]>();
-  const email = "fake@gmail.com";
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
+    let loclStorageEamil = localStorage.getItem("email")!;
+    setEmail(loclStorageEamil);
+  }),
+    [email];
+
+  useEffect(() => {
+    if (!email) return;
     const handleFetchFileTree = async (email: string) => {
       try {
         const response = await axios.post(
@@ -26,17 +33,13 @@ export const FileSystemProvider = ({ children }: { children: ReactNode }) => {
           { withCredentials: true }
         );
         setFileTree(response.data);
-        console.log(fileTree);
+        console.log(response);
       } catch (err) {
         console.error("Error fetching file tree:", err);
       }
     };
     handleFetchFileTree(email);
   }, [email]);
-
-  useEffect(() => {
-    console.log("✅ File Tree Updated", JSON.stringify(fileTree, null, 2));
-  }, [fileTree]);
 
   return (
     <FileSystemContext.Provider
