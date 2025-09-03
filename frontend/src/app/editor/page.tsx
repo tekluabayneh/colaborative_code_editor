@@ -9,7 +9,7 @@ import { FilePlus, FolderPlus, Menu, X } from "lucide-react";
 import { useFileTree } from "@/context/EditorContext";
 const Home = () => {
   const { fileTree } = useFileSystem();
-  const { isModalOpen, Createfolder, setisFile } = useFileTree();
+  const { isModalOpen, Createfolder } = useFileTree();
   const [isFileSystemOpen, setIsFileSystemOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
