@@ -8,7 +8,7 @@ interface IDocument extends Document {
 }
 
 const DocumentSchema: Schema<IDocument> = new Schema({
-  content: { type: String, required: true },
+  content: { type: String },
   language: { type: String, required:true, default: "plaintext" },
   ownerType: { type: String, required: true, enum: ["User", "Owner"] },
   ownerId: { type: Schema.Types.ObjectId, required: true, refPath: "ownerType" },
