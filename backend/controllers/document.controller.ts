@@ -82,8 +82,9 @@ class DocumentController {
         res.status(404).json({ message: "folder tree are not found" });
         return;
       }
+      console.log(fileTree);
 
-      const result = await getSubtree(fileTree[0].folderId);
+      const result = await getSubtree(fileTree[0]?.folderId);
       res.send([result]);
     } catch (error) {
       console.error(error);
@@ -122,7 +123,7 @@ class DocumentController {
 
   // ======================================//////=====================================
   async DeletedocumentById(req: Request, res: Response): Promise<void> {
-    if (!req.params.folderId || !req.body.email) {
+    if (!req.body.folderId || !req.body.email) {
       res.status(404).json({ message: "folder id and email  are required" });
       return;
     }
@@ -131,7 +132,8 @@ class DocumentController {
       folderId: string;
     };
 
-    const { folderId } = req.params as { folderId: string } satisfies oneTy;
+    const { folderId } = req.body as { folderId: string } satisfies oneTy;
+
     try {
       const docs = await FolderTree.find({ folderId: folderId });
 
@@ -164,12 +166,7 @@ class DocumentController {
         await FolderTree.deleteOne({ folderId: id });
       }
 
-      res.send({
-        do: docs,
-        result: folderToBeDeleted,
-        ids: IDS,
-        folder: FolderIDS,
-      });
+      res.status(200).json({ message: "document and file are deleted" });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error" });
@@ -266,6 +263,7 @@ class DocumentController {
     try {
       const folderid = nanoid(12);
       const { parentId, ownerId, folderName } = req.body;
+      console.log(parentId, ownerId, folderName);
 
       const getOwnerId = await Owners.findOne({ _id: ownerId });
 
@@ -328,6 +326,7 @@ class DocumentController {
         .json({ message: "owner was not found when creating file" });
       return;
     }
+    console.log(data);
     const CreateDocument = await Documents.insertOne(data);
 
     if (!CreateDocument) {
