@@ -12,7 +12,7 @@ import axios from "axios";
 const FileSystemContext = createContext<FileSystemContextType | null>(null);
 
 export const FileSystemProvider = ({ children }: { children: ReactNode }) => {
-  const [fileTree, setFileTree] = useState<Node[]>();
+  const [fileTree, setFileTree] = useState<Node[] | null>(null);
   const [email, setEmail] = useState("");
 
   useEffect(() => {
@@ -33,7 +33,12 @@ export const FileSystemProvider = ({ children }: { children: ReactNode }) => {
           { withCredentials: true }
         );
         setFileTree(response.data);
-        console.log(response);
+
+        if (response?.data[0]) {
+          localStorage.setItem("main_DocumentId", response?.data[0]._id);
+        } else {
+          localStorage.setItem("main_DocumentId", "");
+        }
       } catch (err) {
         console.error("Error fetching file tree:", err);
       }
