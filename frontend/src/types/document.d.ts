@@ -1,27 +1,34 @@
 export type DocumentType = {
-	contentId :string | null, 
-	folderId :string, 
-	name :string, 
-	nodes :DocumentType[], 
-	ownerId :string, 
-	ownerType:string,
-	parentId :string | null
-	_id:string,
-}
-
-
-
-export type FileSyncHandeleContentType = {
-    // setFileTree: React.Dispatch<React.SetStateAction<Node[]>>;
-   CurrentFileInEditor:[]
-   DeleteFile: () => void,
-   DeleteFolder:() => void, 
-  updateFileToEditor:(file:DocumentType) => void,
-  SaveFileContentToDb:() => void,
-UpdateFileName_and_folderName:() => void
+  contentId: string | null;
+  folderId: string;
+  name: string;
+  nodes: DocumentType[];
+  ownerId: string;
+  ownerType: string;
+  parentId: string | null;
+  _id: string;
 };
 
-
+export type FileSyncHandeleContentType = {
+  CurrentFileInEditor: DocumentType[] | null;
+  updateFileToEditor: (file: DocumentType[]) => void;
+  name: string;
+  setName: React.Dispatch<React.SetStateAction<string>>;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  deleteModalOpen: boolean;
+  isModalOpen: boolean;
+  newDocument: (node: DocumentType) => void;
+  flag: string;
+  setFlag: React.Dispatch<React.SetStateAction<string>>;
+  Createfolder: (node: DocumentType) => void;
+  deleteFolder: (node: DocumentType) => void;
+  UpdateDocument: (node: DocumentType) => void;
+  handelFolderNam_rename: (node: DocumentType) => void;
+  Dletefile_and_folder: () => void;
+  SaveFileContentToDb: () => void;
+  handleSubmit: () => void;
+  handleCancel: () => void;
+};
 
 export const extensionToLanguage: Record<string, string> = {
   js: "javascript",
@@ -48,4 +55,3 @@ export const extensionToLanguage: Record<string, string> = {
   dockerfile: "dockerfile",
   makefile: "makefile",
 };
-
