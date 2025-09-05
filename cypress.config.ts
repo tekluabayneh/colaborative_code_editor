@@ -8,4 +8,5 @@ export default defineConfig({
     videosFolder: "E2E/cypress/videos",
     screenshotsFolder: "E2E/cypress/screenshots",
   },
+
 });
