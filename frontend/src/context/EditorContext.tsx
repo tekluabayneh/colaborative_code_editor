@@ -14,6 +14,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
   const [name, setName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [flag, setFlag] = useState("");
   const [CurrentFileInEditor, SetCurrentFileInEditor] = useState<
     DocumentType[] | null
   >(null);
@@ -27,11 +28,11 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     name: "",
   });
 
-  const UpdateFileName = async (node: DocumentType) => {
+  const UpdateFileName = async ({ node }: { node: DocumentType }) => {
     try {
       const res = await axios.put(
         "http://localhost:5000/api/doc/UpdateFolderName/",
-        { folderId: node.node.folderId, newName: node.name },
+        { folderId: node.folderId, newName: name },
         { withCredentials: true }
       );
       toast.success(res.data.message);
@@ -49,16 +50,16 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     // console.log(res)
   };
 
-  const newFile = async (node: DocumentType) => {
+  const newFile = async ({ node }: { node: DocumentType }) => {
     try {
       const res = await axios.post(
         "http://localhost:5000/api/doc/newDocument",
         {
-          parentId: node.node._id,
+          parentId: node._id,
           content: "",
-          fileName: node.name,
-          ownerId: node.node.ownerId,
-          ownerType: node.node.ownerType,
+          fileName: name,
+          email: localStorage.getItem("email"),
+          ownerType: node.ownerType,
         },
         { withCredentials: true }
       );
@@ -71,14 +72,14 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const CreateFolder = async (node: DocumentType) => {
+  const CreateFolder = async ({ node }: { node: DocumentType }) => {
     try {
       const res = await axios.post(
         "http://localhost:5000/api/doc/createFolder",
         {
-          parentId: node.node._id,
-          folderName: node.name,
-          ownerId: node.node.ownerId,
+          parentId: node._id,
+          folderName: name,
+          email: localStorage.getItem("email"),
         },
         { withCredentials: true }
       );
@@ -91,15 +92,14 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const DeleteFolder = async (node: DocumentType) => {
+  const DeleteFolder = async ({ node }: { node: DocumentType }) => {
     try {
-      console.log("man man man", node);
       const res = await axios.delete(
         `http://localhost:5000/api/doc/DeleteDocument`,
         {
           data: {
             email: localStorage.getItem("email"),
-            folderId: node.node.folderId,
+            folderId: node.folderId,
           },
           withCredentials: true,
         }
@@ -118,8 +118,6 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const newDocument = (node: DocumentType) => {
-    console.log("new document man", node);
-
     settoBeupdated((prev) => ({
       ...prev,
       node: node,
@@ -132,8 +130,6 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
   const SaveFileContentToDb = () => {};
 
   const Createfolder = (node: DocumentType) => {
-    console.log("new folder", node);
-
     settoBeupdated((prev) => ({
       ...prev,
       node: node,
@@ -148,16 +144,15 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
       ...prev,
       node: node,
     }));
-    console.log("this work but ugly", node);
     setDeleteModalOpen(false);
     setIsModalOpen(true);
   };
+
   const deleteFolder = (node: DocumentType) => {
     settoBeupdated((prev) => ({
       ...prev,
       node: node,
     }));
-    console.log("this work but ugly", node);
     setIsModalOpen(true);
     setDeleteModalOpen(true);
   };
@@ -171,10 +166,14 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     setDeleteModalOpen(false);
   };
 
-  const handleSubmit = () => {
-    const flag = localStorage.getItem("flag");
+  useEffect(() => {
+    const getFlag = localStorage.getItem("flag");
+    if (!getFlag) return;
+    setFlag(getFlag);
+  }, [flag]);
 
-    const toUpdate = { ...toBeUpdated, name };
+  const toUpdate = { ...toBeUpdated, name } as { node: DocumentType };
+  const handleSubmit = () => {
     function setToBeUpdatedCase() {
       if (!flag) return;
       switch (flag) {
@@ -191,7 +190,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
           DeleteFolder(toUpdate);
           break;
         default:
-          return "nothing man";
+          return "nothing to update";
       }
     }
 
@@ -219,10 +218,13 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     setIsModalOpen(false);
     setName("");
   };
+
   return (
     <FileTreeContent.Provider
       value={{
         name,
+        flag,
+        setFlag,
         setName,
         Createfolder,
         isModalOpen,
