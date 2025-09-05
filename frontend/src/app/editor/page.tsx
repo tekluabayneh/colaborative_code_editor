@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChatSidebar } from "@/components/ChatBar";
 import CodeEditor from "../../components/Editor";
 import FileSystem from "@/components/FileSystem";
@@ -7,15 +7,104 @@ import NameInputModal from "../../components/ui/CreateFolderModal";
 import { useFileSystem } from "@/context/FileTreeContext";
 import { FilePlus, FolderPlus, Menu, X } from "lucide-react";
 import { useFileTree } from "@/context/EditorContext";
+import { createPortal } from "react-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
 const Home = () => {
   const { fileTree } = useFileSystem();
-  const { isModalOpen, Createfolder } = useFileTree();
+  const { isModalOpen, flag, setFlag, name, setName } = useFileTree();
   const [isFileSystemOpen, setIsFileSystemOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isCreateModalOpen, setisCreateModalOpen] = useState(false);
+  // const [name, setName] = useState("");
+  // const [flag, setFlag] = useState("");
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    const getEmail = localStorage.getItem("email");
+    if (!getEmail) return;
+    setEmail(getEmail);
+  }, [email]);
+
+  const newFile = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/doc/newDocument",
+        {
+          parentId: localStorage.getItem("main_DocumentId"),
+          content: "",
+          fileName: name,
+          email: email,
+          ownerType: "Owner",
+        },
+        { withCredentials: true }
+      );
+      toast.success(res.data.message);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message = error.response?.data?.message || error.message;
+        toast.error(message);
+      }
+    }
+  };
+
+  const CreateFolder = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/doc/createFolder",
+        {
+          parentId: null,
+          folderName: name,
+          email: email,
+        },
+        { withCredentials: true }
+      );
+      toast.success(res.data.message);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message = error.response?.data?.message || error.message;
+        toast.error(message);
+      }
+    }
+  };
+  const setFlagAndOPenModal = (flag: string) => {
+    localStorage.setItem("flag", flag);
+    setisCreateModalOpen(true);
+  };
+
+  useEffect(() => {
+    const getFlag = localStorage.getItem("flag");
+    if (!getFlag) return;
+    setFlag(getFlag);
+  }, [flag]);
+
+  const handleSubmit = () => {
+    if (name == "") {
+      toast("Please enter a folder or file name.", {
+        icon: "⚠️",
+        style: {
+          background: "#fef3c7",
+          color: "#92400e",
+        },
+      });
+      return;
+    }
+    if (flag == "createFolder") {
+      CreateFolder();
+      setName("");
+    } else if (flag == "newFile") {
+      newFile();
+      setName("");
+    }
+    setisCreateModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setisCreateModalOpen(false);
+  };
 
   return (
     <div className="w-full h-screen bg-gray-950 text-gray-100 flex relative overflow-hidden">
-      {/* File System Overlay - Mobile/Tablet */}
       {isFileSystemOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
@@ -34,15 +123,23 @@ const Home = () => {
             </div>
             <div className="flex items-center justify-center gap-6 p-4 border-b border-gray-700/50">
               <button
-                onClick={() => Createfolder()}
-                className="flex items-center gap-2 px-3 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 rounded-lg transition-all duration-200 hover:scale-105"
+                onClick={() => setFlagAndOPenModal("createFolder")}
+                className="flex items-center gap-2 px-3 py-2 cursor-pointer bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 rounded-lg transition-all duration-200 hover:scale-105"
               >
                 <FolderPlus className="w-5 h-5" />
                 <span className="text-sm font-medium">Folder</span>
               </button>
               <button
-                onClick={() => Createfolder()}
-                className="flex items-center gap-2 px-3 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 rounded-lg transition-all duration-200 hover:scale-105"
+                disabled={localStorage.getItem("main_DocumentId") === ""}
+                onClick={() => setFlagAndOPenModal("newFile")}
+                className="flex items-center gap-2 px-3 py-2 
+             bg-blue-500/10 
+             text-blue-400 
+             rounded-lg 
+             transition-all duration-200
+             cursor-pointer 
+             hover:bg-blue-500/20 hover:scale-105
+             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-500/10 disabled:hover:scale-100"
               >
                 <FilePlus className="w-5 h-5" />
                 <span className="text-sm font-medium">File</span>
@@ -55,6 +152,42 @@ const Home = () => {
         </div>
       )}
 
+      {isCreateModalOpen
+        ? createPortal(
+            <div className="mx-auto fixed inset-0 bg-opacity-20 flex items-center justify-center z-50">
+              <div className="bg-gray-900 rounded-xl shadow-2xl p-6 w-96 border border-gray-700">
+                {/* Title */}
+                <h2 className="text-lg font-semibold mb-4 text-white">
+                  {flag == "createFolder" ? "Create folder" : "Create file"}
+                </h2>
+                <input
+                  type="text"
+                  value={name}
+                  placeholder="Enter name..."
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full bg-gray-800 text-white border border-gray-600 rounded-md px-3 py-2 mb-4 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                {/* Buttons */}
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => handleSubmit()}
+                    className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-4 py-2 rounded-md transition"
+                  >
+                    Create
+                  </button>
+                  <button
+                    onClick={() => handleCancel()}
+                    className="bg-gray-700 cursor-pointer text-white px-4 py-2 rounded-md hover:bg-gray-600 transition"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>,
+            document.body
+          )
+        : ""}
+
       {/* File System Sidebar - Desktop */}
       <div className="hidden pl-1 lg:flex lg:w-50 bg-white/10 border-r border-white/40 flex-col">
         <div className="flex items-center justify-between p-4 border-b border-gray-700">
@@ -62,15 +195,23 @@ const Home = () => {
         </div>
         <div className="flex items-center justify-center gap-6 p-4 border-b border-gray-700/50">
           <button
-            onClick={() => Createfolder()}
+            onClick={() => setFlagAndOPenModal("createFolder")}
             className="flex items-center gap-2   cursor-pointer px-3 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 rounded-lg transition-all duration-200 hover:scale-105"
           >
             <FolderPlus className="w-5 h-5" />
             <span className="text-sm font-medium">Folder</span>
           </button>
           <button
-            onClick={() => Createfolder()}
-            className="flex items-center cursor-pointer gap-2 px-3 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 rounded-lg transition-all duration-200 hover:scale-105"
+            disabled={localStorage.getItem("main_DocumentId") === ""}
+            onClick={() => setFlagAndOPenModal("newFile")}
+            className="flex items-center gap-2 px-3 py-2 
+             bg-blue-500/10 
+             text-blue-400 
+             rounded-lg 
+             transition-all duration-200
+             cursor-pointer 
+             hover:bg-blue-500/20 hover:scale-105
+             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-500/10 disabled:hover:scale-100"
           >
             <FilePlus className="w-5 h-5" />
             <span className="text-sm font-medium">File</span>
@@ -80,7 +221,6 @@ const Home = () => {
           <FileSystem folders={fileTree} />
         </div>
       </div>
-
       {/* Main Editor Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Bar */}
@@ -114,7 +254,6 @@ const Home = () => {
           <CodeEditor />
         </div>
       </div>
-
       {/* Chat Sidebar - Mobile Overlay */}
       {isChatOpen && (
         <div className="fixed inset-0 z-40 ">
