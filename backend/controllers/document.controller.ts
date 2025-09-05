@@ -252,20 +252,15 @@ class DocumentController {
   }
 
   async createFolder(req: Request, res: Response): Promise<void> {
-    if (
-      !req.body.folderName ||
-      !("parentId" in req.body) ||
-      !req.body.ownerId
-    ) {
+    if (!req.body.folderName || !("parentId" in req.body) || !req.body.email) {
       res.status(400).json({ message: "all input are mandatory" });
       return;
     }
     try {
       const folderid = nanoid(12);
-      const { parentId, ownerId, folderName } = req.body;
-      console.log(parentId, ownerId, folderName);
+      const { parentId, folderName, email } = req.body;
 
-      const getOwnerId = await Owners.findOne({ _id: ownerId });
+      const getOwnerId = await Owners.findOne({ email: email });
 
       if (!getOwnerId) {
         res
@@ -301,7 +296,7 @@ class DocumentController {
       !("parentId" in req.body) ||
       !req.body.fileName ||
       !req.body.ownerType ||
-      !req.body.ownerId
+      !req.body.email
     ) {
       res.status(400).json({ message: "all input are mandatory" });
       return;
@@ -311,14 +306,13 @@ class DocumentController {
       parentId: string;
       content: any;
       fileName: string;
-      ownerId: string;
+      email: string;
       ownerType: string;
     };
     const folderid = nanoid(12);
-    const { parentId, content, fileName, ownerId, ownerType } =
+    const { parentId, content, fileName, email, ownerType } =
       req.body as bodyType;
-    const data = { parentId, content, fileName, ownerId, ownerType };
-    const getOwnerId = await Owners.findOne({ _id: ownerId });
+    const getOwnerId = await Owners.findOne({ email: email });
 
     if (!getOwnerId) {
       res
@@ -326,7 +320,14 @@ class DocumentController {
         .json({ message: "owner was not found when creating file" });
       return;
     }
-    console.log(data);
+
+    const data = {
+      parentId,
+      content,
+      fileName,
+      ownerId: getOwnerId._id,
+      ownerType,
+    };
     const CreateDocument = await Documents.insertOne(data);
 
     if (!CreateDocument) {
