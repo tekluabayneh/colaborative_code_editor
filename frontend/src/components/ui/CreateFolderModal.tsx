@@ -10,9 +10,16 @@ type PropsType = {
   isFile: boolean;
 };
 const NameInputModal = () => {
-  const { name, setName, handleSubmit, handleCancel, deleteModalOpen } =
-    useFileTree();
-  const flag = localStorage.getItem("flag");
+  const {
+    name,
+    setName,
+    flag,
+    setFlag,
+    handleSubmit,
+    handleCancel,
+    deleteModalOpen,
+  } = useFileTree();
+  // const flag = localStorage.getItem("flag");
 
   const isRename = flag === "Rename";
 
@@ -56,7 +63,7 @@ const NameInputModal = () => {
               deleteModalOpen
                 ? "bg-red-600 hover:bg-red-700"
                 : "bg-blue-600 hover:bg-blue-700"
-            } text-white px-4 py-2 rounded-md transition`}
+            } text-white px-4 py-2 rounded-md cursor-pointer transition`}
           >
             {deleteModalOpen
               ? "Delete Anyway"
@@ -66,7 +73,7 @@ const NameInputModal = () => {
           </button>
           <button
             onClick={() => handleCancel()}
-            className="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition"
+            className="bg-gray-700 text-white cursor-pointer px-4 py-2 rounded-md hover:bg-gray-600 transition"
           >
             Cancel
           </button>
