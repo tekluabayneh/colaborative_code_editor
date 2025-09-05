@@ -5,22 +5,18 @@ import { DocumentIcon, FolderIcon } from "@heroicons/react/solid";
 import { AnimatePresence, motion } from "framer-motion";
 import { Node } from "../types/Node";
 import { useState, useEffect } from "react";
-import { useFileSystem } from "@/context/FileTreeContext";
 import axios from "axios";
 import { DocumentType } from "../types/document";
 import { useFileTree } from "../context/EditorContext";
 import { createPortal } from "react-dom";
 
-export function FilesystemItem({ node }: { node: Node }) {
+export function FilesystemItem({ node }: { node: DocumentType }) {
   const {
-    UpdateFileName,
-    DeleteFile,
     newDocument,
     deleteFolder,
     handelFolderNam_rename,
     updateFileToEditor,
     Createfolder,
-    SaveFileContentToDb,
   } = useFileTree();
   const [isOpen, setIsOpen] = useState(false);
   const [isRightClick, setisRightClick] = useState(false);
@@ -65,7 +61,7 @@ export function FilesystemItem({ node }: { node: Node }) {
     setFlag("");
   }, [setFlag]);
   return (
-    <li key={node.name} className="relative" onClick={(e) => leftClick(e)}>
+    <li key={node?.name} className="relative" onClick={(e) => leftClick(e)}>
       {isRightClick &&
         createPortal(
           <div className="absolute top-50 left-36 w-44 p-3 z-50 bg-gray-900 rounded-xl shadow-lg border border-gray-700">
@@ -115,7 +111,7 @@ export function FilesystemItem({ node }: { node: Node }) {
         onContextMenu={(e) => CreateFolder_andFile(node, e)}
         className="flex items-center gap-0.5 py-1 cursor-pointer"
       >
-        {node.nodes && node.nodes.length > 0 && (
+        {node?.nodes && node?.nodes?.length > 0 && (
           <button>
             <motion.span
               animate={{ rotate: isOpen ? 90 : 0 }}
@@ -126,11 +122,10 @@ export function FilesystemItem({ node }: { node: Node }) {
             </motion.span>
           </button>
         )}
-        {/* @ts-expect-error nodes always exist */}
-        {node.contentId == null ? (
+        {node?.contentId == null ? (
           <FolderIcon
             className={`size-6 text-sky-500 ${
-              node?.nodes.length === 0 ? "ml-[12px]" : ""
+              node?.nodes?.length === 0 ? "ml-[12px]" : ""
             }`}
           />
         ) : (
@@ -138,7 +133,7 @@ export function FilesystemItem({ node }: { node: Node }) {
         )}
         <span onClick={() => fetchcontentFile(node as DocumentType)}>
           {" "}
-          {node.name}{" "}
+          {node?.name}{" "}
         </span>
       </div>
 
@@ -152,7 +147,7 @@ export function FilesystemItem({ node }: { node: Node }) {
             className="pl-3 overflow-hidden flex flex-col justify-end"
           >
             {node.nodes?.map((node) => (
-              <FilesystemItem node={node} key={node.name} />
+              <FilesystemItem node={node} key={node?.name} />
             ))}
           </motion.ul>
         )}
