@@ -26,8 +26,9 @@ DocumentRouter.put(
   authorizeRoles("Admin", "Owner"),
   (req, res) => DocController.UpdateFolderName(req, res)
 );
+
 DocumentRouter.put(
-  "/doc/UpdateFileName",
+  "/doc/updateDocumentContent",
   authenticate,
   authorizeRoles("Admin", "Owner"),
   (req, res) => DocController.UpdateDocument(req, res)
