@@ -6,7 +6,6 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import { toast } from "react-hot-toast";
 import { Node, FileSystemContextType } from "@/types/Node";
 import axios from "axios";
 const FileSystemContext = createContext<FileSystemContextType | null>(null);
@@ -51,6 +50,7 @@ export const FileSystemProvider = ({ children }: { children: ReactNode }) => {
       value={{
         fileTree,
         setFileTree,
+        email,
       }}
     >
       {children}
