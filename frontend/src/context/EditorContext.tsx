@@ -10,23 +10,48 @@ import { DocumentType, FileSyncHandeleContentType } from "../types/document";
 import axios from "axios";
 const FileTreeContent = createContext<FileSyncHandeleContentType | null>(null);
 import toast from "react-hot-toast";
+import { useFileSystem } from "./FileTreeContext";
+type nodes = {
+  node: DocumentType | [];
+  name: string;
+};
 export const FileContentProvider = ({ children }: { children: ReactNode }) => {
   const [name, setName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [flag, setFlag] = useState("");
+  const { setFileTree, email } = useFileSystem();
   const [CurrentFileInEditor, SetCurrentFileInEditor] = useState<
     DocumentType[] | null
   >(null);
-  type nodes = {
-    node: DocumentType | [];
-    name: string;
-  };
 
   const [toBeUpdated, settoBeupdated] = useState<nodes>({
     node: [],
     name: "",
   });
+
+  const handelRefresh = async (email: string) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/doc/GetAllFolderTree",
+        {
+          email: email,
+        },
+        { withCredentials: true }
+      );
+      if (!response.data) return;
+      // @ts-ignore
+      setFileTree(response.data);
+
+      if (response?.data[0]) {
+        localStorage.setItem("main_DocumentId", response?.data[0]._id);
+      } else {
+        localStorage.setItem("main_DocumentId", "");
+      }
+    } catch (err) {
+      console.error("Error fetching file tree:", err);
+    }
+  };
 
   const UpdateFileName = async ({ node }: { node: DocumentType }) => {
     try {
@@ -36,6 +61,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
         { withCredentials: true }
       );
       toast.success(res.data.message);
+      await handelRefresh(email);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message = error.response?.data?.message || error.message;
@@ -64,6 +90,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
         { withCredentials: true }
       );
       toast.success(res.data.message);
+      await handelRefresh(email);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message = error.response?.data?.message || error.message;
@@ -84,6 +111,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
         { withCredentials: true }
       );
       toast.success(res.data.message);
+      await handelRefresh(email);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message = error.response?.data?.message || error.message;
@@ -105,6 +133,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
         }
       );
       toast.success(res.data.message);
+      await handelRefresh(email);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message = error.response?.data?.message || error.message;
@@ -116,45 +145,23 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
   const updateFileToEditor = (file: DocumentType[]) => {
     SetCurrentFileInEditor(file);
   };
-
-  const newDocument = (node: DocumentType) => {
-    settoBeupdated((prev) => ({
-      ...prev,
-      node: node,
-    }));
-
-    setDeleteModalOpen(false);
-    setIsModalOpen(true);
-  };
-
   const SaveFileContentToDb = () => {};
 
-  const Createfolder = (node: DocumentType) => {
-    settoBeupdated((prev) => ({
-      ...prev,
-      node: node,
-    }));
+  const openModalWithFlag = (
+    node: DocumentType,
+    flagValue: string,
+    isDelete: boolean = false
+  ) => {
+    setFlag(flagValue);
+    localStorage.setItem("flag", flagValue);
+    console.log("flag set to", flagValue);
 
-    setDeleteModalOpen(false);
-    setIsModalOpen(true);
-  };
-
-  const handelFolderNam_rename = (node: DocumentType) => {
-    settoBeupdated((prev) => ({
-      ...prev,
-      node: node,
-    }));
-    setDeleteModalOpen(false);
-    setIsModalOpen(true);
-  };
-
-  const deleteFolder = (node: DocumentType) => {
     settoBeupdated((prev) => ({
       ...prev,
       node: node,
     }));
     setIsModalOpen(true);
-    setDeleteModalOpen(true);
+    setDeleteModalOpen(isDelete);
   };
 
   const handleCancel = () => {
@@ -165,12 +172,6 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     setIsModalOpen(true);
     setDeleteModalOpen(false);
   };
-
-  useEffect(() => {
-    const getFlag = localStorage.getItem("flag");
-    if (!getFlag) return;
-    setFlag(getFlag);
-  }, [flag]);
 
   const toUpdate = { ...toBeUpdated, name } as { node: DocumentType };
   const handleSubmit = () => {
@@ -226,20 +227,16 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
         flag,
         setFlag,
         setName,
-        Createfolder,
         isModalOpen,
         setIsModalOpen,
-        newDocument,
-        CurrentFileInEditor,
-        deleteFolder,
-        handelFolderNam_rename,
-        deleteModalOpen,
-        UpdateDocument,
         Dletefile_and_folder,
         updateFileToEditor,
         SaveFileContentToDb,
         handleSubmit,
         handleCancel,
+        openModalWithFlag,
+        deleteModalOpen,
+        CurrentFileInEditor,
       }}
     >
       {children}
