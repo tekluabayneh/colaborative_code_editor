@@ -1,26 +1,11 @@
 "use client";
 import React, { useEffect } from "react";
-import { Node } from "../../types/Node";
 import { useFileTree } from "@/context/EditorContext";
-import { DocumentDuplicateIcon } from "@heroicons/react/solid";
 
-type PropsType = {
-  setFileTree: React.Dispatch<React.SetStateAction<Node[]>>;
-  setisModalopen: React.Dispatch<React.SetStateAction<boolean>>;
-  isFile: boolean;
-};
 const NameInputModal = () => {
-  const {
-    name,
-    setName,
-    flag,
-    setFlag,
-    handleSubmit,
-    handleCancel,
-    deleteModalOpen,
-  } = useFileTree();
-  // const flag = localStorage.getItem("flag");
-
+  const { name, setName, flag, handleSubmit, handleCancel, deleteModalOpen } =
+    useFileTree();
+  console.log("this is the flag", flag);
   const isRename = flag === "Rename";
 
   return (
