@@ -17,17 +17,17 @@ export type FileSyncHandeleContentType = {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   deleteModalOpen: boolean;
   isModalOpen: boolean;
-  newDocument: (node: DocumentType) => void;
   flag: string;
   setFlag: React.Dispatch<React.SetStateAction<string>>;
-  Createfolder: (node: DocumentType) => void;
-  deleteFolder: (node: DocumentType) => void;
-  UpdateDocument: (node: DocumentType) => void;
-  handelFolderNam_rename: (node: DocumentType) => void;
   Dletefile_and_folder: () => void;
   SaveFileContentToDb: () => void;
   handleSubmit: () => void;
   handleCancel: () => void;
+  openModalWithFlag: (
+    node: DocumentType,
+    flagValue: string,
+    isDelete?: boolean
+  ) => void;
 };
 
 export const extensionToLanguage: Record<string, string> = {
