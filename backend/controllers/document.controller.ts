@@ -41,14 +41,14 @@ async function getSubtree(
   return fetchChildren(root);
 }
 
-const GetAllOwnerFolderTree = async (req: Request, res: Response) => {
+export const GetAllOwnerFolderTree = async (req: Request, res: Response) => {
   const { email } = req.body as { email: string };
 
   const IsRoleUser = await validator.isUserRoleOwnerOrUser(email);
 
   // check if the user is found
   if (!IsRoleUser) {
-    res.status(404).json({ message: "user is not found" });
+    res.status(404).json({ message: "user not found" });
     return;
   }
 
@@ -82,12 +82,10 @@ class DocumentController {
         res.status(404).json({ message: "folder tree are not found" });
         return;
       }
-      console.log(fileTree);
 
       const result = await getSubtree(fileTree[0]?.folderId);
       res.send([result]);
     } catch (error) {
-      console.error(error);
       res.status(500).json({ message: "Internal server error" });
     }
   }
