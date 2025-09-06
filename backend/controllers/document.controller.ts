@@ -61,7 +61,7 @@ export const GetAllOwnerFolderTree = async (req: Request, res: Response) => {
     findOwnerId = IsRoleUser?.Owners_user?._id;
   }
 
-  // now get all the folder tree taht are labed with ownder id
+  //  get all the folder tree taht are labed with ownder id
   const fileTree = await FolderTree.find({ ownerId: findOwnerId });
 
   return fileTree;
@@ -111,6 +111,7 @@ class DocumentController {
         ownerId: documentData.ownerId,
         FileExtenstion: documentData.language,
         content: documentData.content,
+        id: documentData._id,
       };
       res.status(200).json({ message: "data is send successfully", data });
     } catch (error) {
@@ -206,7 +207,6 @@ class DocumentController {
       const contentName = await Documents.findOne({
         _id: findFolder.contentId,
       });
-      console.log("this man", contentName);
 
       if (!contentName) return;
 
@@ -322,7 +322,7 @@ class DocumentController {
     const data = {
       parentId,
       content,
-      fileName,
+      language: fileName,
       ownerId: getOwnerId._id,
       ownerType,
     };
