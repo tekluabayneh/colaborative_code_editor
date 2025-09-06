@@ -11,13 +11,7 @@ import { useFileTree } from "../context/EditorContext";
 import { createPortal } from "react-dom";
 
 export function FilesystemItem({ node }: { node: DocumentType }) {
-  const {
-    newDocument,
-    deleteFolder,
-    handelFolderNam_rename,
-    updateFileToEditor,
-    Createfolder,
-  } = useFileTree();
+  const { updateFileToEditor, openModalWithFlag } = useFileTree();
   const [isOpen, setIsOpen] = useState(false);
   const [isRightClick, setisRightClick] = useState(false);
 
@@ -30,7 +24,6 @@ export function FilesystemItem({ node }: { node: DocumentType }) {
 
   const CreateFolder_andFile = (node: Node, e: React.MouseEvent) => {
     e.preventDefault();
-    localStorage.setItem("folderId", JSON.stringify(node.folderid!));
     setisRightClick(!isRightClick);
   };
 
@@ -52,48 +45,32 @@ export function FilesystemItem({ node }: { node: DocumentType }) {
     updateFileToEditor(result.data);
   };
 
-  const setFlag = (flag: string) => {
-    if (flag == "") return;
-    localStorage.setItem("flag", flag);
-  };
-
-  useEffect(() => {
-    setFlag("");
-  }, [setFlag]);
   return (
-    <li key={node?.name} className="relative" onClick={(e) => leftClick(e)}>
+    <li key={node?.folderId} className="relative" onClick={(e) => leftClick(e)}>
       {isRightClick &&
         createPortal(
           <div className="absolute top-50 left-36 w-44 p-3 z-50 bg-gray-900 rounded-xl shadow-lg border border-gray-700">
             <div className="flex flex-col space-y-2">
               <span
-                onClick={() => {
-                  newDocument(node), setFlag("newFile");
-                }}
+                onClick={() => openModalWithFlag(node, "newFile")}
                 className="cursor-pointer text-white text-sm hover:bg-gray-700 px-3 py-2 rounded-md transition"
               >
                 📝 New File
               </span>
               <span
-                onClick={() => {
-                  Createfolder(node), setFlag("createFolder");
-                }}
+                onClick={() => openModalWithFlag(node, "createFolder")}
                 className="cursor-pointer text-white text-sm hover:bg-gray-700 px-3 py-2 rounded-md transition"
               >
                 📁 Create Folder
               </span>
               <span
-                onClick={() => {
-                  handelFolderNam_rename(node), setFlag("Rename");
-                }}
+                onClick={() => openModalWithFlag(node, "Rename")}
                 className="cursor-pointer text-white text-sm hover:bg-gray-700 px-3 py-2 rounded-md transition"
               >
                 ✏️ Rename
               </span>
               <span
-                onClick={() => {
-                  deleteFolder(node), setFlag("Delete");
-                }}
+                onClick={() => openModalWithFlag(node, "Delete", true)}
                 className="cursor-pointer text-red-400 text-sm hover:bg-red-900 px-3 py-2 rounded-md transition"
               >
                 🗑️ Delete Folder
