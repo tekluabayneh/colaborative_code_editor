@@ -5,7 +5,7 @@ import CodeEditor from "../../components/Editor";
 import FileSystem from "@/components/FileSystem";
 import NameInputModal from "../../components/ui/CreateFolderModal";
 import { useFileSystem } from "@/context/FileTreeContext";
-import { FilePlus, FolderPlus, Menu, X } from "lucide-react";
+import { FilePlus, Filter, FolderPlus, Menu, X } from "lucide-react";
 import { useFileTree } from "@/context/EditorContext";
 import { createPortal } from "react-dom";
 import axios from "axios";
@@ -16,15 +16,19 @@ const Home = () => {
   const [isFileSystemOpen, setIsFileSystemOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isCreateModalOpen, setisCreateModalOpen] = useState(false);
-  // const [name, setName] = useState("");
-  // const [flag, setFlag] = useState("");
   const [email, setEmail] = useState("");
+  const [isMainFolderExists, setisMainFolderExists] = useState(false);
 
   useEffect(() => {
     const getEmail = localStorage.getItem("email");
     if (!getEmail) return;
     setEmail(getEmail);
   }, [email]);
+
+  useEffect(() => {
+    const isFolderNotFetch = localStorage.getItem("main_DocumentId") === "";
+    setisMainFolderExists(isFolderNotFetch);
+  }, [isMainFolderExists, Filter]);
 
   const newFile = async () => {
     try {
@@ -68,15 +72,9 @@ const Home = () => {
     }
   };
   const setFlagAndOPenModal = (flag: string) => {
-    localStorage.setItem("flag", flag);
+    setFlag(flag);
     setisCreateModalOpen(true);
   };
-
-  useEffect(() => {
-    const getFlag = localStorage.getItem("flag");
-    if (!getFlag) return;
-    setFlag(getFlag);
-  }, [flag]);
 
   const handleSubmit = () => {
     if (name == "") {
@@ -130,7 +128,7 @@ const Home = () => {
                 <span className="text-sm font-medium">Folder</span>
               </button>
               <button
-                disabled={localStorage.getItem("main_DocumentId") === ""}
+                disabled={isMainFolderExists}
                 onClick={() => setFlagAndOPenModal("newFile")}
                 className="flex items-center gap-2 px-3 py-2 
              bg-blue-500/10 
@@ -202,7 +200,7 @@ const Home = () => {
             <span className="text-sm font-medium">Folder</span>
           </button>
           <button
-            disabled={localStorage.getItem("main_DocumentId") === ""}
+            disabled={isMainFolderExists}
             onClick={() => setFlagAndOPenModal("newFile")}
             className="flex items-center gap-2 px-3 py-2 
              bg-blue-500/10 
