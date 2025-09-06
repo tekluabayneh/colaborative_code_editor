@@ -1,12 +1,11 @@
 export type Node = {
-  folderid?: string;
+  folderId?: string;
   name: string;
   nodes?: Node[] | null;
 };
 
 export type FileSystemContextType = {
-  fileTree: Node[];
-  setFileTree: React.Dispatch<React.SetStateAction<Node[]>>;
-  setName: (value: string) => void;
-  setEmail: (value: string) => void;
+  fileTree: Node[] | null;
+  setFileTree: React.Dispatch<React.SetStateAction<Node[]>> | null;
+  email:string
 };
