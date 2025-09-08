@@ -24,6 +24,8 @@
     "@tanstack/react-query": "^5.81.5",
     "axios": "^1.10.0",
     "class-variance-authority": "^0.7.1",
+    "data-fns": "^1.1.0",
+    "date-fns": "^4.1.0",
     "framer-motion": "^12.23.9",
     "gsap": "^3.13.0",
     "input-otp": "^1.4.2",
