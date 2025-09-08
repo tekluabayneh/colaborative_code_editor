@@ -10,10 +10,10 @@ const MainDashboard = () => {
     <div className="min-h-screen bg-nuteral-900 ">
       <div className="flex">
         <DashboardSidebar />
-        
+
         <div className="flex-1 flex flex-col">
           <DashboardHeader />
-          
+
           <main className="flex-1 p-6 space-y-6 overflow-auto">
             <div className="flex items-center justify-between">
               <div>
@@ -34,15 +34,13 @@ const MainDashboard = () => {
                 <ActivityFeed />
               </div>
 
-            <div className="space-y-1 lg:col-span-4 ">
-             <TeamSection />
+              <div className="space-y-1 lg:col-span-4 ">
+                <TeamSection />
               </div>
 
               <div className="flex-1 lg:col-span-6 flex  space-y-6">
-                <RecentFiles/>
+                <RecentFiles />
               </div>
-
-
             </div>
           </main>
         </div>
