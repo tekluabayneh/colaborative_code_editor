@@ -144,6 +144,7 @@ const Home = () => {
               </button>
             </div>
             <div className="h-full overflow-auto">
+              {/* @ts-ignore */}
               <FileSystem folders={fileTree} />
             </div>
           </div>
@@ -216,6 +217,8 @@ const Home = () => {
           </button>
         </div>
         <div className="flex-1 overflow-auto">
+          {" "}
+          {/* @ts-ignore */}
           <FileSystem folders={fileTree} />
         </div>
       </div>
