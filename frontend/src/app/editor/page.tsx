@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Profiler, useEffect, useState } from "react";
 import { ChatSidebar } from "@/components/ChatBar";
 import CodeEditor from "../../components/Editor";
 import FileSystem from "@/components/FileSystem";
@@ -9,8 +9,10 @@ import { FilePlus, Filter, FolderPlus, Menu, X } from "lucide-react";
 import { useFileTree } from "@/context/EditorContext";
 import { createPortal } from "react-dom";
 import axios from "axios";
+import { FileText, User, Users, Activity, Code2, Home } from "lucide-react";
 import toast from "react-hot-toast";
-const Home = () => {
+import Link from "next/link";
+const HomePage = () => {
   const { fileTree } = useFileSystem();
   const { isModalOpen, flag, setFlag, name, setName } = useFileTree();
   const [isFileSystemOpen, setIsFileSystemOpen] = useState(false);
@@ -242,6 +244,25 @@ const Home = () => {
               Code Editor
             </span>
           </div>
+          <Link
+            href={"/dashboard"}
+            className="flex items-center gap-3 text-gray-700 hover:text-white hover:bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-lg transition-all duration-300"
+          >
+            <Home className="w-5 h-5" />
+          </Link>
+          <Link
+            href={"/profile"}
+            className="flex items-center gap-3 text-gray-700 hover:text-white hover:bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-lg transition-all duration-300"
+          >
+            <User className="w-5 h-5" />
+          </Link>
+          <Link
+            href={"/admin"}
+            className="flex items-center gap-3 text-gray-700 hover:text-white hover:bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-lg transition-all duration-300"
+          >
+            <Users className="w-5 h-5" />
+          </Link>
+
           <button
             onClick={() => setIsChatOpen(!isChatOpen)}
             className="xl px-3 py-1.5 bg-blue-500/10 cursor-pointer hover:bg-blue-500/20 text-blue-400 rounded-lg transition-colors text-sm font-medium"
@@ -275,4 +296,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;
