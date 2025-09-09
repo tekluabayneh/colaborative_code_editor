@@ -1,9 +1,11 @@
-import { FileText, Users, Activity, Folder, Code2, Home } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { User, Users, FileText, Activity, Code2, Home } from "lucide-react";
+
 const navigation = [
   { name: "Dashboard", icon: Home, current: true, link: "/dashboard" },
+  { name: "Profile", icon: User, current: false, link: "/profile" },
   { name: "Code Editor", icon: Code2, current: false, link: "/editor" },
   { name: "Team", icon: Users, current: false, link: "/admin" },
   { name: "Activity", icon: Activity, current: false, link: "/activity" },
