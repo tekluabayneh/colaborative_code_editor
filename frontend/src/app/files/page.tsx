@@ -32,80 +32,39 @@ type DocumentType = {
   updatedAt: Date;
 };
 
-const File = [
-  {
-    _id: "1",
-    name: "ProjectProposal.docx",
-    content: "This is a proposal for a new project...",
-    language: "English",
-    ownerType: "user",
-    ownerId: "user1",
-    createdAt: new Date("2025-09-01T10:30:00"),
-    updatedAt: new Date("2025-09-05T14:45:00"),
-  },
-  {
-    _id: "2",
-    name: "MeetingNotes.txt",
-    content: "Notes from today's meeting about product launch...",
-    language: "English",
-    ownerType: "user",
-    ownerId: "user2",
-    createdAt: new Date("2025-08-28T09:15:00"),
-    updatedAt: new Date("2025-09-02T11:00:00"),
-  },
-  {
-    _id: "3",
-    name: "Budget.xlsx",
-    content: "Budget breakdown for Q3 2025...",
-    language: "English",
-    ownerType: "admin",
-    ownerId: "admin1",
-    createdAt: new Date("2025-07-15T12:00:00"),
-    updatedAt: new Date("2025-08-20T16:30:00"),
-  },
-  {
-    _id: "4",
-    name: "DesignMockup.png",
-    content: "Initial design mockups for mobile app...",
-    language: "Visual",
-    ownerType: "user",
-    ownerId: "user3",
-    createdAt: new Date("2025-08-05T08:45:00"),
-    updatedAt: new Date("2025-08-25T10:15:00"),
-  },
-  {
-    _id: "5",
-    name: "CodeSnippet.js",
-    content: "function greet(name) { return `Hello ${name}`; }",
-    language: "JavaScript",
-    ownerType: "user",
-    ownerId: "user1",
-    createdAt: new Date("2025-09-03T13:20:00"),
-    updatedAt: new Date("2025-09-04T09:50:00"),
-  },
-];
-
 export default function Files() {
   const [files, setFiles] = useState<DocumentType[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<DocumentType[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [email, setemail] = useState("");
 
   useEffect(() => {
-    loadFiles();
+    const getEmail = localStorage.getItem("email");
+    if (!getEmail) return;
+    setemail(getEmail);
   }, []);
 
-  const loadFiles = async () => {
-    setIsLoading(true);
-    try {
-      //   const res = await axios.get("");
-      //   if (res.data) return;
-      setFiles(File);
-    } catch (error) {
-      console.error("Error loading files:", error);
+  useEffect(() => {
+    if (!email) return;
+    async function FetchFile() {
+      setIsLoading(true);
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/api/doc/GetOnlyDocument",
+          { email: email },
+          { withCredentials: true }
+        );
+        console.log(response.data);
+        setFiles(response.data);
+
+        setIsLoading(false);
+      } catch (error: any) {
+        console.log(error);
+      }
     }
-    setIsLoading(false);
-  };
+    FetchFile();
+  }, [email]);
 
   const filterFiles = useCallback(() => {
     let filtered = files;
@@ -204,7 +163,7 @@ export default function Files() {
             </div>
             <div className="flex items-center space-x-1">
               <Calendar className="w-3 h-3" />
-              <span>{format(new Date(file.createdAt), "MMM d, yyyy")}</span>
+              {/* <span>{format(new Date(file.createdAt), "MMM d, yyyy")}</span> */}
             </div>
           </div>
 
