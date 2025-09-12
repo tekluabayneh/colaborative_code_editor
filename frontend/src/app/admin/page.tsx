@@ -159,17 +159,19 @@ export default function Dashboard() {
       <div className="max-w-7xl mx-auto px-6 py-12">
         {/* Elegant Header */}
         <header className="mb-12">
-          <div className="flex items-center gap-6 mb-8">
-            <div className="p-4 rounded-2xl bg-black/20 backdrop-blur-md shadow-lg border border-white/10">
-              <Shield className="h-10 w-10 text-purple-400" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold text-gray-50 mb-2">
-                Admin Dashboard
-              </h1>
-              <p className="text-gray-400 text-lg font-medium">
-                Manage users, roles, and permissions with elegance
-              </p>
+          <div className="flex justify-between items-center gap-6 mb-8">
+            <div className="flex items-center gap-2">
+              <div className="p-4 rounded-2xl bg-black/20 backdrop-blur-md shadow-lg border border-white/10">
+                <Shield className="h-10 w-10 text-purple-400" />
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold text-gray-50 mb-2">
+                  Admin Dashboard
+                </h1>
+                <p className="text-gray-400 text-lg font-medium">
+                  Manage users, roles, and permissions with elegance
+                </p>
+              </div>
             </div>
 
             <Link
