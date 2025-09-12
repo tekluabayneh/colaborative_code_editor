@@ -91,6 +91,64 @@ class DocumentController {
   }
 
   // ======================================//////=====================================
+  async GetOnlyDocument(req: Request, res: Response): Promise<void> {
+    if (!req.body.email) {
+      res.status(400).json({ message: "email is mandatory" });
+      return;
+    }
+    try {
+      // now get all the folder tree taht are labed with ownder id
+      const fileTree = await GetAllOwnerFolderTree(req, res);
+
+      if (!fileTree) {
+        res.status(404).json({ message: "folder tree are not found" });
+        return;
+      }
+
+      const result = await getSubtree(fileTree[0]?.folderId);
+
+      if (!result) return;
+      // filter only the documen
+      const DocumentOnly: ObId[] = [];
+      function searchDcoumentOnly(node: folderToBeDeletedTypes) {
+        // @ts-ignore
+        if (node.contentId) {
+          DocumentOnly.push(node.contentId);
+        }
+
+        for (let ND of node.nodes) {
+          if (ND.contentId) {
+            DocumentOnly.push(ND.contentId);
+          }
+          if (ND.nodes && ND.nodes.length > 0) {
+            // @ts-ignore
+            searchDcoumentOnly(node.nodes);
+          }
+        }
+      }
+      searchDcoumentOnly(result);
+
+      //get documents
+      const DcoumentsTosend: folderToBeDeletedTypes[] = [];
+      for (let DocId of DocumentOnly) {
+        const documentData = (await Documents.findById(
+          DocId
+        )) as unknown as folderToBeDeletedTypes;
+
+        if (!documentData) {
+          res.status(400).json({ message: "documetId is not found" });
+          return;
+        }
+        DcoumentsTosend.push(documentData);
+      }
+
+      res.send(DcoumentsTosend);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  // ======================================//////=====================================
   async GetdocumetnById(req: Request, res: Response): Promise<void> {
     if (!req.params.DocId) {
       res.status(400).json({ message: "documetId is mandatory" });
@@ -134,8 +192,6 @@ class DocumentController {
     const { folderId } = req.body as { folderId: string } satisfies oneTy;
 
     try {
-      const docs = await FolderTree.find({ folderId: folderId });
-
       const folderToBeDeleted = await getSubtree(folderId);
       if (!folderToBeDeleted) {
         res.status(500).json({ message: "folders are not found" });
