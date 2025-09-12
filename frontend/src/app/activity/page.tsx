@@ -1,14 +1,17 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-// import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import { Button } from "@/components/ui/Button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Activity as ActivityIcon, Search } from "lucide-react";
+import {
+  Activity as ActivityIcon,
+  Home,
+  Search,
+  User,
+  Users,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
-
+import Link from "next/link";
 import ActivityItem from "../../components/activity/ActivityItem";
 import CollaboratorSidebar from "../../components/activity/CollaboratorSidebar";
 import LiveIndicator from "../../components/activity/liveIndicator";
@@ -155,7 +158,7 @@ export default function ActivityPage() {
     }
 
     setFilteredActivities(filtered);
-  }, [activities, activeFilter, searchQuery]); // Dependencies for useCallback
+  }, [activities, activeFilter, searchQuery]);
 
   useEffect(() => {
     loadActivities();
@@ -165,7 +168,7 @@ export default function ActivityPage() {
 
   useEffect(() => {
     filterActivities();
-  }, [filterActivities]); // Now depends on the memoized filterActivities
+  }, [filterActivities]);
 
   const loadActivities = async () => {
     setIsLoading(true);
@@ -242,15 +245,24 @@ export default function ActivityPage() {
               {/* Controls */}
               <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                 <div className="flex items-center gap-3 w-full sm:w-auto">
-                  <div className="relative flex-1 sm:flex-none">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <Input
-                      placeholder="Search activity..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 bg-gray-900/50 border-gray-700 text-gray-100 placeholder-gray-500 w-full sm:w-64"
-                    />
-                  </div>
+                  <Link
+                    href={"/dashboard"}
+                    className="flex items-center gap-3 text-gray-700 hover:text-white hover:bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-lg transition-all duration-300"
+                  >
+                    <Home className="w-5 h-5" />
+                  </Link>
+                  <Link
+                    href={"/profile"}
+                    className="flex items-center gap-3 text-gray-700 hover:text-white hover:bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-lg transition-all duration-300"
+                  >
+                    <User className="w-5 h-5" />
+                  </Link>
+                  <Link
+                    href={"/admin"}
+                    className="flex items-center gap-3 text-gray-700 hover:text-white hover:bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-lg transition-all duration-300"
+                  >
+                    <Users className="w-5 h-5" />
+                  </Link>
                 </div>
 
                 <div className="w-full sm:w-auto">
@@ -268,10 +280,6 @@ export default function ActivityPage() {
                         {tab.label}
                       </button>
                     ))}
-                  </div>
-
-                  <div className="mt-4">
-                    <p>Active Filter: {activeFilter}</p>
                   </div>
                 </div>
               </div>
