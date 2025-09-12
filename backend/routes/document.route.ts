@@ -19,6 +19,12 @@ DocumentRouter.post(
   authorizeRoles("Admin", "Owner"),
   (req, res) => DocController.GetAllFolderTree(req, res)
 );
+DocumentRouter.post(
+  "/doc/GetOnlyDocument",
+  authenticate,
+  authorizeRoles("Admin", "Owner"),
+  (req, res) => DocController.GetOnlyDocument(req, res)
+);
 
 DocumentRouter.put(
   "/doc/UpdateFolderName",
