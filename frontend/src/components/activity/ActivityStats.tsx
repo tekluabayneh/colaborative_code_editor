@@ -1,5 +1,4 @@
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { GitCommit, FileText, MessageSquare, TrendingUp } from "lucide-react";
 
 export default function ActivityStats({ activities }) {
