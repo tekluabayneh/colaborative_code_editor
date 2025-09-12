@@ -2,7 +2,7 @@ import React from "react";
 import { Circle } from "lucide-react";
 import { motion } from "framer-motion";
 
-export default function LiveIndicator({ count }) {
+export default function LiveIndicator({ count }:{count:number}) {
   if (count === 0) return null;
 
   return (
