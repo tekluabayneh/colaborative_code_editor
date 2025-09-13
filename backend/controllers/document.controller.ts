@@ -314,9 +314,22 @@ class DocumentController {
       const folderid = nanoid(12);
       const { parentId, folderName, email } = req.body;
 
-      const getOwnerId = await Owners.findOne({ email: email });
+      let Id;
 
-      if (!getOwnerId) {
+      const IsRoleUser = await validator.isUserRoleOwnerOrUser(email);
+
+      // check if the user is found
+      if (!IsRoleUser) {
+        res.status(404).json({ message: "user not found" });
+        return;
+      }
+      if (IsRoleUser.role !== "Owner") {
+        Id = IsRoleUser.users_user?._id;
+      } else {
+        Id = IsRoleUser?.Owners_user?._id;
+      }
+
+      if (!IsRoleUser) {
         res
           .status(400)
           .json({ message: "owner was not found when creating folder" });
@@ -328,8 +341,8 @@ class DocumentController {
         folderId: folderid,
         name: folderName,
         parentId: parentId ?? null,
-        ownerType: getOwnerId.role,
-        ownerId: getOwnerId._id,
+        ownerType: IsRoleUser.role,
+        ownerId: Id,
       };
       const createFolder = await FolderTree.insertOne(data);
       if (!createFolder) {
@@ -366,12 +379,25 @@ class DocumentController {
     const folderid = nanoid(12);
     const { parentId, content, fileName, email, ownerType } =
       req.body as bodyType;
-    const getOwnerId = await Owners.findOne({ email: email });
+    let Id;
 
-    if (!getOwnerId) {
+    const IsRoleUser = await validator.isUserRoleOwnerOrUser(email);
+
+    // check if the user is found
+    if (!IsRoleUser) {
+      res.status(404).json({ message: "user not found" });
+      return;
+    }
+    if (IsRoleUser.role !== "Owner") {
+      Id = IsRoleUser.users_user?._id;
+    } else {
+      Id = IsRoleUser?.Owners_user?._id;
+    }
+
+    if (!IsRoleUser) {
       res
         .status(400)
-        .json({ message: "owner was not found when creating file" });
+        .json({ message: "owner was not found when creating folder" });
       return;
     }
 
@@ -379,7 +405,7 @@ class DocumentController {
       parentId,
       content,
       language: fileName,
-      ownerId: getOwnerId._id,
+      ownerId: Id,
       ownerType,
     };
     const CreateDocument = await Documents.insertOne(data);
@@ -394,8 +420,8 @@ class DocumentController {
       folderId: folderid,
       name: fileName,
       parentId: parentId ?? null,
-      ownerType: getOwnerId.role,
-      ownerId: getOwnerId._id,
+      ownerType: IsRoleUser.role,
+      ownerId: Id,
     };
     const createFolder = await FolderTree.insertOne(data_toFolder);
     if (!createFolder) {
