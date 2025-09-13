@@ -14,6 +14,7 @@ import DocumentRouter from "./routes/document.route";
 import Owners from "./models/Owners";
 import GloblaError from "./middlewares/error.middleware"
 import cookieParser from "cookie-parser";
+import UserRouter from "./routes/user.route";
 
  
   
@@ -103,6 +104,9 @@ app.use("/api",  inviteRouter);
 
 // document route 
 app.use("/api",DocumentRouter)
+
+// User Route
+app.use("/api",UserRouter)
 
 
 app.use(GloblaError)
