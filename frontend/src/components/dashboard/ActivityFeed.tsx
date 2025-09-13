@@ -1,15 +1,25 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+"use client";
+import { Avatar } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { GitCommit, FileEdit, MessageSquare, GitPullRequest, Zap, Clock } from "lucide-react";
+import { User } from "lucide-react";
+import {
+  GitCommit,
+  FileEdit,
+  MessageSquare,
+  GitPullRequest,
+  Zap,
+  Clock,
+} from "lucide-react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const activities = [
   {
     id: 1,
     user: {
       name: "Sarah Chen",
-      avatar: "https://github.com/shadcn.png",
-      initials: "SC"
     },
     action: "committed",
     target: "Fix authentication bug in login.tsx",
@@ -17,14 +27,12 @@ const activities = [
     type: "commit",
     icon: GitCommit,
     color: "green-500",
-    priority: "high"
+    priority: "high",
   },
   {
     id: 2,
     user: {
       name: "Mike Johnson",
-      avatar: "https://github.com/shadcn.png",
-      initials: "MJ"
     },
     action: "opened pull request",
     target: "Add dark mode toggle component",
@@ -32,14 +40,12 @@ const activities = [
     type: "pr",
     icon: GitPullRequest,
     color: "purple-500",
-    priority: "medium"
+    priority: "medium",
   },
   {
     id: 3,
     user: {
       name: "Alex Kim",
-      avatar: "https://github.com/shadcn.png",
-      initials: "AK"
     },
     action: "edited",
     target: "dashboard/components/Header.tsx",
@@ -47,14 +53,12 @@ const activities = [
     type: "edit",
     icon: FileEdit,
     color: "blue-500",
-    priority: "low"
+    priority: "low",
   },
   {
     id: 4,
     user: {
       name: "Emma Davis",
-      avatar: "https://github.com/shadcn.png",
-      initials: "ED"
     },
     action: "commented on",
     target: "Review navigation improvements",
@@ -62,14 +66,12 @@ const activities = [
     type: "comment",
     icon: MessageSquare,
     color: "orange-500",
-    priority: "medium"
+    priority: "medium",
   },
   {
     id: 5,
     user: {
       name: "David Wilson",
-      avatar: "https://github.com/shadcn.png",
-      initials: "DW"
     },
     action: "committed",
     target: "Update API endpoints for user management",
@@ -77,8 +79,8 @@ const activities = [
     type: "commit",
     icon: GitCommit,
     color: "green-500",
-    priority: "high"
-  }
+    priority: "high",
+  },
 ];
 
 const getPriorityIcon = (priority: string) => {
@@ -103,11 +105,41 @@ const getPriorityColor = (priority: string) => {
   }
 };
 export const ActivityFeed = () => {
+  const [email, setEmail] = useState("");
+  const [activities, setActivities] = useState([]);
+
+  useEffect(() => {
+    const getEmail = localStorage.getItem("email");
+    if (!getEmail) return;
+    setEmail(getEmail);
+  }, []);
+
+  const getAllOwnerUsers = async () => {
+    try {
+      console.log("email", email);
+      const res = await axios.post(
+        "http://localhost:5000/api/User/GetOwnerUsers",
+        { email: email },
+        { withCredentials: true }
+      );
+      toast.success(res.data.message);
+      setActivities(res.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message = error.response?.data?.message || error.message;
+        toast.error(message);
+      }
+    }
+  };
+  useEffect(() => {
+    getAllOwnerUsers();
+  }, [email]);
+
   return (
     <Card className="relative overflow-hidden border border-gray-600/50 bg-neutral-900">
       {/* Background mesh */}
       <div className="absolute inset-0 bg-gradient-mesh opacity-40" />
-      
+
       <CardHeader className="relative">
         <CardTitle className="flex items-center gap-3">
           <div className="relative">
@@ -117,21 +149,25 @@ export const ActivityFeed = () => {
           <span className="bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
             Live Activity Feed
           </span>
-          <Badge variant="outline" className="text-green-500 border-code-green/30 bg-green-500/5">
+          <Badge
+            variant="outline"
+            className="text-green-500 border-code-green/30 bg-green-500/5"
+          >
             Real-time
           </Badge>
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="relative space-y-2">
-        {activities.map((activity, index) => {
-          const Icon = activity.icon;
-          const PriorityIcon = getPriorityIcon(activity.priority);
-          
-          return (
-            <div 
-              key={activity.id} 
-              className={`
+        {activities.length !== 0 ? (
+          activities.map((activity, index) => {
+            const Icon = activity.icon;
+            const PriorityIcon = getPriorityIcon(activity.priority);
+
+            return (
+              <div
+                key={activity._id}
+                className={`
                 relative flex items-start gap-4 p-4 rounded-xl 
                 bg-gradient-to-r from-transparent via-${activity.color}/5 to-transparent
                 hover:from-${activity.color}/10 hover:via-${activity.color}/5 hover:to-transparent
@@ -139,67 +175,109 @@ export const ActivityFeed = () => {
                 border border-transparent hover:border-${activity.color}/20
                 animate-slide-up
               `}
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              {/* Priority indicator */}
-              <div className={`absolute left-0 top-0 bottom-0 w-1 bg-${getPriorityColor(activity.priority)} rounded-r-full opacity-60`} />
-              
-              <div className="relative">
-                <Avatar className="w-10 h-10 ring-2 ring-border/50 group-hover:ring-primary/50 transition-all duration-300">
-                  <AvatarImage src={activity.user.avatar} alt={activity.user.name} />
-                  <AvatarFallback className="text-xs font-medium">{activity.user.initials}</AvatarFallback>
-                </Avatar>
-                
-                {/* Status indicator */}
-                <div className={`absolute -bottom-1 -right-1 w-4 h-4 bg-${activity.color} rounded-full border-2 border-background flex items-center justify-center`}>
-                  <Icon className="w-2 h-2 text-background" />
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                {/* Priority indicator */}
+                <div
+                  className={`absolute left-0 top-0 bottom-0 w-1 bg-${getPriorityColor(
+                    activity.priority
+                  )} rounded-r-full opacity-60`}
+                />
+
+                <div className="relative">
+                  <Avatar className="w-10 h-10 ring-2 ring-border/50 group-hover:ring-primary/50 transition-all duration-300">
+                    <User className="w-12 h-12 text-gray-400" />
+                  </Avatar>
+
+                  {/* Status indicator */}
+                  <div
+                    className={`absolute -bottom-1 -right-1 w-4 h-4 bg-${activity?.color} rounded-full border-2 border-background flex items-center justify-center`}
+                  >
+                    {/* <Icon className="w-2 h-2 text-background" /> */}
+                  </div>
                 </div>
-              </div>
-              
-              <div className="flex-1 min-w-0 space-y-2">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-semibold text-sm group-hover:text-primary transition-colors">
-                    {activity.user.name}
-                  </span>
-                  <span className="text-muted-foreground text-sm">{activity.action}</span>
-                  
-                  <div className="flex items-center gap-2">
-                    <Badge 
-                      variant="outline" 
-                      className={`
+
+                <div className="flex-1 min-w-0 space-y-2">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-semibold text-sm group-hover:text-primary transition-colors">
+                      {activity.name}
+                    </span>
+                    <span className="text-muted-foreground text-sm">
+                      {activity?.action}
+                    </span>
+
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        variant="outline"
+                        className={`
                         text-${activity.color} border-${activity.color}/30 bg-${activity.color}/10
                         group-hover:bg-${activity.color}/20 transition-all duration-300
                       `}
-                    >
-                      <Icon className="w-3 h-3 mr-1" />
-                      {activity.type}
-                    </Badge>
-                    
-                    <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full bg-${getPriorityColor(activity.priority)}/10`}>
-                      <PriorityIcon className={`w-2.5 h-2.5 text-${getPriorityColor(activity.priority)}`} />
-                      <span className={`text-xs text-${getPriorityColor(activity.priority)} capitalize`}>
-                        {activity.priority}
-                      </span>
+                      >
+                        {/* <Icon className="w-3 h-3 mr-1" /> */}
+                        {activity?.type}
+                      </Badge>
+
+                      <div
+                        className={`flex items-center gap-1 px-2 py-0.5 rounded-full bg-${getPriorityColor(
+                          activity?.priority
+                        )}/10`}
+                      >
+                        <PriorityIcon
+                          className={`w-2.5 h-2.5 text-${getPriorityColor(
+                            activity?.priority
+                          )}`}
+                        />
+                        <span
+                          className={`text-xs text-${getPriorityColor(
+                            activity?.priority
+                          )} capitalize`}
+                        >
+                          {activity?.priority}
+                        </span>
+                      </div>
                     </div>
-</div>
+                  </div>
+
+                  <p className="text-sm text-foreground/90 group-hover:text-foreground transition-colors font-medium">
+                    {activity?.target}
+                  </p>
+
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Clock className="w-3 h-3" />
+                    <span>{activity?.time}</span>
+                  </div>
                 </div>
-                
-                <p className="text-sm text-foreground/90 group-hover:text-foreground transition-colors font-medium">
-                  {activity.target}
-                </p>
-                
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Clock className="w-3 h-3" />
-                  <span>{activity.time}</span>
-                </div>
+
+                {/* Hover glow effect */}
+                <div
+                  className={`absolute inset-0 bg-${activity?.color}/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`}
+                />
               </div>
-              
-              {/* Hover glow effect */}
-              <div className={`absolute inset-0 bg-${activity.color}/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
-            </div>
-          );
-        })}
-        
+            );
+          })
+        ) : (
+          <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-12 h-12 mb-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m4 4v-4h-1m4 4v-4h-1M3 7h18M3 12h18M3 17h18"
+              />
+            </svg>
+            <p className="text-center text-gray-500 text-lg">
+              No live activity
+            </p>
+          </div>
+        )}
+
         <div className="pt-4">
           <div className="text-center">
             <button className="text-sm text-code-blue hover:text-code-blue/80 font-medium transition-colors duration-300">
