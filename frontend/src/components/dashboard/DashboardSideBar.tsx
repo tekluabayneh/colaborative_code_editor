@@ -1,7 +1,15 @@
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { User, Users, FileText, Activity, Code2, Home } from "lucide-react";
+import {
+  User,
+  Users,
+  UserPlus,
+  FileText,
+  Activity,
+  Code2,
+  Home,
+} from "lucide-react";
 
 const navigation = [
   { name: "Dashboard", icon: Home, current: true, link: "/dashboard" },
@@ -10,6 +18,7 @@ const navigation = [
   { name: "Team", icon: Users, current: false, link: "/admin" },
   { name: "Activity", icon: Activity, current: false, link: "/activity" },
   { name: "Files", icon: FileText, current: false, link: "/files" },
+  { name: "Invite", icon: UserPlus , current: false, link: "/invite" },
 ];
 
 export const DashboardSidebar = () => {
