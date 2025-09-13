@@ -171,7 +171,21 @@ const acceptInvite = async (req: Request, res: Response) => {
     await InviteToken.deleteOne({ email });
 
     if (StoreUser._id) {
-      res.status(201).json({ message: "Welcome! You are now a member" });
+      const token = Tokens.SignUser_JWT_Token(
+        email,
+        role,
+        process.env.JWT_SECRET_KEY!
+      );
+
+      res.cookie("accessToken", token, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: true,
+        maxAge: 100 * 60 * 60 * 60,
+        signed: false,
+      });
+
+      res.status(201).json({ message: "Welcome! You are now a member", token });
       return;
     } else {
       res.status(500).json({ message: "Failed to create user" });
