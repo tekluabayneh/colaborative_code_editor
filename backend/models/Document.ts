@@ -11,7 +11,7 @@ const DocumentSchema: Schema<IDocument> = new Schema(
   {
     content: { type: String },
     language: { type: String, required: true, default: "plaintext" },
-    ownerType: { type: String, required: true, enum: ["User", "Owner"] },
+    ownerType: { type: String, required: true, enum: ["Admin", "Owner"] },
     ownerId: {
       type: Schema.Types.ObjectId,
       required: true,
