@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import axios from "axios";
-type DocumentType = {
+export type DocumentType = {
   _id: string;
   content: string;
   language: string;
