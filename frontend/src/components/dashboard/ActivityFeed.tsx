@@ -1,4 +1,5 @@
 "use client";
+
 import { Avatar } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,74 +15,6 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-
-const activities = [
-  {
-    id: 1,
-    user: {
-      name: "Sarah Chen",
-    },
-    action: "committed",
-    target: "Fix authentication bug in login.tsx",
-    time: "2 minutes ago",
-    type: "commit",
-    icon: GitCommit,
-    color: "green-500",
-    priority: "high",
-  },
-  {
-    id: 2,
-    user: {
-      name: "Mike Johnson",
-    },
-    action: "opened pull request",
-    target: "Add dark mode toggle component",
-    time: "5 minutes ago",
-    type: "pr",
-    icon: GitPullRequest,
-    color: "purple-500",
-    priority: "medium",
-  },
-  {
-    id: 3,
-    user: {
-      name: "Alex Kim",
-    },
-    action: "edited",
-    target: "dashboard/components/Header.tsx",
-    time: "12 minutes ago",
-    type: "edit",
-    icon: FileEdit,
-    color: "blue-500",
-    priority: "low",
-  },
-  {
-    id: 4,
-    user: {
-      name: "Emma Davis",
-    },
-    action: "commented on",
-    target: "Review navigation improvements",
-    time: "18 minutes ago",
-    type: "comment",
-    icon: MessageSquare,
-    color: "orange-500",
-    priority: "medium",
-  },
-  {
-    id: 5,
-    user: {
-      name: "David Wilson",
-    },
-    action: "committed",
-    target: "Update API endpoints for user management",
-    time: "25 minutes ago",
-    type: "commit",
-    icon: GitCommit,
-    color: "green-500",
-    priority: "high",
-  },
-];
 
 const getPriorityIcon = (priority: string) => {
   switch (priority) {
@@ -104,40 +37,84 @@ const getPriorityColor = (priority: string) => {
       return "white";
   }
 };
+
 export const ActivityFeed = () => {
   const [email, setEmail] = useState("");
-  const [activities, setActivities] = useState([]);
+  const [activities, setActivities] = useState<any[]>([]);
 
+  // Load email from localStorage
   useEffect(() => {
     const getEmail = localStorage.getItem("email");
     if (!getEmail) return;
     setEmail(getEmail);
   }, []);
 
+  // Fetch minimal data from backend and enrich it
   const getAllOwnerUsers = async () => {
+    if (!email) return;
+
     try {
-      console.log("email", email);
       const res = await axios.post(
         "http://localhost:5000/api/User/GetOwnerUsers",
-        { email: email },
+        { email },
         { withCredentials: true }
       );
-      toast.success(res.data.message);
-      setActivities(res.data);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const message = error.response?.data?.message || error.message;
-        toast.error(message);
-      }
+
+      const data = res.data;
+
+      const types = ["commit", "edit", "pr", "comment"];
+      const actions: Record<string, string> = {
+        commit: "committed",
+        edit: "edited",
+        pr: "opened pull request",
+        comment: "commented on",
+      };
+      const colors: Record<string, string> = {
+        commit: "green-500",
+        edit: "blue-500",
+        pr: "purple-500",
+        comment: "orange-500",
+      };
+      const icons: Record<string, any> = {
+        commit: GitCommit,
+        edit: FileEdit,
+        pr: GitPullRequest,
+        comment: MessageSquare,
+      };
+      const priorities = ["high", "medium", "low"];
+
+      const enrichedData = data.map((item: any, index: number) => {
+        const type = types[Math.floor(Math.random() * types.length)];
+
+        return {
+          id: index + 1,
+          ...item,
+          target: item.task || item.target || "No description",
+          type,
+          action: actions[type],
+          icon: icons[type],
+          color: colors[type],
+          priority: priorities[Math.floor(Math.random() * priorities.length)],
+          time: `${Math.floor(Math.random() * 60) + 1} minutes ago`,
+        };
+      });
+
+      setActivities(enrichedData);
+    } catch (error: any) {
+      const message =
+        axios.isAxiosError(error) && error.response?.data?.message
+          ? error.response.data.message
+          : error.message;
+      toast.error(message);
     }
   };
+
   useEffect(() => {
     getAllOwnerUsers();
   }, [email]);
 
   return (
     <Card className="relative overflow-hidden border border-gray-600/50 bg-neutral-900">
-      {/* Background mesh */}
       <div className="absolute inset-0 bg-gradient-mesh opacity-40" />
 
       <CardHeader className="relative">
@@ -159,25 +136,24 @@ export const ActivityFeed = () => {
       </CardHeader>
 
       <CardContent className="relative space-y-2">
-        {activities.length !== 0 ? (
+        {activities.length ? (
           activities.map((activity, index) => {
             const Icon = activity.icon;
             const PriorityIcon = getPriorityIcon(activity.priority);
 
             return (
               <div
-                key={activity._id}
+                key={activity.id}
                 className={`
-                relative flex items-start gap-4 p-4 rounded-xl 
-                bg-gradient-to-r from-transparent via-${activity.color}/5 to-transparent
-                hover:from-${activity.color}/10 hover:via-${activity.color}/5 hover:to-transparent
-                transition-all duration-500 group cursor-pointer
-                border border-transparent hover:border-${activity.color}/20
-                animate-slide-up
-              `}
+                  relative flex items-start gap-4 p-4 rounded-xl 
+                  bg-gradient-to-r from-transparent via-${activity.color}/5 to-transparent
+                  hover:from-${activity.color}/10 hover:via-${activity.color}/5 hover:to-transparent
+                  transition-all duration-500 group cursor-pointer
+                  border border-transparent hover:border-${activity.color}/20
+                  animate-slide-up
+                `}
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                {/* Priority indicator */}
                 <div
                   className={`absolute left-0 top-0 bottom-0 w-1 bg-${getPriorityColor(
                     activity.priority
@@ -189,18 +165,15 @@ export const ActivityFeed = () => {
                     <User className="w-12 h-12 text-gray-400" />
                   </Avatar>
 
-                  {/* Status indicator */}
                   <div
-                    className={`absolute -bottom-1 -right-1 w-4 h-4 bg-${activity?.color} rounded-full border-2 border-background flex items-center justify-center`}
-                  >
-                    {/* <Icon className="w-2 h-2 text-background" /> */}
-                  </div>
+                    className={`absolute -bottom-1 -right-1 w-4 h-4 bg-${activity.color} rounded-full border-2 border-background flex items-center justify-center`}
+                  />
                 </div>
 
                 <div className="flex-1 min-w-0 space-y-2">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-semibold text-sm group-hover:text-primary transition-colors">
-                      {activity.name}
+                      {activity.userName}
                     </span>
                     <span className="text-muted-foreground text-sm">
                       {activity?.action}
@@ -210,11 +183,10 @@ export const ActivityFeed = () => {
                       <Badge
                         variant="outline"
                         className={`
-                        text-${activity.color} border-${activity.color}/30 bg-${activity.color}/10
-                        group-hover:bg-${activity.color}/20 transition-all duration-300
-                      `}
+                          text-${activity.color} border-${activity.color}/30 bg-${activity.color}/10
+                          group-hover:bg-${activity.color}/20 transition-all duration-300
+                        `}
                       >
-                        {/* <Icon className="w-3 h-3 mr-1" /> */}
                         {activity?.type}
                       </Badge>
 
@@ -249,7 +221,6 @@ export const ActivityFeed = () => {
                   </div>
                 </div>
 
-                {/* Hover glow effect */}
                 <div
                   className={`absolute inset-0 bg-${activity?.color}/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`}
                 />
