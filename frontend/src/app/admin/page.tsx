@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MoreVertical,
   Users,
@@ -12,468 +12,338 @@ import {
   UserCheck,
   UserX,
   AlertTriangle,
+  Home,
+  User,
 } from "lucide-react";
 import Link from "next/link";
-import { User, Home } from "lucide-react";
-const mockUsers = [
-  {
-    id: 1,
-    name: "Alexandra Chen",
-    email: "alex@company.com",
-    role: "admin",
-    status: "online",
-    avatar: "/placeholder.svg",
-    lastActive: "2 min ago",
-    projects: 12,
+import axios from "axios";
+import toast from "react-hot-toast";
+
+const roleConfig: any = {
+  admin: {
+    color: "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20",
+    icon: Crown,
   },
-  {
-    id: 2,
-    name: "Marcus Rodriguez",
-    email: "marcus@company.com",
-    role: "editor",
-    status: "offline",
-    avatar: "/placeholder.svg",
-    lastActive: "1 hour ago",
-    projects: 8,
+  editor: {
+    color: "bg-purple-500/10 text-purple-400 border border-purple-500/20",
+    icon: Edit,
   },
-  {
-    id: 3,
-    name: "Sarah Kim",
-    email: "sarah@company.com",
-    role: "viewer",
-    status: "online",
-    avatar: "/placeholder.svg",
-    lastActive: "5 min ago",
-    projects: 3,
+  viewer: {
+    color: "bg-slate-500/10 text-slate-400 border border-slate-500/20",
+    icon: Eye,
   },
-  {
-    id: 4,
-    name: "David Thompson",
-    email: "david@company.com",
-    role: "editor",
-    status: "suspended",
-    avatar: "/placeholder.svg",
-    lastActive: "2 days ago",
-    projects: 15,
-  },
-  {
-    id: 5,
-    name: "Emily Johnson",
-    email: "emily@company.com",
-    role: "viewer",
-    status: "online",
-    avatar: "/placeholder.svg",
-    lastActive: "Just now",
-    projects: 5,
-  },
-];
+};
+
+const statusColor: any = {
+  online: "bg-emerald-500",
+  offline: "bg-slate-600",
+  suspended: "bg-red-500",
+};
 
 export default function Dashboard() {
-  const [users, setUsers] = useState(mockUsers);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [users, setUsers] = useState<any[]>([]);
+  const [search, setSearch] = useState("");
+  const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    const e = localStorage.getItem("email");
+    if (e) setEmail(e);
+  }, []);
+
+  useEffect(() => {
+    if (!email) return;
+    const fetchUsers = async () => {
+      try {
+        const res = await axios.post(
+          "http://localhost:5000/api/User/GetOwnerUsers",
+          { email },
+          { withCredentials: true }
+        );
+        const data = res.data || [];
+        setUsers(
+          data.map((u: any, i: number) => ({
+            _id: u.__id || i + 1,
+            name: u.userName || `User ${i + 1}`,
+            email: u.email || "N/A",
+            role: u.role || "viewer",
+            status: "online",
+            initials:
+              u.userName
+                ?.split(" ")
+                .map((n: string) => n[0])
+                .join("") || "UK",
+            isLead: u.role === "Admin",
+            lastActive: "Active now",
+            projects: Math.floor(Math.random() * 10),
+          }))
+        );
+      } catch (err: any) {
+        toast.error(err.response?.data?.message || err.message);
+      }
+    };
+    fetchUsers();
+  }, [email]);
 
   const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    (u) =>
+      u.name.toLowerCase().includes(search.toLowerCase()) ||
+      u.email.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleRoleChange = (userId: number, newRole: string) => {
-    setUsers(
-      users.map((user) =>
-        user.id === userId ? { ...user, role: newRole } : user
-      )
-    );
-    setActiveDropdown(null);
-  };
+  const updateUser = async (id: number, changes: any) => {
+    try {
+      await axios.put(
+        `http://localhost:5000/api/User/updateUserRoleOrStatus/${id}`,
+        changes,
+        { withCredentials: true }
+      );
 
-  const handleUserAction = (userId: number, action: string) => {
-    switch (action) {
-      case "suspend":
-        setUsers(
-          users.map((user) =>
-            user.id === userId ? { ...user, status: "suspended" } : user
-          )
-        );
-        break;
-      case "activate":
-        setUsers(
-          users.map((user) =>
-            user.id === userId ? { ...user, status: "online" } : user
-          )
-        );
-        break;
-      case "delete":
-        setUsers(users.filter((user) => user.id !== userId));
-        break;
-    }
-    setActiveDropdown(null);
-  };
-
-  const getRoleBadgeColor = (role: string) => {
-    switch (role) {
-      case "admin":
-        return "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20";
-      case "editor":
-        return "bg-purple-500/10 text-purple-400 border border-purple-500/20";
-      case "viewer":
-        return "bg-slate-500/10 text-slate-400 border border-slate-500/20";
-      default:
-        return "bg-slate-500/10 text-slate-400 border border-slate-500/20";
+      // Update local state after successful API call
+      setUsers(users.map((u) => (u._id === id ? { ...u, ...changes } : u)));
+      setActiveDropdown(null);
+      toast.success("User updated successfully");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || error.message);
     }
   };
-
-  const getRoleIcon = (role: string) => {
-    switch (role) {
-      case "admin":
-        return Crown;
-      case "editor":
-        return Edit;
-      case "viewer":
-        return Eye;
-      default:
-        return Eye;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "online":
-        return "bg-emerald-500";
-      case "offline":
-        return "bg-slate-600";
-      case "suspended":
-        return "bg-red-500";
-      default:
-        return "bg-slate-600";
-    }
-  };
-
-  const totalUsers = users.length;
-  const activeUsers = users.filter((u) => u.status === "online").length;
-  const suspendedUsers = users.filter((u) => u.status === "suspended").length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-purple-900 text-gray-200">
       <div className="max-w-7xl mx-auto px-6 py-12">
-        {/* Elegant Header */}
-        <header className="mb-12">
-          <div className="flex justify-between items-center gap-6 mb-8">
-            <div className="flex items-center gap-2">
-              <div className="p-4 rounded-2xl bg-black/20 backdrop-blur-md shadow-lg border border-white/10">
-                <Shield className="h-10 w-10 text-purple-400" />
-              </div>
-              <div>
-                <h1 className="text-4xl font-bold text-gray-50 mb-2">
-                  Admin Dashboard
-                </h1>
-                <p className="text-gray-400 text-lg font-medium">
-                  Manage users, roles, and permissions with elegance
-                </p>
-              </div>
+        {/* Header */}
+        <header className="mb-12 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <div className="p-4 rounded-2xl bg-black/20 backdrop-blur-md shadow-lg border border-white/10">
+              <Shield className="h-10 w-10 text-purple-400" />
             </div>
-
-            <Link
-              href={"/dashboard"}
-              className="flex items-center gap-3 text-gray-700 hover:text-white hover:bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-lg transition-all duration-300"
-            >
-              <Home className="w-5 h-5" />
-            </Link>
-            <Link
-              href={"/profile"}
-              className="flex items-center gap-3 text-gray-700 hover:text-white hover:bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-lg transition-all duration-300"
-            >
-              <User className="w-5 h-5" />
-            </Link>
-            <Link
-              href={"/admin"}
-              className="flex items-center gap-3 text-gray-700 hover:text-white hover:bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-lg transition-all duration-300"
-            >
-              <Users className="w-5 h-5" />
-            </Link>
+            <div>
+              <h1 className="text-4xl font-bold text-gray-50 mb-2">
+                Admin Dashboard
+              </h1>
+              <p className="text-gray-400 text-lg font-medium">
+                Manage users, roles, and permissions
+              </p>
+            </div>
           </div>
-
-          {/* Statistics Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <div className="bg-black/20 backdrop-blur-md rounded-2xl shadow-lg border border-white/10 p-8 hover:bg-black/30 transition-all duration-300">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                    Total Users
-                  </p>
-                  <p className="text-3xl font-bold text-purple-400">
-                    {totalUsers}
-                  </p>
-                </div>
-                <div className="p-3 rounded-xl bg-purple-500/10">
-                  <Users className="h-7 w-7 text-purple-400" />
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-black/20 backdrop-blur-md rounded-2xl shadow-lg border border-white/10 p-8 hover:bg-black/30 transition-all duration-300">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                    Active Users
-                  </p>
-                  <p className="text-3xl font-bold text-emerald-400">
-                    {activeUsers}
-                  </p>
-                </div>
-                <div className="p-3 rounded-xl bg-emerald-500/10">
-                  <UserCheck className="h-7 w-7 text-emerald-400" />
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-black/20 backdrop-blur-md rounded-2xl shadow-lg border border-white/10 p-8 hover:bg-black/30 transition-all duration-300">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                    Suspended
-                  </p>
-                  <p className="text-3xl font-bold text-red-500">
-                    {suspendedUsers}
-                  </p>
-                </div>
-                <div className="p-3 rounded-xl bg-red-500/10">
-                  <UserX className="h-7 w-7 text-red-500" />
-                </div>
-              </div>
-            </div>
+          <div className="flex gap-2">
+            {[
+              { href: "/dashboard", icon: Home },
+              { href: "/profile", icon: User },
+              { href: "/admin", icon: Users },
+            ].map((link, _idx) => (
+              <Link
+                key={_idx}
+                href={link.href}
+                className="flex items-center gap-3 text-gray-700 hover:text-white hover:bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-lg transition-all duration-300"
+              >
+                <link.icon className="w-5 h-5" />
+              </Link>
+            ))}
           </div>
         </header>
 
-        {/* Main Content */}
+        {/* User Management Table */}
         <main className="bg-black/20 backdrop-blur-md rounded-2xl shadow-lg border border-white/10">
-          <header className="border-b border-white/10 p-8">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-purple-500/10">
-                  <Users className="h-7 w-7 text-purple-400" />
-                </div>
-                <h2 className="text-2xl font-bold text-gray-50">
-                  User Management
-                </h2>
+          <header className="border-b border-white/10 p-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-purple-500/10">
+                <Users className="h-7 w-7 text-purple-400" />
               </div>
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
-                <input
-                  type="text"
-                  placeholder="Search users..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 pr-4 py-3 w-80 border border-white/10 rounded-xl bg-black/20 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
-                />
-              </div>
+              <h2 className="text-2xl font-bold text-gray-50">
+                User Management
+              </h2>
+            </div>
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
+              <input
+                type="text"
+                placeholder="Search users..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-12 pr-4 py-3 w-80 border border-white/10 rounded-xl bg-black/20 text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-200"
+              />
             </div>
           </header>
 
-          <div className="">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-white/10">
-                  <th className="text-left font-semibold text-gray-400 p-6">
-                    User
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-white/10">
+                {[
+                  "User",
+                  "Role",
+                  "Status",
+                  "Projects",
+                  "Last Active",
+                  "Actions",
+                ].map((h, i) => (
+                  <th
+                    key={i}
+                    className={`text-left font-semibold text-gray-400 p-6 ${
+                      i === 5 ? "text-right" : ""
+                    }`}
+                  >
+                    {h}
                   </th>
-                  <th className="text-left font-semibold text-gray-400 p-6">
-                    Role
-                  </th>
-                  <th className="text-left font-semibold text-gray-400 p-6">
-                    Status
-                  </th>
-                  <th className="text-left font-semibold text-gray-400 p-6">
-                    Projects
-                  </th>
-                  <th className="text-left font-semibold text-gray-400 p-6">
-                    Last Active
-                  </th>
-                  <th className="text-right font-semibold text-gray-400 p-6">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.map((user) => {
-                  const RoleIcon = getRoleIcon(user.role);
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {Users.length !== 0 ? (
+                filteredUsers.map((user) => {
+                  const role =
+                    roleConfig[user.role.toLowerCase()] || roleConfig.viewer;
                   return (
                     <tr
-                      key={user.id}
+                      key={user._id}
                       className="border-b border-white/5 hover:bg-white/5 transition-colors duration-200 group"
                     >
-                      <td className="p-6">
-                        <div className="flex items-center gap-4">
-                          <div className="relative">
-                            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center text-purple-400 font-semibold text-lg shadow-lg border border-white/10">
-                              {user.name
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")}
-                            </div>
-                            <div
-                              className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-gray-800 ${getStatusColor(
-                                user.status
-                              )} shadow-lg`}
-                            />
+                      <td className="p-6 flex items-center gap-4">
+                        <div className="relative">
+                          <div className="h-12 w-12 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center text-purple-400 font-semibold text-lg shadow-lg border border-white/10">
+                            {user.initials}
                           </div>
-                          <div>
-                            <div className="font-semibold text-gray-100 text-base">
-                              {user.name}
-                            </div>
-                            <div className="text-gray-400 text-sm">
-                              {user.email}
-                            </div>
+                          <div
+                            className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-gray-800 ${
+                              statusColor[user.status]
+                            }`}
+                          />
+                        </div>
+                        <div>
+                          <div className="font-semibold text-gray-100 text-base">
+                            {user.name}
+                          </div>
+                          <div className="text-gray-400 text-sm">
+                            {user.email}
                           </div>
                         </div>
                       </td>
-
                       <td className="p-6">
                         <div
-                          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold ${getRoleBadgeColor(
-                            user.role
-                          )}`}
+                          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold ${role.color}`}
                         >
-                          <RoleIcon className="h-3 w-3" />
-                          {user.role}
+                          <role.icon className="h-3 w-3" /> {user.role}
                         </div>
                       </td>
-
-                      <td className="p-6">
-                        <div className="flex items-center gap-3">
-                          <div
-                            className={`w-2.5 h-2.5 rounded-full ${getStatusColor(
-                              user.status
-                            )}`}
-                          />
-                          <span className="capitalize font-medium text-gray-300">
-                            {user.status}
-                          </span>
-                          {user.status === "suspended" && (
-                            <AlertTriangle className="h-4 w-4 text-red-500" />
-                          )}
-                        </div>
-                      </td>
-
-                      <td className="p-6">
-                        <span className="font-semibold text-gray-200">
-                          {user.projects}
+                      <td className="p-6 flex items-center gap-3">
+                        <div
+                          className={`w-2.5 h-2.5 rounded-full ${
+                            statusColor[user.status]
+                          }`}
+                        />
+                        <span className="capitalize font-medium text-gray-300">
+                          {user.status}
                         </span>
+                        {user.status === "suspended" && (
+                          <AlertTriangle className="h-4 w-4 text-red-500" />
+                        )}
                       </td>
-
-                      <td className="p-6">
-                        <span className="text-gray-400">{user.lastActive}</span>
+                      <td className="p-6 font-semibold text-gray-200">
+                        {user.projects}
                       </td>
-
-                      <td className="text-right p-6">
-                        <div className="relative inline-block">
-                          <button
-                            onClick={() =>
-                              setActiveDropdown(
-                                activeDropdown === user.id ? null : user.id
-                              )
-                            }
-                            className="h-10 w-10 cursor-pointer rounded-lg hover:bg-white/10 flex items-center justify-center transition-colors duration-200 opacity-0 group-hover:opacity-100"
-                          >
-                            <MoreVertical className="h-5 w-5 text-gray-400" />
-                          </button>
-
-                          {activeDropdown === user.id && (
-                            <div className="absolute right-0 mt-2 w-56 bg-black/50 backdrop-blur-xl rounded-xl shadow-2xl border border-white/10 py-2 z-10">
-                              <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-white/10">
-                                User Actions
-                              </div>
-
+                      <td className="p-6 text-gray-400">{user.lastActive}</td>
+                      <td className="text-right p-6 relative">
+                        <button
+                          onClick={() =>
+                            setActiveDropdown(
+                              activeDropdown === user._id ? null : user._id
+                            )
+                          }
+                          className="h-10 w-10 cursor-pointer rounded-lg hover:bg-white/10 flex items-center justify-center transition-colors duration-200 opacity-0 group-hover:opacity-100"
+                        >
+                          <MoreVertical className="h-5 w-5 text-gray-400" />
+                        </button>
+                        {activeDropdown === user._id && (
+                          <div className="absolute right-0  mt-2 w-56 bg-black/50 backdrop-blur-xl rounded-xl shadow-2xl border border-white/10 py-2 z-10">
+                            {["admin", "editor", "viewer"].map((r) => (
                               <button
+                                key={r}
                                 onClick={() =>
-                                  handleRoleChange(user.id, "admin")
+                                  updateUser(user._id, { role: r })
                                 }
-                                className="w-full flex items-center gap-3 cursor-pointer px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200"
+                                className="w-full cursor-pointer flex  items-center gap-3 px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200"
                               >
-                                <Crown className="h-4 w-4 text-red-400" />
                                 <span className="text-gray-300 cursor-pointer">
-                                  Make Admin
+                                  Make {r.charAt(0).toUpperCase() + r.slice(1)}
                                 </span>
                               </button>
-
-                              <button
-                                onClick={() =>
-                                  handleRoleChange(user.id, "editor")
-                                }
-                                className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200"
-                              >
-                                <Edit className="h-4 w-4 text-purple-400" />
-                                <span className="text-gray-300">
-                                  Make Editor
-                                </span>
-                              </button>
-
-                              <button
-                                onClick={() =>
-                                  handleRoleChange(user.id, "viewer")
-                                }
-                                className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200"
-                              >
-                                <Eye className="h-4 w-4 text-gray-500" />
-                                <span className="text-gray-300">
-                                  Make Viewer
-                                </span>
-                              </button>
-
-                              <div className="border-t border-white/10 my-2" />
-
+                            ))}
+                            <div className="border-t border-white/10 my-2" />
+                            <button
+                              onClick={() =>
+                                updateUser(user._id, {
+                                  status:
+                                    user.status === "suspended"
+                                      ? "online"
+                                      : "suspended",
+                                })
+                              }
+                              className="w-full cursor-pointer flex items-center gap-3 px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200"
+                            >
                               {user.status === "suspended" ? (
-                                <button
-                                  onClick={() =>
-                                    handleUserAction(user.id, "activate")
-                                  }
-                                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200"
-                                >
-                                  <UserCheck className="h-4 w-4 text-emerald-400" />
-                                  <span className="text-emerald-400">
-                                    Activate User
-                                  </span>
-                                </button>
+                                <UserCheck className="h-4 w-4 text-emerald-400" />
                               ) : (
-                                <button
-                                  onClick={() =>
-                                    handleUserAction(user.id, "suspend")
-                                  }
-                                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200"
-                                >
-                                  <UserX className="h-4 w-4 text-amber-400" />
-                                  <span className="text-amber-400">
-                                    Suspend User
-                                  </span>
-                                </button>
+                                <UserX className="h-4 w-4 text-amber-400" />
                               )}
-
-                              <button
-                                onClick={() =>
-                                  handleUserAction(user.id, "delete")
+                              <span
+                                className={
+                                  user.status === "suspended"
+                                    ? "text-emerald-400"
+                                    : "text-amber-400"
                                 }
-                                className="w-full flex items-center cursor-pointer gap-3 px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200"
                               >
-                                <Trash2 className="h-4 w-4 text-red-500" />
-                                <span className="text-red-500 cursor-pointer">
-                                  Delete User
-                                </span>
-                              </button>
-                            </div>
-                          )}
-                        </div>
+                                {user.status === "suspended"
+                                  ? "Activate User"
+                                  : "Suspend User"}
+                              </span>
+                            </button>
+                            <button
+                              onClick={() =>
+                                updateUser(user._id, { status: "deleted" })
+                              }
+                              className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200"
+                            >
+                              <Trash2 className="h-4 w-4 text-red-500" />
+                              <span className="text-red-500">Delete User</span>
+                            </button>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   );
-                })}
-              </tbody>
-            </table>
-          </div>
+                })
+              ) : (
+                <div className="w-full flex flex-col items-center justify-center py-16 text-gray-400">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-12 h-12 mb-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 16h-1v-4h-1m4 4v-4h-1m4 4v-4h-1M3 7h18M3 12h18M3 17h18"
+                    />
+                  </svg>
+                  <p className="text-center text-gray-500 text-lg">
+                    No users found would you like to invite?
+                    <Link
+                      href={"/invite"}
+                      className="cursor-pointer text-blue-300"
+                    >
+                      {" "}
+                      invite
+                    </Link>
+                  </p>
+                </div>
+              )}
+            </tbody>
+          </table>
         </main>
       </div>
-
-      {/* Click outside to close dropdown */}
       {activeDropdown && (
         <div
           className="fixed inset-0 z-5"
