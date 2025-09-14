@@ -15,8 +15,6 @@ class UserControllers {
         return;
       }
 
-      // if the email is user find its owner if it just owner look for it's users
-      // if the user is is not Owner get his owner id and fetch its folder tree
       let findOwnerId;
       if (IsRoleUser.role !== "Owner") {
         const invitedBy = IsRoleUser.users_user?.invitedBy;
@@ -57,9 +55,61 @@ class UserControllers {
       res.json({ message: "Role updated successfully", user: updatedUser });
     } catch (err: any) {
       res.status(500).json({ error: err.message });
+      return;
     }
   }
-  async getTotalUser() {}
+
+  async getProfile(req: Request, res: Response) {
+    if (!req.body.email) {
+      res.status(400).json({ message: "Email is required" });
+      return;
+    }
+    const { email } = req.body;
+
+    try {
+      const IsRoleUser = await validator.isUserRoleOwnerOrUser(email);
+
+      // check if the user is found
+      if (!IsRoleUser) {
+        res.status(404).json({ message: "user not found" });
+        return;
+      }
+
+      res.status(200).json({
+        message: "Users fetched successfully",
+        IsRoleUser,
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message || "Server error" });
+    }
+  }
+
+  async updateUserRoleOrStatus(req: Request, res: Response) {
+    const { id } = req.params;
+    const { role } = req.body;
+
+    if (!id && !id) {
+      res.status(400).json({ message: "Role or id must be provided" });
+      return;
+    }
+    try {
+      const user = await Users.findById(id);
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
+      }
+
+      if (role) user.role = role;
+
+      await user.save();
+
+      res.json({ message: "User updated successfully", user });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message || "Server error" });
+    }
+  }
+
+  async getTotalUser(req: Request, res: Response) {}
 }
 
 const UserController = new UserControllers();
