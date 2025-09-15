@@ -19,7 +19,7 @@ const userSchema: Schema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["Editor", "Admin", "Reviewer", "Read_only"],
+    enum: ["Editor", "Admin", "Reviewer", "Read_only", "suspended", "deleted"],
   },
   invitedBy: {
     type: mongoose.Schema.Types.ObjectId,
