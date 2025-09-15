@@ -63,7 +63,7 @@ export default function Dashboard() {
         const data = res.data || [];
         setUsers(
           data.map((u: any, i: number) => ({
-            _id: u.__id || i + 1,
+            _id: u._id,
             name: u.userName || `User ${i + 1}`,
             email: u.email || "N/A",
             role: u.role || "viewer",
@@ -95,11 +95,10 @@ export default function Dashboard() {
     try {
       await axios.put(
         `http://localhost:5000/api/User/updateUserRoleOrStatus/${id}`,
-        changes,
+        { role: changes },
         { withCredentials: true }
       );
 
-      // Update local state after successful API call
       setUsers(users.map((u) => (u._id === id ? { ...u, ...changes } : u)));
       setActiveDropdown(null);
       toast.success("User updated successfully");
@@ -189,7 +188,7 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {Users.length !== 0 ? (
+              {users.length !== 0 ? (
                 filteredUsers.map((user) => {
                   const role =
                     roleConfig[user.role.toLowerCase()] || roleConfig.viewer;
@@ -198,6 +197,7 @@ export default function Dashboard() {
                       key={user._id}
                       className="border-b border-white/5 hover:bg-white/5 transition-colors duration-200 group"
                     >
+                      {/* Avatar + Name */}
                       <td className="p-6 flex items-center gap-4">
                         <div className="relative">
                           <div className="h-12 w-12 rounded-full bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center text-purple-400 font-semibold text-lg shadow-lg border border-white/10">
@@ -218,6 +218,8 @@ export default function Dashboard() {
                           </div>
                         </div>
                       </td>
+
+                      {/* Role */}
                       <td className="p-6">
                         <div
                           className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold ${role.color}`}
@@ -225,6 +227,8 @@ export default function Dashboard() {
                           <role.icon className="h-3 w-3" /> {user.role}
                         </div>
                       </td>
+
+                      {/* Status */}
                       <td className="p-6 flex items-center gap-3">
                         <div
                           className={`w-2.5 h-2.5 rounded-full ${
@@ -238,46 +242,52 @@ export default function Dashboard() {
                           <AlertTriangle className="h-4 w-4 text-red-500" />
                         )}
                       </td>
+
+                      {/* Projects */}
                       <td className="p-6 font-semibold text-gray-200">
                         {user.projects}
                       </td>
+
+                      {/* Last Active */}
                       <td className="p-6 text-gray-400">{user.lastActive}</td>
+
+                      {/* Actions */}
                       <td className="text-right p-6 relative">
+                        {/* Three-dot button */}
                         <button
                           onClick={() =>
                             setActiveDropdown(
                               activeDropdown === user._id ? null : user._id
                             )
                           }
-                          className="h-10 w-10 cursor-pointer rounded-lg hover:bg-white/10 flex items-center justify-center transition-colors duration-200 opacity-0 group-hover:opacity-100"
+                          className="h-10 w-10 cursor-pointer rounded-lg hover:bg-white/10 flex items-center justify-center transition-colors duration-200 z-10"
                         >
                           <MoreVertical className="h-5 w-5 text-gray-400" />
                         </button>
+
+                        {/* Dropdown menu */}
                         {activeDropdown === user._id && (
-                          <div className="absolute right-0  mt-2 w-56 bg-black/50 backdrop-blur-xl rounded-xl shadow-2xl border border-white/10 py-2 z-10">
-                            {["admin", "editor", "viewer"].map((r) => (
-                              <button
-                                key={r}
-                                onClick={() =>
-                                  updateUser(user._id, { role: r })
-                                }
-                                className="w-full cursor-pointer flex  items-center gap-3 px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200"
-                              >
-                                <span className="text-gray-300 cursor-pointer">
-                                  Make {r.charAt(0).toUpperCase() + r.slice(1)}
-                                </span>
-                              </button>
-                            ))}
+                          <div className="absolute right-0 mt-2 w-56 bg-black/70 backdrop-blur-xl rounded-xl shadow-2xl border border-white/10 py-2 z-50">
+                            {["Admin", "Editor", "Reviewer", "Read_only"].map(
+                              (r) => (
+                                <button
+                                  key={r}
+                                  onClick={() => updateUser(user._id, r)}
+                                  className="w-full cursor-pointer flex items-center gap-3 px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200"
+                                >
+                                  <span className="text-gray-300">
+                                    Make{" "}
+                                    {r.charAt(0).toUpperCase() + r.slice(1)}
+                                  </span>
+                                </button>
+                              )
+                            )}
+
                             <div className="border-t border-white/10 my-2" />
+
+                            {/* Suspend / Activate */}
                             <button
-                              onClick={() =>
-                                updateUser(user._id, {
-                                  status:
-                                    user.status === "suspended"
-                                      ? "online"
-                                      : "suspended",
-                                })
-                              }
+                              onClick={() => updateUser(user._id, "suspended")}
                               className="w-full cursor-pointer flex items-center gap-3 px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200"
                             >
                               {user.status === "suspended" ? (
@@ -297,10 +307,10 @@ export default function Dashboard() {
                                   : "Suspend User"}
                               </span>
                             </button>
+
+                            {/* Delete User */}
                             <button
-                              onClick={() =>
-                                updateUser(user._id, { status: "deleted" })
-                              }
+                              onClick={() => updateUser(user._id, "deleted")}
                               className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white/10 transition-colors duration-200"
                             >
                               <Trash2 className="h-4 w-4 text-red-500" />
@@ -313,42 +323,42 @@ export default function Dashboard() {
                   );
                 })
               ) : (
-                <div className="w-full flex flex-col items-center justify-center py-16 text-gray-400">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-12 h-12 mb-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 16h-1v-4h-1m4 4v-4h-1m4 4v-4h-1M3 7h18M3 12h18M3 17h18"
-                    />
-                  </svg>
-                  <p className="text-center text-gray-500 text-lg">
-                    No users found would you like to invite?
-                    <Link
-                      href={"/invite"}
-                      className="cursor-pointer text-blue-300"
+                <tr>
+                  <td colSpan={6} className="py-16 text-center text-gray-400">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-12 h-12 mb-4 mx-auto"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
                     >
-                      {" "}
-                      invite
-                    </Link>
-                  </p>
-                </div>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 16h-1v-4h-1m4 4v-4h-1m4 4v-4h-1M3 7h18M3 12h18M3 17h18"
+                      />
+                    </svg>
+                    <p className="text-center text-gray-500 text-lg">
+                      No users found. Would you like to{" "}
+                      <Link
+                        href={"/invite"}
+                        className="cursor-pointer text-blue-300"
+                      >
+                        invite
+                      </Link>
+                      ?
+                    </p>
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>
         </main>
       </div>
+      {/* Backdrop for closing dropdown */}
       {activeDropdown && (
-        <div
-          className="fixed inset-0 z-5"
-          onClick={() => setActiveDropdown(null)}
-        />
+        <div className="" onClick={() => setActiveDropdown(null)} />
       )}
     </div>
   );
