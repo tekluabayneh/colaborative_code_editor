@@ -4,7 +4,11 @@ import { useFileTree } from "../context/EditorContext";
 import { extensionToLanguage } from "../data/FolderTree";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { GoogleGenAI } from "@google/genai";
 
+const GEMINI_API_KEY = process.env.YOUR_API_KEY_HERE;
+
+const client = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 export default function CodeEditor() {
   const { CurrentFileInEditor } = useFileTree();
   const editorRef = useRef<any>(null);
@@ -13,6 +17,70 @@ export default function CodeEditor() {
   const handleEditorDidMount = (editor: any, monaco: Monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
+    const model = editorRef.current.getModel();
+    const language = model?.getLanguageId() || "javascript";
+    // Replace this function inside your existing CodeEditor
+
+    // Fake streaming for demo using Google GenAI
+    async function* aiStream(prompt: string) {
+      const response = await client.responses.create({
+        model: "models/text-bison-001", // GenAI model
+        input: prompt,
+        temperature: 0.2,
+        maxOutputTokens: 100,
+      });
+
+      // Extract the text from GenAI response
+      const text = response.output[0].content[0].text;
+
+      for (let i = 0; i < text.length; i++) {
+        await new Promise((r) => setTimeout(r, 20)); // simulate streaming
+        yield text[i];
+      }
+    }
+
+    // Then in your existing useEffect for inline suggestions
+    useEffect(() => {
+      if (!editorRef.current || !monacoRef.current) return;
+
+      const model = editorRef.current.getModel();
+      const language = model?.getLanguageId() || "javascript";
+
+      const disposable =
+        monacoRef.current.editor.registerInlineCompletionsProvider(language, {
+          provideInlineCompletions: async (model, position) => {
+            const before = model.getValueInRange({
+              startLineNumber: 1,
+              startColumn: 1,
+              endLineNumber: position.lineNumber,
+              endColumn: position.column,
+            });
+
+            let suggestionText = "";
+            for await (const chunk of aiStream(before)) {
+              suggestionText += chunk;
+            }
+
+            return {
+              items: [
+                {
+                  insertText: suggestionText,
+                  range: {
+                    startLineNumber: position.lineNumber,
+                    startColumn: position.column,
+                    endLineNumber: position.lineNumber,
+                    endColumn: position.column,
+                  },
+                },
+              ],
+              dispose() {},
+            };
+          },
+          freeInlineCompletions: () => {},
+        });
+
+      return () => disposable?.dispose();
+    }, [editorRef.current, monacoRef.current]);
   };
 
   const handleFileChange = (file: {
@@ -41,6 +109,7 @@ export default function CodeEditor() {
     }
   }, [CurrentFileInEditor]);
 
+  ///////////////////////////////=====================================================//////////////////////////
   const updateDocumentContent = async () => {
     try {
       const res = await axios.put(
