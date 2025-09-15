@@ -87,7 +87,6 @@ class UserControllers {
   async updateUserRoleOrStatus(req: Request, res: Response) {
     const { id } = req.params;
     const { role } = req.body;
-
     if (!id && !id) {
       res.status(400).json({ message: "Role or id must be provided" });
       return;
