@@ -7,12 +7,9 @@ import Link from "next/link";
 const navigation = [
   { name: "Dashboard", icon: Home, current: true, link: "/dashboard" },
   { name: "Code Editor", icon: Code2, current: false, link: "/editor" },
-  { name: "Team", icon: Users, current: false, link: "/admin" },
   { name: "Activity", icon: Activity, current: false, link: "/activity" },
-  { name: "Files", icon: FileText, current: false, link: "/files" },
 ];
 const Index = () => {
-  
   return (
     <div className="min-h-screen bg-neutral-900 p-6">
       <div className="max-w-7xl mx-auto">
