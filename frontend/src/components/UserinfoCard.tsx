@@ -38,6 +38,7 @@ export function UserInfoCard() {
           res.data?.IsRoleUser?.users_user ||
           res.data?.IsRoleUser?.Owners_user ||
           null;
+          
         setUser(userData);
       } catch (error: any) {
         toast.error(error.response?.data?.message || error.message);
