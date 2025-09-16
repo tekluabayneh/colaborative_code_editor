@@ -20,9 +20,9 @@ UserRouter.put("/User/updateUserRoleOrStatus/:id", (req, res) =>
   UserController.updateUserRoleOrStatus(req, res)
 );
 
-UserRouter.get("/User/getProfile", (req, res) =>
-  UserController.getTotalUser(req, res)
-);
+// UserRouter.get("/User/getProfile", (req, res) =>
+//   UserController.getTotalUser(req, res)
+// );
 
 UserRouter.post(
   "User/",
