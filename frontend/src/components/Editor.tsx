@@ -1,4 +1,5 @@
-import React, { useRef, useEffect } from "react";
+"use client";
+import React, { useRef, useEffect, useState } from "react";
 import Editor, { Monaco } from "@monaco-editor/react";
 import { useFileTree } from "../context/EditorContext";
 import { extensionToLanguage } from "../data/FolderTree";
@@ -15,10 +16,39 @@ const GEMINI_API_KEY = process.env.YOUR_API_KEY_HERE;
 
 // const client = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 export default function CodeEditor() {
+  const [email, setemail] = useState("");
+  const [user, setUser] = useState([]);
   const { CurrentFileInEditor } = useFileTree();
   const editorRef = useRef<any>(null);
   const monacoRef = useRef<any>(null);
+  useEffect(() => {
+    const getEmail = localStorage.getItem("email");
+    if (!getEmail) return;
+    setemail(getEmail);
+  }, []);
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!email) return;
+      try {
+        const res = await axios.post(
+          "http://localhost:5000/api/User/getProfile",
+          { email },
+          { withCredentials: true }
+        );
+        const userData =
+          res.data?.IsRoleUser?.users_user ||
+          res.data?.IsRoleUser?.Owners_user ||
+          null;
+        setUser(userData);
+        console.log(userData);
+      } catch (error: any) {
+        toast.error(error.response?.data?.message || error.message);
+      }
+    };
+
+    fetchProfile();
+  }, [email]);
   const handleEditorDidMount = (editor: any, monaco: Monaco) => {
     editorRef.current = editor;
     monacoRef.current = monaco;
@@ -29,11 +59,21 @@ export default function CodeEditor() {
     const doc = new Y.Doc();
     // set up the provider
     const provider = new WebsocketProvider(
-      "ws://localhost:1234/editor",
+      "ws://localhost:3000",
       "my-roomname",
       doc
     );
-    //  const provider = new WebrtcProvider("test-room", doc)
+    provider.awareness.setLocalStateField("user", {
+      name: "Alice",
+      color: "#ff0000",
+      // cursor: editor.getPosition(),
+    });
+    editor.onDidChangeCursorSelection((e) => {
+      provider.awareness.setLocalStateField("selection", {
+        start: e.selection.getStartPosition(),
+        end: e.selection.getEndPosition(),
+      });
+    });
 
     // get the monaco editor
     const type = doc.getText("monaco");
