@@ -84,11 +84,9 @@ const Login = async (req: Request, res: Response) => {
 
 const SendOTP = async (req: Request, res: Response) => {
   if (!req.body?.email) {
-    res
-      .status(400)
-      .json({
-        message: "email is required if you want to reset your password",
-      });
+    res.status(400).json({
+      message: "email is required if you want to reset your password",
+    });
     return;
   }
 
@@ -99,12 +97,10 @@ const SendOTP = async (req: Request, res: Response) => {
     const checkusrFromUsers = await Users.findOne({ email: email });
 
     if (!checkuserFromOwners && !checkusrFromUsers) {
-      res
-        .status(400)
-        .json({
-          message:
-            "user is not found with the provided email check your email again ",
-        });
+      res.status(400).json({
+        message:
+          "user is not found with the provided email check your email again ",
+      });
       return;
     }
 
