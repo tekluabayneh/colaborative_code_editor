@@ -8,7 +8,6 @@ import Users from "../models/user";
 import OtpModel from "../models/Otp";
 import { sendOtpEmail, sendResetPasswordLink } from "../services/email.service";
 import ResetLinkModel from "../models/ResetPassword";
-
 interface ResetLinkRequestBody {
   email: string;
 }
@@ -43,14 +42,22 @@ const Login = async (req: Request, res: Response) => {
 
   // check usr role get the role from the db using the email
   const UserRole = await validator.isUserRoleOwnerOrUser(email);
+  let IsOwnerOrUser;
 
-  const HashedPassword = await Owners.findOne({ email: email });
-
-  if (!HashedPassword) {
+  if (!UserRole) {
     res.status(400).json({ message: "user not found" });
     return;
   }
-  if (!HashedPassword.password || HashedPassword.password.length === 0) {
+  if (UserRole.isOwner) {
+    IsOwnerOrUser = UserRole?.Owners_user;
+    console.log(IsOwnerOrUser);
+  } else {
+    const invitedBy = UserRole.Users_user?.invitedBy;
+    IsOwnerOrUser = await Owners.findOne({ _id: invitedBy });
+    console.log(IsOwnerOrUser);
+  }
+
+  if (!IsOwnerOrUser?.password || IsOwnerOrUser?.password.length === 0) {
     res.status(400).json({
       message:
         "This account was created using Google or GitHub. Please log in with that provider.",
@@ -58,14 +65,14 @@ const Login = async (req: Request, res: Response) => {
     return;
   }
 
-  if (!(await validator.isPasswordMatch(password, HashedPassword.password))) {
+  if (!(await validator.isPasswordMatch(password, IsOwnerOrUser.password))) {
     res.status(404).json({ message: "password is not correct" });
     return;
   }
 
   const token = Tokens.SignUser_JWT_Token(
-    HashedPassword.email,
-    HashedPassword?.role,
+    IsOwnerOrUser.email,
+    IsOwnerOrUser?.role,
     process.env.JWT_SECRET_KEY!
   );
 
@@ -77,9 +84,10 @@ const Login = async (req: Request, res: Response) => {
     signed: false,
   });
 
-  res
-    .status(200)
-    .json({ message: "user login successfully", role: UserRole?.role });
+  res.status(200).json({
+    message: "user login successfully",
+    role: UserRole?.role,
+  });
 };
 
 const SendOTP = async (req: Request, res: Response) => {
