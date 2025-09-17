@@ -54,8 +54,8 @@ export const GetAllOwnerFolderTree = async (req: Request, res: Response) => {
 
   // if the user is is not Owner get his owner id and fetch its folder tree
   let findOwnerId;
-  if (IsRoleUser.role !== "Owner") {
-    const invitedBy = IsRoleUser.users_user?.invitedBy;
+  if (!IsRoleUser.isOwner) {
+    const invitedBy = IsRoleUser.Users_user?.invitedBy;
     findOwnerId = await Owners.findOne({ _id: invitedBy });
   } else {
     findOwnerId = IsRoleUser?.Owners_user?._id;
@@ -323,8 +323,8 @@ class DocumentController {
         res.status(404).json({ message: "user not found" });
         return;
       }
-      if (IsRoleUser.role !== "Owner") {
-        Id = IsRoleUser.users_user?._id;
+      if (!IsRoleUser.isOwner) {
+        Id = IsRoleUser.Users_user?._id;
       } else {
         Id = IsRoleUser?.Owners_user?._id;
       }
@@ -388,8 +388,8 @@ class DocumentController {
       res.status(404).json({ message: "user not found" });
       return;
     }
-    if (IsRoleUser.role !== "Owner") {
-      Id = IsRoleUser.users_user?._id;
+    if (!IsRoleUser.isOwner) {
+      Id = IsRoleUser.Users_user?._id;
     } else {
       Id = IsRoleUser?.Owners_user?._id;
     }
