@@ -40,7 +40,7 @@ const sendInvite = async (req: Request, res: Response) => {
   }
 
   let IsUser;
-  if (!invitedBy.users_user) {
+  if (invitedBy.isOwner) {
     inviterId = invitedBy.Owners_user._id;
     if (typeof invitedBy.Owners_user.email !== "string") {
       res.status(400).json({ message: "Email must be a string" });
@@ -49,13 +49,13 @@ const sendInvite = async (req: Request, res: Response) => {
     IsUser = await validator.isUserRoleOwnerOrUser(invitedBy.Owners_user.email);
   }
 
-  if (!invitedBy.Owners_user) {
-    inviterId = invitedBy.users_user._id;
-    if (typeof invitedBy.users_user.email !== "string") {
+  if (!invitedBy.isOwner) {
+    inviterId = invitedBy.Users_user._id;
+    if (typeof invitedBy.Users_user.email !== "string") {
       res.status(400).json({ message: "Email must be a string" });
       return;
     }
-    IsUser = await validator.isUserRoleOwnerOrUser(invitedBy.users_user.email);
+    IsUser = await validator.isUserRoleOwnerOrUser(invitedBy.Users_user.email);
   }
 
   if (!IsUser) {
