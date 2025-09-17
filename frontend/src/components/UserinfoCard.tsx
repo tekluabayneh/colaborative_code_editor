@@ -35,10 +35,10 @@ export function UserInfoCard() {
           { withCredentials: true }
         );
         const userData =
-          res.data?.IsRoleUser?.users_user ||
+          res.data?.IsRoleUser?.Users_user ||
           res.data?.IsRoleUser?.Owners_user ||
           null;
-          
+
         setUser(userData);
       } catch (error: any) {
         toast.error(error.response?.data?.message || error.message);
