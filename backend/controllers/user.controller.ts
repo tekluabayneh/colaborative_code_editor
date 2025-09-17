@@ -16,11 +16,11 @@ class UserControllers {
       }
 
       let findOwnerId;
-      if (IsRoleUser.role !== "Owner") {
-        const invitedBy = IsRoleUser.users_user?.invitedBy;
-        findOwnerId = await Owners.findOne({ _id: invitedBy });
-      } else {
+      if (IsRoleUser.isOwner) {
         findOwnerId = IsRoleUser?.Owners_user?._id;
+      } else {
+        const invitedBy = IsRoleUser.Users_user?.invitedBy;
+        findOwnerId = await Owners.findOne({ _id: invitedBy });
       }
 
       const findUsers = await Users.find({ invitedBy: findOwnerId });
