@@ -13,11 +13,16 @@ import { WebsocketProvider } from "y-websocket";
 import { MonacoBinding } from "y-monaco";
 
 const GEMINI_API_KEY = process.env.YOUR_API_KEY_HERE;
-
+type UserType = {
+  invitedBy: string;
+  role: string;
+  userName: string;
+  _id: string;
+};
 // const client = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 export default function CodeEditor() {
   const [email, setemail] = useState("");
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState<UserType | null>(null);
   const { CurrentFileInEditor } = useFileTree();
   const editorRef = useRef<any>(null);
   const monacoRef = useRef<any>(null);
@@ -36,12 +41,12 @@ export default function CodeEditor() {
           { email },
           { withCredentials: true }
         );
+        console.log(res);
         const userData =
-          res.data?.IsRoleUser?.users_user ||
+          res.data?.IsRoleUser?.Users_user ||
           res.data?.IsRoleUser?.Owners_user ||
           null;
         setUser(userData);
-        console.log(userData);
       } catch (error: any) {
         toast.error(error.response?.data?.message || error.message);
       }
@@ -54,17 +59,24 @@ export default function CodeEditor() {
     monacoRef.current = monaco;
     const model = editorRef.current.getModel();
 
+    if (!user) {
+      return;
+    }
     /////===========yjs==================///
     // initialize yjs
     const doc = new Y.Doc();
     // set up the provider
     const provider = new WebsocketProvider(
-      "ws://localhost:3000",
-      "my-roomname",
+      "ws://localhost:1234",
+      user.invitedBy ? user.invitedBy : user._id,
       doc
     );
+
+    provider.on("status", (event) => {
+      console.log("Connection status:", event.status);
+    });
     provider.awareness.setLocalStateField("user", {
-      name: "Alice",
+      name: user.userName,
       color: "#ff0000",
       // cursor: editor.getPosition(),
     });
