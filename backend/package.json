@@ -9,7 +9,7 @@
     "predev": "npm run build",
     "dev": "concurrently \"npx tsc -watch\" \"nodemon dist/srever.js\" ",
     "serve_ts": "nodemon",
-     "test":"jest --watch --reporter=verbose"
+    "test": "jest --watch --reporter=verbose"
   },
   "keywords": [],
   "author": "",
@@ -39,7 +39,9 @@
     "passport": "^0.7.0",
     "passport-github2": "^0.1.12",
     "passport-google-oauth20": "^2.0.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "ws": "^8.18.3",
+    "y-websocket": "^3.0.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -51,6 +53,7 @@
     "@types/passport": "^1.0.17",
     "@types/passport-github2": "^1.2.9",
     "@types/passport-google-oauth20": "^2.0.16",
+    "@types/ws": "^8.18.1",
     "jest": "^30.1.1",
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
