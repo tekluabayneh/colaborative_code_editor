@@ -4,6 +4,7 @@ import { Request } from "express";
 import type { returnMessage } from "../types/user";
 import Owners from "../models/Owners";
 import Users from "../models/user";
+import { IsRoleUser, UserType } from "../types/document";
 const validateEmailAndPassword = (password: string, email: string): boolean => {
   if (password.length < 6 || password.length > 30) {
     return false;
@@ -15,7 +16,6 @@ const validateEmailAndPassword = (password: string, email: string): boolean => {
 
 const ValidateRegister = (request: Request): returnMessage => {
   const { email, userName, password } = request.body;
-
 
   if (!email || !userName || !password) {
     return {
@@ -57,7 +57,10 @@ const ValidateLogin = (request: Request): returnMessage => {
   };
 };
 
-const VerifyJwtToken = ( token: string, secretKey: string): string | jwt.JwtPayload => {
+const VerifyJwtToken = (
+  token: string,
+  secretKey: string
+): string | jwt.JwtPayload => {
   try {
     const decoded = jwt.verify(token, secretKey);
     return decoded as jwt.JwtPayload;
@@ -71,38 +74,46 @@ const isUserAlreadyRegistered = async (email: string): Promise<boolean> => {
   return findUserByEmail.length === 0 ? false : true;
 };
 
+const isUserRoleOwnerOrUser = async (
+  email: string
+): Promise<IsRoleUser | null> => {
+  const Owners_user = await Owners.findOne({ email });
+  const Users_user = await Users.findOne({ email });
 
-const isUserRoleOwnerOrUser = async (email:string) => {
-const Owners_user = await Owners.findOne({email:email})
-const users_user =  await Users.findOne({email:email})
+  if (!Owners_user && !Users_user) {
+    return null;
+  }
 
-	if(!Owners_user && !users_user) { 
-		return null 
-	}      
+  if (Owners_user) {
+    return { role: Owners_user.role, isOwner: true, Owners_user };
+  }
 
-	// is the result of owners is empty we know its user
-	if(Owners_user){
-         return { role:Owners_user.role, isOwner:true, Owners_user }
+  if (Users_user) {
+    return {
+      role: Users_user.role as string,
+      isOwner: false,
+      Users_user,
+    } as unknown as IsRoleUser;
+  }
 
-	}else if(users_user){
-	  return { role:users_user.role, isOwner:false, users_user}
-	}
+  return null;
+};
 
-}
-
-
-const isPasswordMatch = async(password:string, hasedapssword:string): Promise<boolean> => {
-   return compareSync(password,hasedapssword) 
-}
+const isPasswordMatch = async (
+  password: string,
+  hasedapssword: string
+): Promise<boolean> => {
+  return compareSync(password, hasedapssword);
+};
 
 export default {
   ValidateLogin,
   ValidateRegister,
   VerifyJwtToken,
   isUserAlreadyRegistered,
-  isUserRoleOwnerOrUser ,
+  isUserRoleOwnerOrUser,
   validateEmailAndPassword,
-isPasswordMatch
+  isPasswordMatch,
 };
 
 // validateing step we hvae to take
