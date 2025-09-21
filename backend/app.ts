@@ -15,6 +15,7 @@ import Owners from "./models/Owners";
 import GloblaError from "./middlewares/error.middleware"
 import cookieParser from "cookie-parser";
 import UserRouter from "./routes/user.route";
+import AICodeCompletionRouter from "./routes/codeCompletion.route";
 
  
   
@@ -107,6 +108,9 @@ app.use("/api",DocumentRouter)
 
 // User Route
 app.use("/api",UserRouter)
+
+// get the ai code completion
+app.use("/api", AICodeCompletionRouter);
 
 
 app.use(GloblaError)
