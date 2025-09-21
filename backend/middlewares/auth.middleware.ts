@@ -105,7 +105,6 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// check if the user is  oging useing invite code and if the invite code is valid and redirect them to the dashboard and set thier role to user or admin or super admin
 
 export default {
   ResgisterValidate,
