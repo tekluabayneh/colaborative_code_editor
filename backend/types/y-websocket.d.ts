@@ -1,10 +1,10 @@
-declare module "y-websocket/bin/utils" {
+declare module "y-websocket/bin/utils.js" {
   import { WebSocket } from "ws";
-  import { IncomingMessage } from "http";
+  import http from "http";
 
   export function setupWSConnection(
     conn: WebSocket,
-    req: IncomingMessage,
-    opts?: { docName?: string }
+    req: http.IncomingMessage,
+    options?: { docName?: string }
   ): void;
 }
