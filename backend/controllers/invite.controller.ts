@@ -94,6 +94,7 @@ const sendInvite = async (req: Request, res: Response) => {
 };
 
 const acceptInvite = async (req: Request, res: Response) => {
+  
   if (!req.body) {
     res.status(400).json({ message: "Request body is missing" });
     return;
