@@ -97,7 +97,6 @@ class DocumentController {
       return;
     }
     try {
-      // now get all the folder tree taht are labed with ownder id
       const fileTree = await GetAllOwnerFolderTree(req, res);
 
       if (!fileTree) {
@@ -111,7 +110,6 @@ class DocumentController {
       // filter only the documen
       const DocumentOnly: ObId[] = [];
       function searchDcoumentOnly(node: folderToBeDeletedTypes) {
-        // @ts-ignore
         if (node.contentId) {
           DocumentOnly.push(node.contentId);
         }
@@ -121,8 +119,7 @@ class DocumentController {
             DocumentOnly.push(ND.contentId);
           }
           if (ND.nodes && ND.nodes.length > 0) {
-            // @ts-ignore
-            searchDcoumentOnly(node.nodes);
+            searchDcoumentOnly(ND);
           }
         }
       }
@@ -136,7 +133,7 @@ class DocumentController {
         )) as unknown as folderToBeDeletedTypes;
 
         if (!documentData) {
-          res.status(400).json({ message: "documetId is not found" });
+          res.status(400).json({ message: "documentId is not found" });
           return;
         }
         DcoumentsTosend.push(documentData);
@@ -144,14 +141,17 @@ class DocumentController {
 
       res.send(DcoumentsTosend);
     } catch (error) {
-      res.status(500).json({ message: "Internal server error" });
+      res
+        .status(500)
+        .json({ message: "Internal server error", ErrorMSg: error });
+      console.log(error);
     }
   }
 
   // ======================================//////=====================================
   async GetdocumetnById(req: Request, res: Response): Promise<void> {
     if (!req.params.DocId) {
-      res.status(400).json({ message: "documetId is mandatory" });
+      res.status(400).json({ message: "documentId is mandatory" });
       return;
     }
 
@@ -161,7 +161,7 @@ class DocumentController {
       const documentData = await Documents.findById(DocId);
 
       if (!documentData) {
-        res.status(400).json({ message: "documetId is not found" });
+        res.status(400).json({ message: "documentId is not found" });
         return;
       }
 
