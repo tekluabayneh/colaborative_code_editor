@@ -50,11 +50,8 @@ const Login = async (req: Request, res: Response) => {
   }
   if (UserRole.isOwner) {
     IsOwnerOrUser = UserRole?.Owners_user;
-    console.log(IsOwnerOrUser);
   } else {
-    const invitedBy = UserRole.Users_user?.invitedBy;
-    IsOwnerOrUser = await Owners.findOne({ _id: invitedBy });
-    console.log(IsOwnerOrUser);
+    IsOwnerOrUser = UserRole.Users_user;
   }
 
   if (!IsOwnerOrUser?.password || IsOwnerOrUser?.password.length === 0) {
