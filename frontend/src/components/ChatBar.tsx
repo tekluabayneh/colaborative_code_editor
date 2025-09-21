@@ -1,6 +1,9 @@
-"use client"
-import React, { useState, useRef, useEffect } from 'react';
-import { Send,X, Users} from 'lucide-react';
+"use client";
+import React, { useState, useRef, useEffect } from "react";
+import { Send, X, Users } from "lucide-react";
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:5000");
 
 interface Message {
   id: string;
@@ -16,112 +19,81 @@ interface User {
   avatar: string;
   isOnline: boolean;
 }
-
-export const ChatSidebar = ({setIsChatOpen}) => {
-  const [messageText, setMessageText] = useState('');
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      user: 'Sarah Chen',
-      text: 'Hey team! I just pushed the latest changes to the auth module.',
-      timestamp: new Date(Date.now() - 5 * 60000),
-      isOwn: false
-    },
-    {
-      id: '2',
-      user: 'You',
-      text: 'Great! I\'ll review it now.',
-      timestamp: new Date(Date.now() - 3 * 60000),
-      isOwn: true
-    },
-    {
-      id: '3',
-      user: 'Mike Rodriguez',
-      text: 'Can someone help me with the API integration on line 127?',
-      timestamp: new Date(Date.now() - 1 * 60000),
-      isOwn: false
-    }
-  ]);
-
-  const [onlineUsers] = useState<User[]>([
-    { id: '1', name: 'Sarah Chen', avatar: 'SC', isOnline: true },
-    { id: '2', name: 'Mike Rodriguez', avatar: 'MR', isOnline: true },
-    { id: '3', name: 'Alex Kim', avatar: 'AK', isOnline: false },
-    { id: '4', name: 'You', avatar: 'ME', isOnline: true }
-  ]);
+type StateType = React.Dispatch<React.SetStateAction<boolean>>;
+export const ChatSidebar = ({
+  setIsChatOpen,
+}: {
+  setIsChatOpen: StateType;
+}) => {
+  const [messageText, setMessageText] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [username] = useState("You");
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
+  // 🔥 setup socket listeners
+  useEffect(() => {
+    socket.on("chat_message", (msg) => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString(),
+          user: msg.user,
+          text: msg.text,
+          timestamp: new Date(),
+          isOwn: msg.user === username,
+        },
+      ]);
+    });
+
+    return () => {
+      socket.off("chat_message");
+    };
+  }, [username]);
 
   const handleSendMessage = () => {
     if (messageText.trim()) {
-      const newMessage: Message = {
-        id: Date.now().toString(),
-        user: 'You',
+      const msgData = {
+        user: username,
         text: messageText,
-        timestamp: new Date(),
-        isOwn: true
       };
-      setMessages([...messages, newMessage]);
-      setMessageText('');
+      socket.emit("chat_message", msgData);
+      setMessageText("");
     }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
   };
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      hour12: false 
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
     });
   };
 
-
   return (
     <div className="h-full w-80 bg-gray-900 border-r border-gray-700 flex flex-col">
-            <div className="flex items-center justify-between z-10 p-4 border-b border-gray-700">
-              <button onClick={() => setIsChatOpen(false)} className="p-2 cursor-pointer hover:bg-gray-800 rounded-lg transition-colors" >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-      {/* Online Users */}
-      <div className="p-3 border-b border-gray-700">
-        <div className="flex items-center space-x-2 mb-2">
-          <Users className="w-4 h-4 text-gray-400" />
-          <span className="text-xs text-gray-400 font-medium">
-            Online ({onlineUsers.filter(u => u.isOnline).length})
-          </span>
-        </div>
-        <div className="flex space-x-2">
-          {onlineUsers.filter(u => u.isOnline).map((user) => (
-            <div
-              key={user.id}
-              className="relative group cursor-pointer"
-            >
-              <div className="w-8 h-8 rounded-full bg-blue-600 text-white text-xs font-medium flex items-center justify-center">
-                {user.avatar}
-              </div>
-              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-gray-900 rounded-full"></div>
-              <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                {user.name}
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="flex items-center justify-between z-10 p-4 border-b border-gray-700">
+        <button
+          onClick={() => setIsChatOpen(false)}
+          className="p-2 cursor-pointer hover:bg-gray-800 rounded-lg transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       {/* Messages */}
@@ -129,9 +101,13 @@ export const ChatSidebar = ({setIsChatOpen}) => {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'}`}
+            className={`flex ${
+              message.isOwn ? "justify-end" : "justify-start"
+            }`}
           >
-            <div className={`max-w-[85%] ${message.isOwn ? 'order-2' : 'order-1'}`}>
+            <div
+              className={`max-w-[85%] ${message.isOwn ? "order-2" : "order-1"}`}
+            >
               {!message.isOwn && (
                 <div className="text-xs text-gray-400 mb-1 font-medium">
                   {message.user}
@@ -140,8 +116,8 @@ export const ChatSidebar = ({setIsChatOpen}) => {
               <div
                 className={`rounded-lg px-3 py-2 text-sm ${
                   message.isOwn
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-800 text-gray-300'
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-800 text-gray-300"
                 }`}
               >
                 {message.text}
@@ -167,8 +143,8 @@ export const ChatSidebar = ({setIsChatOpen}) => {
               className="w-full bg-gray-800 border border-gray-600 rounded-md px-3 py-2 text-sm text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               rows={1}
               style={{
-                minHeight: '36px',
-                maxHeight: '80px'
+                minHeight: "36px",
+                maxHeight: "80px",
               }}
             />
           </div>
