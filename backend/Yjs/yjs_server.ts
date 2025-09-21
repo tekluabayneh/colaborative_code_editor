@@ -1,14 +1,15 @@
-// yjs-server.ts
-import { WebsocketServer } from "y-websocket";
+import http from "http";
+import WebSocket from "ws";
+const { setupWSConnection } = require("y-websocket/bin/utils.js");
 
-const port: number = Number(process.env.PORT) || 1234;
+const server = http.createServer();
+const wss = new WebSocket.Server({ server });
 
-// Create Yjs WebSocket server
-const wss = new WebsocketServer({ port });
-
-wss.on("connection", (conn) => {
-  console.log("New client connected");
+wss.on("connection", (conn, req) => {
+  const docName = req.url?.slice(1).split("?")[0] || "default";
+  setupWSConnection(conn, req);
 });
 
-// Optional: log when server starts
-console.log(`Yjs WebSocket Server running on ws://localhost:${port}`);
+server.listen(1234, () =>
+  console.log("✅ Yjs WebSocket server running at ws://localhost:1234")
+);
