@@ -7,7 +7,7 @@
     "prestart": "npm run build",
     "start": "nodemon dist/server.js",
     "predev": "npm run build",
-    "dev": "concurrently \"npx tsc -watch\" \"nodemon dist/srever.js\" ",
+    "dev": "concurrently \"npx tsc -watch\" \"nodemon dist/server.js\" ",
     "serve_ts": "nodemon",
     "test": "jest --watch --reporter=verbose"
   },
