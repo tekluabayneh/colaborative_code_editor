@@ -14,6 +14,25 @@ import CollaboratorSidebar from "../../components/activity/CollaboratorSidebar";
 import LiveIndicator from "../../components/activity/LiveIndicator";
 import ActivityStats from "../../components/activity/ActivityStats";
 
+type activittype = {
+    id: string
+    type: string
+    title: string
+    collaborator_name: string,
+    is_live?: boolean,
+    created_date?: string,
+    description?: string,
+    file_path?: string,
+    name: string,
+    language?: string,
+    lines_added?: number,
+    lines_removed?: number,
+    branch: string,
+    updatedAt?: string,
+    createdAt?: string,
+    avatar?: string
+}
+
 const Files = [
     {
         _id: "2323412",
@@ -118,6 +137,7 @@ const Files = [
         branch: "main",
         createdAt: new Date("2025-09-01T10:30:00"),
         updatedAt: new Date("2025-09-05T14:45:00"),
+
     },
 ];
 
@@ -127,14 +147,16 @@ const tabs = [
     { value: "file_edit", label: "Edits" },
     { value: "comment", label: "Comments" },
 ];
+
 export default function ActivityPage() {
-    const [activities, setActivities] = useState([]);
-    const [filteredActivities, setFilteredActivities] = useState([]);
-    const [activeFilter, setActiveFilter] = useState("all");
+    const [activities, setActivities] = useState<activittype[]>([]);
+    const [filteredActivities, setFilteredActivities] = useState<activittype[]>([]);
+    const [activeFilter, setActiveFilter] = useState<string>("all");
     const [searchQuery, setSearchQuery] = useState("");
     const [isLoading, setIsLoading] = useState(true);
-    const [liveActivities, setLiveActivities] = useState([]);
+    const [liveActivities, setLiveActivities] = useState<activittype[]>([]);
 
+    console.log("con con", setSearchQuery)
     const filterActivities = useCallback(() => {
         let filtered = activities;
 
@@ -149,7 +171,7 @@ export default function ActivityPage() {
                     activity.file_path
                         ?.toLowerCase()
                         .includes(searchQuery.toLowerCase()) ||
-                    activity.collaborator_name
+                    activity?.collaborator_name
                         .toLowerCase()
                         .includes(searchQuery.toLowerCase())
             );
@@ -180,7 +202,7 @@ export default function ActivityPage() {
 
     const simulateLiveActivity = () => {
         const liveActivity = {
-            id: `live-${Date.now()}`,
+            id: `live - ${Date.now()} `,
             type: "collaboration",
             title: "Live editing in progress",
             collaborator_name: "Sarah Chen",
@@ -293,7 +315,7 @@ export default function ActivityPage() {
                             <AnimatePresence>
                                 {liveActivities.map((activity) => (
                                     <motion.div
-                                        key={activity._id}
+                                        key={activity.id}
                                         initial={{ opacity: 0, y: -20, scale: 0.95 }}
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         exit={{ opacity: 0, y: -20, scale: 0.95 }}
@@ -348,7 +370,7 @@ export default function ActivityPage() {
                                             ))
                                         : filteredActivities.map((activity, index) => (
                                             <ActivityItem
-                                                key={activity._id}
+                                                key={activity.id}
                                                 activity={activity}
                                                 index={index}
                                             />
