@@ -137,7 +137,7 @@ export const ActivityFeed = () => {
             <CardContent className="relative space-y-2">
                 {activities.length ? (
                     activities.map((activity, index) => {
-                        const Icon = activity.icon;
+                        {/* const Icon = activity.icon; */ }
                         const PriorityIcon = getPriorityIcon(activity.priority);
 
                         return (

@@ -17,7 +17,7 @@ describe("Login Component", () => {
         const mockedData = {
             email: "sdfjsdklfjsl"
         }
-        // @ts-expect-error
+        // @ts-expect-error global fetch will be replaced by other methond later
         global.fetch = jest.fn(() =>
             Promise.resolve({
                 json: () => Promise.resolve({ success: true, data: mockedData })

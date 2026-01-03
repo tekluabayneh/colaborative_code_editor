@@ -1,65 +1,64 @@
 "use client";
 import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useState,
-  useEffect,
+    createContext,
+    ReactNode,
+    useContext,
+    useState,
+    useEffect,
 } from "react";
 import { Node, FileSystemContextType } from "@/types/Node";
 import axios from "axios";
 const FileSystemContext = createContext<FileSystemContextType | null>(null);
 
 export const FileSystemProvider = ({ children }: { children: ReactNode }) => {
-  const [fileTree, setFileTree] = useState<Node[] | null>(null);
-  const [email, setEmail] = useState("");
+    const [fileTree, setFileTree] = useState<Node[] | null>(null);
+    const [email, setEmail] = useState("");
 
-  useEffect(() => {
-    let loclStorageEamil = localStorage.getItem("email")!;
-    setEmail(loclStorageEamil);
-  }),
-    [email];
+    useEffect(() => {
+        const loclStorageEamil = localStorage.getItem("email")!;
+        setEmail(loclStorageEamil);
+    }, [email])
 
-  useEffect(() => {
-    if (!email) return;
-    const handleFetchFileTree = async (email: string) => {
-      try {
-        const response = await axios.post(
-          "http://localhost:5000/api/doc/GetAllFolderTree",
-          {
-            email: email,
-          },
-          { withCredentials: true }
-        );
-        setFileTree(response.data);
+    useEffect(() => {
+        if (!email) return;
+        const handleFetchFileTree = async (email: string) => {
+            try {
+                const response = await axios.post(
+                    "http://localhost:5000/api/doc/GetAllFolderTree",
+                    {
+                        email: email,
+                    },
+                    { withCredentials: true }
+                );
+                setFileTree(response.data);
 
-        if (response?.data[0]) {
-          localStorage.setItem("main_DocumentId", response?.data[0]._id);
-        } else {
-          localStorage.setItem("main_DocumentId", "");
-        }
-      } catch (err) {
-        console.error("Error fetching file tree:", err);
-      }
-    };
-    handleFetchFileTree(email);
-  }, [email]);
+                if (response?.data[0]) {
+                    localStorage.setItem("main_DocumentId", response?.data[0]._id);
+                } else {
+                    localStorage.setItem("main_DocumentId", "");
+                }
+            } catch (err) {
+                console.error("Error fetching file tree:", err);
+            }
+        };
+        handleFetchFileTree(email);
+    }, [email]);
 
-  return (
-    <FileSystemContext.Provider
-      value={{
-        fileTree,
-        setFileTree,
-        email,
-      }}
-    >
-      {children}
-    </FileSystemContext.Provider>
-  );
+    return (
+        <FileSystemContext.Provider
+            value={{
+                fileTree,
+                setFileTree,
+                email,
+            }}
+        >
+            {children}
+        </FileSystemContext.Provider>
+    );
 };
 export const useFileSystem = () => {
-  const context = useContext(FileSystemContext);
-  if (!context)
-    throw new Error("useFileSystem must be used within a FileSystemProvider");
-  return context;
+    const context = useContext(FileSystemContext);
+    if (!context)
+        throw new Error("useFileSystem must be used within a FileSystemProvider");
+    return context;
 };

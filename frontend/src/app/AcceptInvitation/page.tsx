@@ -10,7 +10,9 @@ import { checkEmailValidity } from "@/utils/formValidate";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import axios, { AxiosError } from "axios";
-const containerVariants = {
+import type { Variants } from "framer-motion"
+
+const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
@@ -19,21 +21,28 @@ const containerVariants = {
             delayChildren: 0.2,
         },
     },
-};
+}
 
-const itemVariants = {
+
+const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
         y: 0,
         opacity: 1,
-        transition: { type: "spring", stiffness: 100 },
+        transition: {
+            type: "spring",
+            stiffness: 100,
+        },
     },
-};
+}
+
+
 interface FormType {
     username: string;
     email: string;
     password: string;
 }
+
 interface paramsType {
     role: string;
     token: string;
@@ -76,7 +85,7 @@ export default function AcceptInvitation() {
         }));
     }, []);
 
-    const handleSubmit = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         setIsSubmitting(true);
         if (!checkEmailValidity(formData.email) || formData.password.length < 6) {
