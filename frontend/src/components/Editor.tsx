@@ -24,6 +24,7 @@ export default function CodeEditor() {
         }
     };
     // Handle editor mount
+    {/* @ts-expect-error fils type need to be updated */ }
     const handleEditorDidMount = (editor, monaco: Monaco) => {
         editorRef.current = editor;
         monacoRef.current = monaco;
@@ -33,6 +34,8 @@ export default function CodeEditor() {
 
         monaco.languages.registerCompletionItemProvider(language, {
             triggerCharacters: [" ", ".", "(", ","], // common triggers
+
+            // @ts-expect-error fils type need to be updated 
             provideCompletionItems: async (model) => {
                 const code = model.getValue();
                 const suggestion = await fetchAISuggestions(code, language);
@@ -55,16 +58,25 @@ export default function CodeEditor() {
 
     // Handle file changes
     useEffect(() => {
+
+        // @ts-expect-error fils type need to be updated 
         if (!CurrentFileInEditor?.data || !editorRef.current || !monacoRef.current)
             return;
 
+
+        // @ts-expect-error fils type need to be updated 
         const file = CurrentFileInEditor.data;
+
+        // @ts-expect-error fils type need to be updated 
         editorRef.current.setValue(file.content);
 
+        // @ts-expect-error fils type need to be updated 
         const model = editorRef.current.getModel();
         const fileName = file.FileExtenstion.split(".")[1];
         if (model) {
             const language = extensionToLanguage[fileName] || "javascript";
+
+            // @ts-expect-error fils type need to be updated 
             monacoRef.current.editor.setModelLanguage(model, language);
         }
     }, [CurrentFileInEditor]);
@@ -87,7 +99,11 @@ export default function CodeEditor() {
             const res = await axios.put(
                 "http://localhost:5000/api/doc/updateDocumentContent/",
                 {
+
+                    // @ts-expect-error fils type need to be updated 
                     contentId: CurrentFileInEditor?.data.id,
+
+                    // @ts-expect-error fils type need to be updated 
                     newContent: editorRef.current.getValue(),
                 },
                 { withCredentials: true }
