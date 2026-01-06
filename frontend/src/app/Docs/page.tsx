@@ -450,6 +450,7 @@ const Docs = () => {
 
             <div className="max-w-6xl mx-auto px-6 py-12">
                 <div className="transform transition-all duration-500 ease-in-out">
+                    {/* @ts-expect-error type need to change to number index*/}
                     {docsData[activeTab]?.content}
                 </div>
             </div>
