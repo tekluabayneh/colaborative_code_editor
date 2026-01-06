@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { activittype } from "@/app/activity/page";
 import {
     GitCommit,
     FileText,
@@ -13,6 +14,25 @@ import {
     Minus,
     Clock,
 } from "lucide-react";
+
+
+// type ActivityType = "commit" | "file_edit" | "comment" | "branch_create" | "merge" | "collaboration";
+type ActivityLanguage = "javascript" | "typescript" | "python" | "css" | "html" | "json";
+
+export type Activity = {
+    type: activittype;
+    title: string;
+    description?: string;
+    name: string;
+    collaborator_avatar?: string;
+    file_path?: string;
+    language?: ActivityLanguage;
+    branch?: string;
+    created_date: string | Date;
+    lines_added: number;
+    lines_removed?: number;
+};
+
 
 const activityIcons = {
     commit: GitCommit,
@@ -41,8 +61,12 @@ const languageColors = {
     json: "bg-gray-500",
 };
 
-export default function ActivityItem({ activity, index }) {
+
+export default function ActivityItem({ activity, index }: { activity: activittype, index: number }) {
+    // @ts-expect-error activity.type is string it need to fiexed 
     const Icon = activityIcons[activity.type] || FileText;
+
+    // @ts-expect-error activity.type is string it need to fiexed 
     const colorClass = activityColors[activity.type] || activityColors.file_edit;
 
     return (
@@ -99,10 +123,8 @@ export default function ActivityItem({ activity, index }) {
                                 )}
 
                                 {activity.language && (
-                                    <Badge
-                                        className={`${languageColors[activity.language]
-                                            } text-white border-0 text-xs`}
-                                    >
+                                    // @ts-expect-error language type does exists
+                                    <Badge className={`${languageColors[activity.language]} text-white border-0 text-xs`} >
                                         {activity.language}
                                     </Badge>
                                 )}
@@ -125,7 +147,7 @@ export default function ActivityItem({ activity, index }) {
                                 {/* {format(new Date(activity.created_date), "MMM d, h:mm a")} */}
                             </div>
 
-                            {(activity.lines_added || activity.lines_removed) && (
+                            {(activity.lines_added && activity.lines_removed) && (
                                 <div className="flex items-center gap-2 text-xs">
                                     {activity.lines_added > 0 && (
                                         <span className="text-green-400 flex items-center gap-1">

@@ -4,7 +4,16 @@ import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
 import { format } from "date-fns";
 
-export default function CollaboratorSidebar({ collaborators }) {
+
+export type CollaboratorType = {
+    name: string;
+    avatar: string;
+    lastActive?: Date;
+    isOnline: boolean;
+};
+
+
+export default function CollaboratorSidebar({ collaborators }: { collaborators: CollaboratorType[] }) {
     const onlineCollaborators = collaborators.filter((c) => c.isOnline);
     const offlineCollaborators = collaborators.filter((c) => !c.isOnline);
 
@@ -73,7 +82,7 @@ export default function CollaboratorSidebar({ collaborators }) {
                             Recently Active
                         </h3>
                         <div className="space-y-3">
-                            {offlineCollaborators.map((collaborator, index) => (
+                            {offlineCollaborators.map((collaborator, index: number) => (
                                 <div
                                     key={index}
                                     className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/30 transition-colors cursor-pointer"
@@ -90,10 +99,8 @@ export default function CollaboratorSidebar({ collaborators }) {
                                             {collaborator.name}
                                         </p>
                                         <p className="text-gray-500 text-sm">
-                                            {format(
-                                                new Date(collaborator.lastActive),
-                                                "MMM d, h:mm a"
-                                            )}
+                                            {/* @ts-expect-error lastActive type is Date */}
+                                            {format(new Date(collaborator.lastActive), "MMM d, h:mm a")}
                                         </p>
                                     </div>
                                 </div>
