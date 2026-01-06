@@ -13,18 +13,25 @@ import ActivityItem from "../../components/activity/ActivityItem";
 import CollaboratorSidebar from "../../components/activity/CollaboratorSidebar";
 import LiveIndicator from "../../components/activity/LiveIndicator";
 import ActivityStats from "../../components/activity/ActivityStats";
+import { CollaboratorType } from "../../components/activity/CollaboratorSidebar";
+export type activittype = {
 
-type activittype = {
     id: string
     type: string
     title: string
+    userName: string,
+    priority: string,
+    action: string,
+    time: Date,
+    color: string,
     collaborator_name: string,
     is_live?: boolean,
     created_date?: string,
     description?: string,
+    collaborator_avatar: string,
     file_path?: string,
     name: string,
-    language?: string,
+    language: string,
     lines_added?: number,
     lines_removed?: number,
     branch: string,
@@ -193,6 +200,7 @@ export default function ActivityPage() {
     const loadActivities = async () => {
         setIsLoading(true);
         try {
+            // @ts-expect-error fils type need to be updated
             setActivities(Files);
         } catch (error) {
             console.error("Error loading activities:", error);
@@ -211,22 +219,24 @@ export default function ActivityPage() {
             created_date: new Date().toISOString(),
         };
 
+        // @ts-expect-error fils type need to be updated
         setLiveActivities((prev) => [liveActivity, ...prev.slice(0, 2)]);
         setTimeout(() => {
             setLiveActivities((prev) => prev.filter((a) => a.id !== liveActivity.id));
         }, 4000);
     };
 
-    const getCollaborators = () => {
-        const collaborators = {};
+    const getCollaborators = (): CollaboratorType[] => {
+        const collaborators: Record<string, CollaboratorType> = {};
         activities.forEach((activity) => {
+            if (!activity.name) return;
             if (!collaborators[activity.name]) {
                 collaborators[activity.name] = {
                     name: activity.name,
                     avatar:
                         activity.avatar ||
                         `https://api.dicebear.com/7.x/avataaars/svg?seed=${activity.collaborator_name}`,
-                    lastActive: activity.createdAt,
+                    lastActive: activity.createdAt ? new Date(activity.createdAt) : undefined,
                     isOnline: Math.random() > 0.3,
                 };
             }
