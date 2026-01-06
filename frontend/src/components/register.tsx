@@ -4,9 +4,8 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
 import { Mail, UserPlus, User, Lock, Send, Smile } from "lucide-react";
 import axios from "axios";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import toast from "react-hot-toast";
-import { formTypeRegister, FormValues } from "../types/form";
 import { validateFormData } from "../utils/formValidate";
 import { useRouter } from "next/navigation";
 import { FaGoogle, FaGithub } from "react-icons/fa";
@@ -15,9 +14,20 @@ type Props = {
   setisLogin: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+// === Types ===
+export type formTypeRegister = {
+  userName: string;
+  email: string;
+  password: string;
+};
+
+export type FormValues = formTypeRegister;
+
 export default function Register({ setisLogin }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+
+  // === react-hook-form setup ===
   const {
     register,
     handleSubmit,
@@ -27,17 +37,21 @@ export default function Register({ setisLogin }: Props) {
     mode: "onChange",
   });
 
-  const SubmitFormData = async (formData: formTypeRegister) => {
+  // === Form submit handler ===
+  const SubmitFormData = async (formData: FormValues) => {
     setIsSubmitting(true);
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/register",
         formData
       );
+
       toast.success(response.data.message + ", now verify Otp");
+
       await axios.post("http://localhost:5000/api/auth/sendOtp", {
         email: formData.email,
       });
+
       setIsSubmitting(false);
       localStorage.setItem("email", formData.email);
       router.push("/verifyOtp");
@@ -45,28 +59,29 @@ export default function Register({ setisLogin }: Props) {
       setIsSubmitting(false);
       if (axios.isAxiosError(err)) {
         console.error(err);
-        toast.error(err.response?.data.message);
+        toast.error(err.response?.data.message || "Axios error");
       } else {
         toast.error("An unexpected error occurred");
       }
     }
   };
 
-  const formSubmit = (data: formTypeRegister): formTypeRegister | void => {
+  // === React-hook-form submit handler with proper type ===
+  const formSubmit: SubmitHandler<FormValues> = (data) => {
     if (!validateFormData(data)) {
       toast.error("Invalid Form data");
-
       return;
     }
     SubmitFormData(data);
     reset();
   };
 
-  const GoogleOAuth = async () => {
+  // === OAuth Handlers ===
+  const GoogleOAuth = () => {
     window.location.href = "http://localhost:5000/api/google";
   };
 
-  const GighutOAuth = async () => {
+  const GithubOAuth = () => {
     window.location.href = "http://localhost:5000/api/github";
   };
 
@@ -87,27 +102,20 @@ export default function Register({ setisLogin }: Props) {
                 You New to Here?
               </span>
             </div>
-            <h2 className="text-3xl font-light text-white">
-              Create an Account
-            </h2>
+            <h2 className="text-3xl font-light text-white">Create an Account</h2>
 
             <div className="text-gray-300 flex px-1 overflow-hidden items-center justify-center gap-20 font-light bg-gradient-to-r from-violet-500/20 to-purple-600/20 rounded-2xl border border-violet-500/30 py-2">
-              <FaGoogle
-                onClick={() => GoogleOAuth()}
-                className="w-7 h-7 text-blue-500 cursor-pointer"
-              />
-              <FaGithub
-                onClick={() => GighutOAuth()}
-                className="w-7 h-7 text-white cursor-pointer"
-              />
+              <FaGoogle onClick={GoogleOAuth} className="w-7 h-7 text-blue-500 cursor-pointer" />
+              <FaGithub onClick={GithubOAuth} className="w-7 h-7 text-white cursor-pointer" />
             </div>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit(formSubmit)} className="space-y-6">
+            {/* UserName */}
             <div className="space-y-3">
               <label
-                htmlFor="email"
+                htmlFor="userName"
                 className="text-sm font-medium text-gray-200 flex items-center gap-2"
               >
                 <User className="w-4 h-4 text-violet-300" />
@@ -115,20 +123,17 @@ export default function Register({ setisLogin }: Props) {
               </label>
               <div className="relative">
                 <Input
-                  id="usename"
+                  id="userName"
                   type="text"
-                  {...register("userName", {
-                    required: "userName is mandatory",
-                  })}
-                  placeholder="Jone"
+                  {...register("userName", { required: "userName is mandatory" })}
+                  placeholder="John"
                   className="h-14 rounded-2xl border-white/20 bg-white/5 backdrop-blur-sm text-white placeholder:text-gray-400 focus:border-violet-400/50 focus:ring-violet-400/20 transition-all duration-300 pl-4 pr-12"
-                  required
                 />
                 <div className="absolute right-4 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gradient-to-r from-violet-400 to-purple-400 rounded-full animate-pulse"></div>
               </div>
             </div>
 
-            {/* Email field with sophisticated styling */}
+            {/* Email */}
             <div className="space-y-3">
               <label
                 htmlFor="email"
@@ -141,19 +146,18 @@ export default function Register({ setisLogin }: Props) {
                 <Input
                   id="email"
                   type="email"
-                  {...register("email", {
-                    required: "email is mandatory",
-                  })}
+                  {...register("email", { required: "email is mandatory" })}
                   placeholder="colleague@company.com"
                   className="h-14 rounded-2xl border-white/20 bg-white/5 backdrop-blur-sm text-white placeholder:text-gray-400 focus:border-violet-400/50 focus:ring-violet-400/20 transition-all duration-300 pl-4 pr-12"
-                  required
                 />
                 <div className="absolute right-4 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gradient-to-r from-violet-400 to-purple-400 rounded-full animate-pulse"></div>
               </div>
             </div>
+
+            {/* Password */}
             <div className="space-y-3">
               <label
-                htmlFor="email"
+                htmlFor="password"
                 className="text-sm font-medium text-gray-200 flex items-center gap-2"
               >
                 <Lock className="w-4 h-4 text-violet-300" />
@@ -161,34 +165,26 @@ export default function Register({ setisLogin }: Props) {
               </label>
               <div className="relative">
                 <Input
-                  id="Password"
+                  id="password"
                   type="password"
                   {...register("password", {
                     required: "password is mandatory",
-                    minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters",
-                    },
-                    maxLength: {
-                      value: 30,
-                      message: "Password must be less than 20 characters",
-                    },
+                    minLength: { value: 6, message: "Password must be at least 6 characters" },
+                    maxLength: { value: 30, message: "Password must be less than 30 characters" },
                   })}
                   placeholder="............."
-                  className="h-14  placeholder:text-2xl rounded-2xl border-white/20 bg-white/5 backdrop-blur-sm text-white placeholder:text-gray-400 focus:border-violet-400/50 focus:ring-violet-400/20 transition-all duration-300 pl-4 pr-12"
-                  required
+                  className="h-14 placeholder:text-2xl rounded-2xl border-white/20 bg-white/5 backdrop-blur-sm text-white placeholder:text-gray-400 focus:border-violet-400/50 focus:ring-violet-400/20 transition-all duration-300 pl-4 pr-12"
                 />
                 <div className="absolute right-4 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gradient-to-r from-violet-400 to-purple-400 rounded-full animate-pulse"></div>
               </div>
             </div>
+
+            {/* Submit Button */}
             <Button
               type="submit"
               disabled={isSubmitting || !isValid}
               className="group relative w-full h-14 bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white rounded-2xl font-medium shadow-2xl hover:shadow-violet-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
             >
-              {/* Button background animation */}
-              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-
               {isSubmitting ? (
                 <div className="flex items-center gap-3">
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -201,13 +197,12 @@ export default function Register({ setisLogin }: Props) {
                 </div>
               )}
             </Button>
-            <div className="flex items-center justify-center gap-2 text-gray-300 ">
+
+            {/* Login switch */}
+            <div className="flex items-center justify-center gap-2 text-gray-300">
               <span>You Have an Account ? </span>
               <Smile className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-              <span
-                onClick={() => setisLogin(true)}
-                className="underline cursor-pointer"
-              >
+              <span onClick={() => setisLogin(true)} className="underline cursor-pointer">
                 Login
               </span>
             </div>
