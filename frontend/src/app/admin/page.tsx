@@ -140,6 +140,7 @@ export default function Dashboard() {
                 { withCredentials: true }
             );
 
+            // @ts-expect-error fils type need to be updated 
             setUsers(users.map((u) => (u._id === id ? { ...u, ...changes } : u)));
             setActiveDropdown(null);
             toast.success("User updated successfully");
@@ -234,8 +235,9 @@ export default function Dashboard() {
                         <tbody>
                             {users.length !== 0 ? (
                                 filteredUsers.map((user) => {
-                                    const role =
-                                        roleConfig[user.role.toLowerCase()] || roleConfig.viewer;
+
+                                    {/* @ts-expect-error fils type need to be updated */ }
+                                    const role = roleConfig[user.role.toLowerCase()] || roleConfig.viewer;
                                     return (
                                         <tr
                                             key={user._id}
@@ -248,6 +250,8 @@ export default function Dashboard() {
                                                         {user.initials}
                                                     </div>
                                                     <div
+
+                                                        // @ts-expect-error fils type need to be updated 
                                                         className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-gray-800 ${statusColor[user.status]
                                                             }`}
                                                     />
@@ -273,10 +277,9 @@ export default function Dashboard() {
 
                                             {/* Status */}
                                             <td className="p-6 flex items-center gap-3">
-                                                <div
-                                                    className={`w-2.5 h-2.5 rounded-full ${statusColor[user.status]
-                                                        }`}
-                                                />
+
+                                                {/* @ts-expect-error fils type need to be updated */}
+                                                <div className={`w-2.5 h-2.5 rounded-full ${statusColor[user.status]}`} />
                                                 <span className="capitalize font-medium text-gray-300">
                                                     {user.status}
                                                 </span>
