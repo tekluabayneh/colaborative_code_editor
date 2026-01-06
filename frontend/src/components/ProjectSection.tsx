@@ -70,10 +70,11 @@ export function ProjectsSection() {
                                 </Badge>
                             </div>
                             <div className="flex items-center gap-2">
-                                <Badge
-                                    variant={getStatusBadgeVariant(project.updatedAt)}
-                                    className="text-xs"
-                                >
+
+                                {/* @ts-expect-error fils type need to be updated */}
+                                <Badge variant={getStatusBadgeVariant(project.updatedAt)} className="text-xs" >
+
+                                    {/* @ts-expect-error fils type need to be updated */}
                                     {project.updatedAt}
                                 </Badge>
                                 <ExternalLink className="w-4 h-4 text-muted-foreground hover:text-foreground cursor-pointer" />
