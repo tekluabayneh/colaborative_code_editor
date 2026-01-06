@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { Node, FileSystemContextType } from "@/types/Node";
 import axios from "axios";
+
 const FileSystemContext = createContext<FileSystemContextType | null>(null);
 
 export const FileSystemProvider = ({ children }: { children: ReactNode }) => {
@@ -24,12 +25,7 @@ export const FileSystemProvider = ({ children }: { children: ReactNode }) => {
         const handleFetchFileTree = async (email: string) => {
             try {
                 const response = await axios.post(
-                    "http://localhost:5000/api/doc/GetAllFolderTree",
-                    {
-                        email: email,
-                    },
-                    { withCredentials: true }
-                );
+                    "http://localhost:5000/api/doc/GetAllFolderTree", { email: email, }, { withCredentials: true });
                 setFileTree(response.data);
 
                 if (response?.data[0]) {
@@ -48,6 +44,7 @@ export const FileSystemProvider = ({ children }: { children: ReactNode }) => {
         <FileSystemContext.Provider
             value={{
                 fileTree,
+                // @ts-expect-error mus be intilized with null
                 setFileTree,
                 email,
             }}
