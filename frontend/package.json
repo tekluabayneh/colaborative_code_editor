@@ -7,8 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest --watch"
+    "test": "jest --watchAll "
   },
+
   "dependencies": {
     "@google/genai": "^1.19.0",
     "@heroicons/react": "^1.0.6",
