@@ -32,7 +32,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     const handelRefresh = async (email: string) => {
         try {
             const response = await axios.post(
-                "http://localhost:5000/api/doc/GetAllFolderTree",
+                process.env.BACKEND_BASEURL + "/api/doc/GetAllFolderTree",
                 {
                     email: email,
                 },
@@ -55,7 +55,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     const UpdateFileName = async ({ node }: { node: DocumentType }) => {
         try {
             const res = await axios.put(
-                "http://localhost:5000/api/doc/UpdateFolderName/",
+                process.env.BACKEND_BASEURL + "/api/doc/UpdateFolderName/",
                 { folderId: node.folderId, newName: name },
                 { withCredentials: true }
             );
@@ -78,7 +78,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     const newFile = async ({ node }: { node: DocumentType }) => {
         try {
             const res = await axios.post(
-                "http://localhost:5000/api/doc/newDocument",
+                process.env.BACKEND_BASEURL + "/api/doc/newDocument",
                 {
                     parentId: node._id,
                     content: "",
@@ -101,7 +101,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     const CreateFolder = async ({ node }: { node: DocumentType }) => {
         try {
             const res = await axios.post(
-                "http://localhost:5000/api/doc/createFolder",
+                process.env.BACKEND_BASEURL + "/api/doc/createFolder",
                 {
                     parentId: node._id,
                     folderName: name,
@@ -122,7 +122,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     const DeleteFolder = async ({ node }: { node: DocumentType }) => {
         try {
             const res = await axios.delete(
-                `http://localhost:5000/api/doc/DeleteDocument`,
+                process.env.BACKEND_BASEURL + `/api/doc/DeleteDocument`,
                 {
                     data: {
                         email: localStorage.getItem("email"),
@@ -153,7 +153,6 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     ) => {
         setFlag(flagValue);
         localStorage.setItem("flag", flagValue);
-        console.log("flag set to", flagValue);
 
         settoBeupdated((prev) => ({
             ...prev,
