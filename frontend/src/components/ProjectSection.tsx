@@ -21,7 +21,7 @@ export function ProjectsSection() {
         async function FetchFile() {
             try {
                 const response = await axios.post(
-                    "http://localhost:5000/api/doc/GetOnlyDocument",
+                    process.env.BACKEND_BASEURL + "/api/doc/GetOnlyDocument",
                     { email: email },
                     { withCredentials: true }
                 );

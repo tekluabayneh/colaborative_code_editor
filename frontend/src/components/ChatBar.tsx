@@ -19,6 +19,7 @@ interface Message {
 //     avatar: string;
 //     isOnline: boolean;
 // }
+//
 type StateType = React.Dispatch<React.SetStateAction<boolean>>;
 export const ChatSidebar = ({
     setIsChatOpen,

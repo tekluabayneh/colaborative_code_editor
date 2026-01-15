@@ -35,7 +35,7 @@ const HomePage = () => {
     const newFile = async () => {
         try {
             const res = await axios.post(
-                "http://localhost:5000/api/doc/newDocument",
+                process.env.BACKEND_BASEURL + "/api/doc/newDocument",
                 {
                     parentId: localStorage.getItem("main_DocumentId"),
                     content: "",
@@ -57,7 +57,7 @@ const HomePage = () => {
     const CreateFolder = async () => {
         try {
             const res = await axios.post(
-                "http://localhost:5000/api/doc/createFolder",
+                process.env.BACKEND_BASEURL + "/api/doc/createFolder",
                 {
                     parentId: null,
                     folderName: name,

@@ -1,8 +1,8 @@
 
 "use client"
 import Image from "next/image";
-import editor_1 from "../../../assets/editor_image.png"
-import editor_2 from "../../../assets/editor_image2.png"
+import editor_1 from "../assets/editor_image.png"
+import editor_2 from "../assets/editor_image2.png"
 
 const LandingTab = ({ toggleEditor }: { toggleEditor: boolean }) => {
     return (
@@ -10,7 +10,7 @@ const LandingTab = ({ toggleEditor }: { toggleEditor: boolean }) => {
             className="HeroCarousel-content p-10 px-2 flex items-center rounded-md  w-full min-h-screen relative overflow-hidden"
             style={{ background: "radial-gradient(141.53% 114.68% at 87.46% 55.27%, #9A7CFF 36.75%, rgba(14, 10, 162, 0) 100%)", }} >
 
-            {/* Glow at top */}
+            {/* Glow at top}
             <div className="absolute top-0 left-0 w-full h-32 pointer-events-none bg-gradient-to-b from-[#9A7CFF]/50 to-transparent blur-2xl" />
 
             {/* Glow at bottom */}

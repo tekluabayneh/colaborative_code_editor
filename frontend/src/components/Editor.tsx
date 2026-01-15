@@ -13,7 +13,7 @@ export default function CodeEditor() {
     const fetchAISuggestions = async (code: string, language: string) => {
         try {
             const res = await axios.post(
-                "http://localhost:5000/api/code-complete",
+                process.env.BACKEND_BASEURL + "/api/code-complete",
                 { codeSnippet: code, language },
                 { withCredentials: true }
             );

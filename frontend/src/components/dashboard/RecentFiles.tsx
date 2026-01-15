@@ -73,7 +73,7 @@ export const RecentFiles = () => {
         const fetchFiles = async () => {
             try {
                 const response = await axios.post(
-                    "http://localhost:5000/api/doc/GetOnlyDocument",
+                    process.env.BACKEND_BASEURL + "/api/doc/GetOnlyDocument",
                     { email },
                     { withCredentials: true }
                 );

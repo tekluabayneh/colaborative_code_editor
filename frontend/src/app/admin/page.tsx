@@ -92,7 +92,7 @@ export default function Dashboard() {
         const fetchUsers = async () => {
             try {
                 const res = await axios.post(
-                    "http://localhost:5000/api/User/GetOwnerUsers",
+                    process.env.BACKEND_BASEURL + "/api/User/GetOwnerUsers",
                     { email },
                     { withCredentials: true }
                 );
@@ -135,7 +135,7 @@ export default function Dashboard() {
     const updateUser = async (id: number, changes: unknown) => {
         try {
             await axios.put(
-                `http://localhost:5000/api/User/updateUserRoleOrStatus/${id}`,
+                process.env.BACKEND_BASEURL + `/api/User/updateUserRoleOrStatus/${id}`,
                 { role: changes },
                 { withCredentials: true }
             );
