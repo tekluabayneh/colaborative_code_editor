@@ -28,13 +28,13 @@ export default function Login({ setisLogin }: Props) {
         try {
             setIsSubmitting(true);
             const response = await axios.post(
-                "http://localhost:5000/api/auth/login",
+                process.env.BACKEND_BASEURL + "/api/auth/login",
                 formData,
                 { withCredentials: true }
             );
             toast.success(response.data.message + ", now verify OTP");
 
-            await axios.post("http://localhost:5000/api/auth/sendOtp", {
+            await axios.post(process.env.BACKEND_BASEURL + "/api/auth/sendOtp", {
                 email: formData.email,
             });
 
@@ -63,11 +63,11 @@ export default function Login({ setisLogin }: Props) {
     };
 
     const GoogleOAuth = async () => {
-        window.location.href = "http://localhost:5000/api/google";
+        window.location.href = process.env.BACKEND_BASEURL + "/api/google";
     };
 
     const GighutOAuth = async () => {
-        window.location.href = "http://localhost:5000/api/github";
+        window.location.href = process.env.BACKEND_BASEURL + "/api/github";
     };
 
     return (
