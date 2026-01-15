@@ -1,4 +1,4 @@
-FROM node:24-alpine AS builder
+FROM node:24-alpine
 
 WORKDIR /app
 
@@ -6,8 +6,10 @@ COPY package.json package-lock.json ./
 
 RUN npm ci 
 
-COPY . .
+COPY . . 
 
 RUN npm run build 
 
-RUN npm run export
+EXPOSE 3000
+ 
+CMD ["npm", "run", "start"]   
