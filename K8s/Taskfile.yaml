@@ -1,0 +1,47 @@
+version: "3"
+
+env:
+  border: double
+  border_foreground: "212"
+  padding: "1 1"
+  margin: "1 1"
+  namespace: 04--configmap
+
+tasks:
+  01-create-namespace:
+    desc: "create a namespace for these examples and set as default"
+    cmds:
+      - kubectl apply -f namespace.yaml
+      - kubens ${namespace}
+
+  02-apply-file-like:
+    desc: "apply the configmap with file like keys"
+    cmds:
+      - kubectl apply -f configmap.file-like-keys.yaml
+
+  03-apply-property-like:
+    desc: "apply the configmap with property like keys"
+    cmds:
+      - kubectl apply -f configmap.property-like-keys.yaml
+
+  04-apply-pod:
+    desc: "apply the configmap with property like keys"
+    cmds:
+      - kubectl apply -f pod.configmap-example.yaml
+
+  05-exec-cat-config:
+    desc: "cat /etc/config/conf.yaml within the container"
+    cmds:
+      - kubectl exec configmap-example -c nginx -- cat /etc/config/conf.yml
+
+  06-exec-printenv:
+    desc: "print the environment variables within the container"
+    cmds:
+      - kubectl exec configmap-example -c nginx -- printenv
+
+  07-delete-namespace:
+    desc: "delete the namespace to clean up"
+    cmds:
+      - cmd: gum style "🚨 deleting the namespace recursively deletes the resources inside of it! 🚨 "
+        silent: true
+      - kubectl delete -f namespace.yaml
