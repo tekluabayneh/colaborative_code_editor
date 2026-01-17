@@ -3,3 +3,9 @@ node_modules
 .env
 /.env
 
+/kind-config.yaml
+kind-config.yaml
+/K8s/base/secret
+K8s/base/secret
+secret.yaml
+*.secret
