@@ -1,47 +1,32 @@
 version: "3"
 
 env:
-  border: double
-  border_foreground: "212"
-  padding: "1 1"
-  margin: "1 1"
-  namespace: 04--configmap
+  CLUSTER_NAME: devops-directive-kubernetes-course
+  CIVO_REGION: NYC1
+  GCP_REGION: us-central1
+  GCP_ZONE: us-central1-a
+  BORDER: double
+  BORDER_FOREGROUND: "212"
+  PADDING: "1 1"
+  MARGIN: "1 1"
 
 tasks:
-  01-create-namespace:
-    desc: "create a namespace for these examples and set as default"
+  kind:01-generate-config:
     cmds:
-      - kubectl apply -f namespace.yaml
-      - kubens ${namespace}
+      - REPLACE_WITH_ABSOLUTE_PATH=${PWD} envsubst < kind-config.yaml.TEMPLATE > kind-config.yaml
+    desc: "Generate kind config with local absolute paths for PV mounts"
 
-  02-apply-file-like:
-    desc: "apply the configmap with file like keys"
+  kind:02-create-cluster:
     cmds:
-      - kubectl apply -f configmap.file-like-keys.yaml
+      - kind create cluster --config kind-config.yaml
+    desc: Create a Kubernetes cluster using kind
 
-  03-apply-property-like:
-    desc: "apply the configmap with property like keys"
+  kind:03-run-cloud-provider-kind:
+    desc: "Run sigs.k8s.io/cloud-provider-kind@latest to enable load balancer services with KinD"
     cmds:
-      - kubectl apply -f configmap.property-like-keys.yaml
+      - sudo cloud-provider-kind
 
-  04-apply-pod:
-    desc: "apply the configmap with property like keys"
+  kind:04-delete-cluster:
     cmds:
-      - kubectl apply -f pod.configmap-example.yaml
-
-  05-exec-cat-config:
-    desc: "cat /etc/config/conf.yaml within the container"
-    cmds:
-      - kubectl exec configmap-example -c nginx -- cat /etc/config/conf.yml
-
-  06-exec-printenv:
-    desc: "print the environment variables within the container"
-    cmds:
-      - kubectl exec configmap-example -c nginx -- printenv
-
-  07-delete-namespace:
-    desc: "delete the namespace to clean up"
-    cmds:
-      - cmd: gum style "🚨 deleting the namespace recursively deletes the resources inside of it! 🚨 "
-        silent: true
-      - kubectl delete -f namespace.yaml
+      - kind delete cluster
+    desc: Delete and existing a kind Kubernetes cluster

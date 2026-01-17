@@ -1,0 +1,6 @@
+version: "3"
+
+includes:
+  setup:
+    taskfile: ./K8s/Taskfile.yaml
+    dir: ./K8s
