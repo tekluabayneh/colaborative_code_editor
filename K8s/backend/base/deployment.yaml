@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: colab-backend 
+  namespace: colab-backend-app
+  labels:
+    app: colab-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: colab-backend
+  template:
+    metadata:
+      labels:
+        app: colab-backend 
+    spec:
+      containers:
+        - name: nginx
+          image: cgr.dev/chainguard/nginx:latest
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          env:
+            - name: PORT
+              value: "5000"
+          envFrom:
+            - secretRef:
+                name: colab-backend-secret 
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5000
+          resources:
+            limits:
+              memory: "50Mi"
+            requests:
+              memory: "50Mi"
+              cpu: "250m"
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        runAsUser: 1001
+        runAsGroup: 1001
+        runAsNonRoot: true
