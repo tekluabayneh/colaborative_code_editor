@@ -3,11 +3,20 @@
   "packages": [
     "kubectl@latest",
     "kubernetes-helm@latest",
-    "go-task@latest"
+    "go-task@latest",
+    "nodejs@20",
+    "pnpm@latest"
   ],
+  "env": {
+    "DEVBOX_COREPACK_ENABLED": "true",
+    "NODE_ENV": "development"
+  },
   "shell": {
     "init_hook": [
-      "echo 'Welcome to devbox!' > /dev/null"
+      "echo 'Welcome to Teklu's fullstack collaboration web app !'",
+      // "cd frontend && pnpm install || true",
+      // "cd ../backend && pnpm install || true",
+      // "cd .."   
     ],
     "scripts": {
       "test": [

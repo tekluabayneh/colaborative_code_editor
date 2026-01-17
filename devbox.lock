@@ -184,6 +184,135 @@
           "store_path": "/nix/store/rv448bzmz78z9vqvgy92428ybjp0nxzi-kubernetes-helm-3.19.1"
         }
       }
+    },
+    "nodejs@20": {
+      "last_modified": "2026-01-14T04:14:06Z",
+      "plugin_version": "0.0.2",
+      "resolved": "github:NixOS/nixpkgs/ea30586ee015f37f38783006a9bc9e4aa64d7d61#nodejs_20",
+      "source": "devbox-search",
+      "version": "20.20.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/l5zcv2mlpz4vkfr8gaznjl4l09pw7qva-nodejs-20.20.0",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/fsrayxzszxaqcm5k849c33qncvr22rf1-nodejs-20.20.0-dev"
+            },
+            {
+              "name": "libv8",
+              "path": "/nix/store/8dmg3m6pxx6g850dr572fbnkkb7l4qx9-nodejs-20.20.0-libv8"
+            }
+          ],
+          "store_path": "/nix/store/l5zcv2mlpz4vkfr8gaznjl4l09pw7qva-nodejs-20.20.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/8bcjyh3wm6172gch2hmjaw70786vnn0p-nodejs-20.20.0",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/6qd7afr0a8mw1y4lnddv380nb1yxg7mn-nodejs-20.20.0-dev"
+            },
+            {
+              "name": "libv8",
+              "path": "/nix/store/9afma3lnsdzfscr8783lwcqydad477m5-nodejs-20.20.0-libv8"
+            }
+          ],
+          "store_path": "/nix/store/8bcjyh3wm6172gch2hmjaw70786vnn0p-nodejs-20.20.0"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/nfpj0w7ckamxpbzci2y9zsrlsw1yjgsa-nodejs-20.20.0",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/q91w4zkkd52829lcx3c1m9k1b2clgv3r-nodejs-20.20.0-dev"
+            },
+            {
+              "name": "libv8",
+              "path": "/nix/store/bl853ghmyam6zc9kpr8hq7dk8mdsnddi-nodejs-20.20.0-libv8"
+            }
+          ],
+          "store_path": "/nix/store/nfpj0w7ckamxpbzci2y9zsrlsw1yjgsa-nodejs-20.20.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/jfar9wnj6kvr0gr6klh1gk7vgckkfr5j-nodejs-20.20.0",
+              "default": true
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/mha8cz3kq9pnnns2f4ygsdl911nnc9nn-nodejs-20.20.0-dev"
+            },
+            {
+              "name": "libv8",
+              "path": "/nix/store/y8syar3i7lnw6ys8akhq252zznlfv0p7-nodejs-20.20.0-libv8"
+            }
+          ],
+          "store_path": "/nix/store/jfar9wnj6kvr0gr6klh1gk7vgckkfr5j-nodejs-20.20.0"
+        }
+      }
+    },
+    "pnpm@latest": {
+      "last_modified": "2025-12-31T03:27:36Z",
+      "resolved": "github:NixOS/nixpkgs/f665af0cdb70ed27e1bd8f9fdfecaf451260fc55#pnpm",
+      "source": "devbox-search",
+      "version": "10.26.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/bixq2sgnl5gmjyslfsmnaijl7bn08p9z-pnpm-10.26.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/bixq2sgnl5gmjyslfsmnaijl7bn08p9z-pnpm-10.26.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/ss5hrp8zgm7jmr1fd0yd2z9sk1whbs2b-pnpm-10.26.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/ss5hrp8zgm7jmr1fd0yd2z9sk1whbs2b-pnpm-10.26.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/yx8yh8m92cxdszxka9sa9kvy26jksg69-pnpm-10.26.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/yx8yh8m92cxdszxka9sa9kvy26jksg69-pnpm-10.26.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/61lr9izijvg30pcribjdxgjxvh3bysp4-pnpm-10.26.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/61lr9izijvg30pcribjdxgjxvh3bysp4-pnpm-10.26.1"
+        }
+      }
     }
   }
 }
