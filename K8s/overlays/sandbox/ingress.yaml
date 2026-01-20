@@ -1,36 +1,34 @@
 apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: fullstack-ingress
-  namespace: my-fullstack
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"   
-spec:
-  ingressClassName: nginx          
-  rules:
-  - host: app.example.com          
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: frontend-service
-            port:
-              number: 80             
+kind: Ingress                  
+metadata:                          
+  name: fullstack-ingress         
+  namespace: colab-app 
+  annotations:                     
+    nginx.ingress.kubernetes.io/rewrite-target: /$2     
+    nginx.ingress.kubernetes.io/use-regex: "true"      
+spec:                              
+  ingressClassName: nginx         
+  rules:                         
+  - host: sandbox.yourdomain.com   # ← Only apply rules if request Host header matches this (e.g., browser URL). Why: Supports multiple domains; for kind, use localhost.
+    http:                         
+      paths:                       
+        - path: /                 
+          pathType: Prefix       
+          backend:              
+            service:               # ← Targets a Service (which points to your Deployment's Pods).
+              name: frontend-service  # ← Name of frontend Service. Why: Routes to frontend Deployment via its Service.
+              port:                
+                number: 80        
 
-      # Backend API - everything under /api/
-      - path: /api(/|$)(.*)
-        pathType: Prefix
-        backend:
-          service:
-            name: backend-service
-            port:
-              number: 5000           
+        - path: /api(/|$)(.*)    
+          pathType: Prefix      
+          backend:              
+            service:            
+              name: backend-service
+              port:               
+                number: 5000     
 
-  # tls:
-  # - hosts:
-  #   - app.example.com
-  #   secretName: fullstack-tls-secret
+  # tls:                           
+  # - hosts:                     
+  #   - sandbox.yourdomain.com  
+  #   secretName: your-tls-secret 
