@@ -5,7 +5,13 @@ node_modules
 
 /kind-config.yaml
 kind-config.yaml
+
 /K8s/base/secret
+/K8s/base/Secret
+
 K8s/base/secret
-secret.yaml
+K8s/base/Secret
+
+Secret.yaml
 *.secret
+*.Secret
