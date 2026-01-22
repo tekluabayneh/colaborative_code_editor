@@ -18,15 +18,29 @@ spec:
       containers:
         - name: nginx
           image: cgr.dev/chainguard/nginx:latest
-          ports:
-            - containerPort: 5000
-              protocol: TCP
+
           env:
             - name: PORT
               value: "5000"
           envFrom:
             - secretRef:
                 name: colab-backend-secret 
+
+          volumeMounts:
+            - name: backend-secrets-vol          
+            mountPath: /app/secrets            
+            readOnly: true                    
+
+          volumes:
+            - name: backend-secrets-vol
+            secret:
+            secretName: colab-backend-secret   
+            defaultMode: 0400
+
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+
           readinessProbe:
             httpGet:
               path: /
