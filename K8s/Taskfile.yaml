@@ -8,21 +8,61 @@ env:
 
 tasks:
   kind:01-generate-config:
+    desc: "Generate kind config with local absolute paths for PV mounts"
     cmds:
       - REPLACE_WITH_ABSOLUTE_PATH=${PWD} envsubst < kind-config.yaml.TEMPLATE > kind-config.yaml
-    desc: "Generate kind config with local absolute paths for PV mounts"
 
   kind:02-create-cluster:
+    desc: "Create a Kubernetes cluster using kind"
     cmds:
       - kind create cluster --config kind-config.yaml
-    desc: Create a Kubernetes cluster using kind
 
   kind:03-run-cloud-provider-kind:
     desc: "Run sigs.k8s.io/cloud-provider-kind@latest to enable load balancer services with KinD"
     cmds:
       - sudo cloud-provider-kind
 
+  kind:04-install-ingress-controller:
+    desc: "Install NGINX Ingress Controller"
+    cmds:
+      - kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.11.2/deploy/static/provider/cloud/deploy.yaml
+      - echo "Waiting for Ingress controller to be ready (up to 5 minutes)..."
+      - kubectl wait --namespace ingress-nginx \
+          --for=condition=ready pod \
+          --selector=app.kubernetes.io/component=controller \
+          --timeout=300s
+
   kind:04-delete-cluster:
+    desc: "Delete an existing kind Kubernetes cluster"
     cmds:
       - kind delete cluster
-    desc: Delete and existing a kind Kubernetes cluster
+
+  kind:setup-all:
+    desc: "Run full local setup: generate config → create cluster → enable LB → install ingress"
+    deps: [kind:01-generate-config, kind:02-create-cluster, kind:03-run-cloud-provider-kind, kind:04-install-ingress-controller]
+    cmds:
+      - echo "Kind cluster is now ready with Ingress controller!"
+
+  app:apply-sandbox:
+    desc: "Apply the sandbox overlay (your actual app)"
+    cmds:
+      - kustomize build overlays/sandbox | kubectl apply -f -
+
+  app:show-external-ip:
+    desc: "Show the public IP or hostname of the Ingress controller"
+    cmds:
+      - echo "Your public URL (wait if EXTERNAL-IP is still <pending>):"
+      - kubectl get svc ingress-nginx-controller -n ingress-nginx
+
+  dev:up:
+    desc: "Full setup: cluster + LB + ingress + apply app"
+    deps: [kind:setup-all, app:apply-sandbox]
+    cmds:
+      - task: app:show-external-ip
+
+  dev:down:
+    desc: "Clean up: delete the cluster"
+    cmds:
+      - task: kind:04-delete-cluster
+
+
