@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend-service 
+  namespace: colab-app
   labels:
     foo: service-label
   annotations:
@@ -9,7 +10,7 @@ metadata:
 spec:
   type: ClusterIP 
   selector:
-    baz: pod-label
+    app: colab-frontend 
   ports:
     - protocol: TCP
       port: 80 
