@@ -19,7 +19,12 @@ tasks:
     cmds:
       - kubectl apply -f Service.yaml
 
-  03-delete-namespace:
+  03-apply-loadbalancer-service:
+    desc: "Apply the  LoadBalancer Service"
+    cmds:
+      - kubectl apply -f Service.yaml
+
+  04-delete-namespace:
     desc: "Delete the namespace to clean up"
     cmds:
       - cmd: gum style "🚨 Deleting the namespace recursively deletes the resources inside of it! 🚨 "
