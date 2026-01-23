@@ -25,7 +25,7 @@ export const FileSystemProvider = ({ children }: { children: ReactNode }) => {
         const handleFetchFileTree = async (email: string) => {
             try {
                 const response = await axios.post(
-                    process.env.BACKEND_BASEURL + "/api/doc/GetAllFolderTree", { email: email, }, { withCredentials: true });
+                    process.env.NEXT_PUBLIC_BACKEND_URL + "/api/doc/GetAllFolderTree", { email: email, }, { withCredentials: true });
                 setFileTree(response.data);
 
                 if (response?.data[0]) {

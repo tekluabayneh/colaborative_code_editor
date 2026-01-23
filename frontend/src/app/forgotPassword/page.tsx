@@ -18,7 +18,7 @@ const ForgotPassword = () => {
 
         try {
             setIsLoading(true);
-            const response = await axios.post(process.env.BACKEND_BASEURL + "/api/auth/sendRestLink", { email: email })
+            const response = await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/sendRestLink", { email: email })
             toast.success(response?.data.message)
             setIsSubmitted(true);
             setIsLoading(false);

@@ -13,11 +13,11 @@ export default function CodeEditor() {
     const fetchAISuggestions = async (code: string, language: string) => {
         try {
             const res = await axios.post(
-                process.env.BACKEND_BASEURL + "/api/code-complete",
+                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/code-complete",
                 { codeSnippet: code, language },
                 { withCredentials: true }
             );
-            return res.data.completion; // string returned from backend
+            return res.data.completion;
         } catch (err) {
             console.error(err);
             return "";
@@ -97,7 +97,7 @@ export default function CodeEditor() {
         if (!editorRef.current) return;
         try {
             const res = await axios.put(
-                "http://localhost:5000/api/doc/updateDocumentContent/",
+                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/doc/updateDocumentContent/",
                 {
 
                     // @ts-expect-error fils type need to be updated 

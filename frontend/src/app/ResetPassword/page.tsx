@@ -36,7 +36,7 @@ const ResetPassword = () => {
         }
         try {
 
-            const mainUrl = process.env.BACKEND_BASEURL + `/api/auth/ResetPassword?token=${token}&email=${email}`
+            const mainUrl = process.env.NEXT_PUBLIC_BACKEND_URL + `/api/auth/ResetPassword?token=${token}&email=${email}`
             const response = await axios.post(mainUrl, { newPassword: newPassword })
             toast.success(response.data.message)
         } catch (err) {

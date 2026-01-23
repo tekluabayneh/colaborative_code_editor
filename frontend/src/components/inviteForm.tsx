@@ -53,7 +53,7 @@ export default function InviteForm() {
 
         try {
             const response = await axios.post(
-                process.env.BACKEND_BASEURL + "/api/auth/invite",
+                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/invite",
                 { role: formData.role, email: formData.email },
                 { withCredentials: true }
             );

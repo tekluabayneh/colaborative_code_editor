@@ -30,7 +30,7 @@ export function UserInfoCard() {
             if (!email) return;
             try {
                 const res = await axios.post(
-                    process.env.BACKEND_BASEURL + "/api/User/getProfile",
+                    process.env.NEXT_PUBLIC_BACKEND_URL + "/api/User/getProfile",
                     { email },
                     { withCredentials: true }
                 );

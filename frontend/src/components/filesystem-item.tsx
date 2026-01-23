@@ -39,7 +39,7 @@ export function FilesystemItem({ node }: { node: DocumentType }) {
         }
 
         const result = await axios.get(
-            process.env.BACKEND_BASEURL + `/api/doc/GetSingleDocument/${node.contentId}`,
+            process.env.NEXT_PUBLIC_BACKEND_URL + `/api/doc/GetSingleDocument/${node.contentId}`,
             { withCredentials: true }
         );
         updateFileToEditor(result.data);

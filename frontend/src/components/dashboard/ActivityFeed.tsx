@@ -116,7 +116,7 @@ export const ActivityFeed = () => {
         const getAllOwnerUsers = async () => {
             try {
                 const res = await axios.post(
-                    process.env.BACKEND_BASEURL + "/api/User/GetOwnerUsers",
+                    process.env.NEXT_PUBLIC_BACKEND_URL + "/api/User/GetOwnerUsers",
                     { email },
                     { withCredentials: true }
                 );

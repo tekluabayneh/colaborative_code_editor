@@ -112,7 +112,7 @@ export default function AcceptInvitation() {
             };
             localStorage.setItem("email", formData.email);
             const response = await axios.post(
-                process.env.BACKEND_BASEURL + "/api/auth/acceptInvite",
+                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/acceptInvite",
                 data
             );
             document.cookie = `accessToken=${response.data.token}; path=/;`;

@@ -43,14 +43,13 @@ const getStatusConfig = (status: string) => {
 
 // Type matching API response
 export type FileItemType = {
-    id: string;           // from _id
+    id: string;
     content: string;
     language: string;
     ownerType: "User" | "Owner";
     ownerId: string;
     createdAt: string;
     updatedAt: string;
-    // optional UI fields
     size?: string;
     commits?: number;
     starred?: boolean;
@@ -73,7 +72,7 @@ export const RecentFiles = () => {
         const fetchFiles = async () => {
             try {
                 const response = await axios.post(
-                    process.env.BACKEND_BASEURL + "/api/doc/GetOnlyDocument",
+                    process.env.NEXT_PUBLIC_BACKEND_URL + "/api/doc/GetOnlyDocument",
                     { email },
                     { withCredentials: true }
                 );
@@ -94,9 +93,9 @@ export const RecentFiles = () => {
                     ownerId: file.ownerId,
                     createdAt: file.createdAt,
                     updatedAt: file.updatedAt,
-                    size: "1 KB", // optional mock value
-                    commits: Math.floor(Math.random() * 10), // optional mock
-                    starred: false, // optional default
+                    size: "1 KB",
+                    commits: Math.floor(Math.random() * 10),
+                    starred: false,
                 }));
 
                 setRecentFiles(files.slice(0, 5));
@@ -134,7 +133,7 @@ export const RecentFiles = () => {
             <CardContent className="relative space-y-2">
                 {recentFiles.length > 0 ? (
                     recentFiles.map((file, index) => {
-                        const ext = file.language.split(".")[1]; // safe: language always exists
+                        const ext = file.language.split(".")[1];
                         const color = getFileTypeColor(ext);
                         const statusConfig = getStatusConfig("stable");
 

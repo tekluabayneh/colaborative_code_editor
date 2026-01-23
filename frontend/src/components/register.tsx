@@ -41,14 +41,14 @@ export default function Register({ setisLogin }: Props) {
     const SubmitFormData = async (formData: FormValues) => {
         setIsSubmitting(true);
         try {
+
             const response = await axios.post(
-                process.env.BACKEND_BASEURL + "/api/auth/register",
+                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/register",
                 formData
             );
 
             toast.success(response.data.message + ", now verify Otp");
-
-            await axios.post(process.env.BACKEND_BASEURL + "/api/auth/sendOtp", {
+            await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/sendOtp", {
                 email: formData.email,
             });
 
@@ -78,11 +78,11 @@ export default function Register({ setisLogin }: Props) {
 
     // === OAuth Handlers ===
     const GoogleOAuth = () => {
-        window.location.href = process.env.BACKEND_BASEURL + "/api/google";
+        window.location.href = process.env.NEXT_PUBLIC_BACKEND_URL + "/api/google";
     };
 
     const GithubOAuth = () => {
-        window.location.href = process.env.BACKEND_BASEURL + "/api/github";
+        window.location.href = process.env.NEXT_PUBLIC_BACKEND_URL + "/api/github";
     };
 
     return (
