@@ -4,8 +4,7 @@
   "main": "dist/server.js",
   "scripts": {
     "build": "npx tsc",
-    "prestart": "npm run build",
-    "start": "nodemon dist/server.js",
+    "start": "node dist/server.js",
     "predev": "npm run build",
     "dev": "concurrently \"npx tsc -watch\" \"nodemon dist/server.js\" ",
     "serve_ts": "nodemon",
@@ -41,6 +40,7 @@
     "passport-github2": "^0.1.12",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
+    "socket.io": "^4.8.3",
     "typescript": "^5.9.3",
     "ws": "^8.18.3",
     "y-websocket": "^1.5.4"
