@@ -27,13 +27,15 @@ type user = {
 
 app.use(
     cors({
-        origin: "*",
-        methods: ["GET", "POST", "PUT", "DELETE"],
+        origin: process.env.ORIGIN_FRONTEND_URL,
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true,
     })
 );
 
+
+app.options("*", cors());
 
 app.use(
     session({
