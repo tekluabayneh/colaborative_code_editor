@@ -34,8 +34,7 @@ app.use(
     })
 );
 
-
-app.options("*", cors());
+app.options("/*all", cors());
 
 app.use(
     session({
