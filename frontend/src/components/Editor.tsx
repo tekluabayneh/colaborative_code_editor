@@ -5,15 +5,18 @@ import { useFileTree } from "../context/EditorContext";
 import { extensionToLanguage } from "../data/FolderTree";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useEnvFile } from "@/context/getNextConfigEnv";
 
 export default function CodeEditor() {
     const { CurrentFileInEditor } = useFileTree();
     const editorRef = useRef(null);
     const monacoRef = useRef(null);
+    const envFile = useEnvFile()
+
     const fetchAISuggestions = async (code: string, language: string) => {
         try {
             const res = await axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/code-complete",
+                envFile.apiBaseUrl + "/api/code-complete",
                 { codeSnippet: code, language },
                 { withCredentials: true }
             );
@@ -97,7 +100,7 @@ export default function CodeEditor() {
         if (!editorRef.current) return;
         try {
             const res = await axios.put(
-                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/doc/updateDocumentContent/",
+                envFile.apiBaseUrl + "/api/doc/updateDocumentContent/",
                 {
 
                     // @ts-expect-error fils type need to be updated 
