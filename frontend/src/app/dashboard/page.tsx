@@ -4,7 +4,6 @@ import { StatsCards } from "@/components/dashboard/StatusCards";
 import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { RecentFiles } from "@/components/dashboard/RecentFiles";
 import { TeamSection } from "@/components/dashboard/TeamSection";
-
 const MainDashboard = () => {
     return (
         <div className="min-h-screen bg-nuteral-900 ">
