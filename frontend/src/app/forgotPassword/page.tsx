@@ -4,10 +4,12 @@ import { Mail, ArrowLeft, CheckCircle, Loader2 } from "lucide-react";
 import axios, { isAxiosError } from "axios";
 import toast from "react-hot-toast";
 import { checkEmailValidity } from "@/utils/formValidate";
+import { useEnvFile } from "@/context/getNextConfigEnv";
 const ForgotPassword = () => {
     const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const envFile = useEnvFile()
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -18,7 +20,7 @@ const ForgotPassword = () => {
 
         try {
             setIsLoading(true);
-            const response = await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/sendRestLink", { email: email })
+            const response = await axios.post(envFile.apiBaseUrl + "/api/auth/sendRestLink", { email: email })
             toast.success(response?.data.message)
             setIsSubmitted(true);
             setIsLoading(false);
