@@ -6,6 +6,7 @@ import { MapPin, Clock, Globe, User } from "lucide-react";
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useEnvFile } from "@/context/getNextConfigEnv";
 
 interface UserData {
     _id: string;
@@ -18,6 +19,7 @@ interface UserData {
 export function UserInfoCard() {
     const [user, setUser] = useState<UserData | null>(null);
     const [email, setemail] = useState("");
+    const envFile = useEnvFile()
 
     useEffect(() => {
         const getEmail = localStorage.getItem("email");
@@ -30,7 +32,7 @@ export function UserInfoCard() {
             if (!email) return;
             try {
                 const res = await axios.post(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + "/api/User/getProfile",
+                    envFile.apiBaseUrl + "/api/User/getProfile",
                     { email },
                     { withCredentials: true }
                 );
@@ -50,7 +52,7 @@ export function UserInfoCard() {
         };
 
         fetchProfile();
-    }, [email]);
+    }, [email, envFile]);
 
     return (
         <Card className="p-6 border-gray-700 bg-neutral-900">
