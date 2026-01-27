@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { validateFormData } from "../utils/formValidate";
 import { useRouter } from "next/navigation";
 import { FaGoogle, FaGithub } from "react-icons/fa";
+import { useEnvFile } from "@/context/getNextConfigEnv";
 
 type Props = {
     setisLogin: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,6 +27,7 @@ export type FormValues = formTypeRegister;
 export default function Register({ setisLogin }: Props) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
+    const envFile = useEnvFile()
 
     // === react-hook-form setup ===
     const {
@@ -43,12 +45,12 @@ export default function Register({ setisLogin }: Props) {
         try {
 
             const response = await axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/register",
+                envFile.apiBaseUrl + "/api/auth/register",
                 formData
             );
 
             toast.success(response.data.message + ", now verify Otp");
-            await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/sendOtp", {
+            await axios.post(envFile.apiBaseUrl + "/api/auth/sendOtp", {
                 email: formData.email,
             });
 
@@ -78,11 +80,11 @@ export default function Register({ setisLogin }: Props) {
 
     // === OAuth Handlers ===
     const GoogleOAuth = () => {
-        window.location.href = process.env.NEXT_PUBLIC_BACKEND_URL + "/api/google";
+        window.location.href = envFile.apiBaseUrl + "/api/google";
     };
 
     const GithubOAuth = () => {
-        window.location.href = process.env.NEXT_PUBLIC_BACKEND_URL + "/api/github";
+        window.location.href = envFile.apiBaseUrl + "/api/github";
     };
 
     return (
