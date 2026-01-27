@@ -30,13 +30,14 @@ export type DocumentType = {
     createdAt: Date;
     updatedAt: Date;
 };
-
+import { useEnvFile } from "@/context/getNextConfigEnv"
 export default function Files() {
     const [files, setFiles] = useState<DocumentType[]>([]);
     const [filteredFiles, setFilteredFiles] = useState<DocumentType[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [email, setemail] = useState("");
+    const envFile = useEnvFile()
 
     useEffect(() => {
         const getEmail = localStorage.getItem("email");
@@ -50,7 +51,7 @@ export default function Files() {
             setIsLoading(true);
             try {
                 const response = await axios.post(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + "/api/doc/GetOnlyDocument",
+                    envFile.apiBaseUrl + "/api/doc/GetOnlyDocument",
                     { email: email },
                     { withCredentials: true }
                 );
@@ -63,7 +64,7 @@ export default function Files() {
             }
         }
         FetchFile();
-    }, [email]);
+    }, [email, envFile]);
 
     const filterFiles = useCallback(() => {
         let filtered = files;
