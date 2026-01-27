@@ -11,7 +11,7 @@ tasks:
   01-create-namespace:
     desc: "Create a namespace for these examples and set as default"
     cmds:
-      - kubectl apply -f Namespace.yaml
+      - kubectl apply -f Namespace.yaml -n {{.Namespace}}
       - kubens ${NAMESPACE}
 
   02-apply-loadbalancer-service:
