@@ -3,7 +3,6 @@ dotenv.config();
 import express, { Request, Response } from "express";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
-import cors from "cors";
 import AuthRouter from "./routes/auth.route";
 import OAuthRouter from "./routes/OAuth.route";
 import passport from "passport"
@@ -25,23 +24,45 @@ type user = {
     _id?: number
 }
 
-app.use(
-    cors({
-        origin: process.env.ORIGIN_FRONTEND_URL,
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization"],
-        credentials: true,
-    })
-);
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
 
-app.options("/*all", cors());
+    if (origin && origin === process.env.ORIGIN_FRONTEND_URL) {
+        res.setHeader("Access-Control-Allow-Origin", origin);
+        res.setHeader("Vary", "Origin");
+    }
+
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    );
+
+    res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET, POST, PUT, DELETE, OPTIONS"
+    );
+
+    if (req.method === "OPTIONS") {
+        res.sendStatus(204);
+        return
+    }
+
+    next();
+});
+
+app.set("trust proxy", 1);
 
 app.use(
     session({
         secret: "my-secret",
         resave: false,
         saveUninitialized: true,
-        cookie: { secure: false },
+        cookie: {
+            secure: true,
+            sameSite: "none",
+            httpOnly: true,
+        },
     })
 );
 
@@ -92,6 +113,7 @@ app.get("/", (req: Request, res: Response) => {
     console.log("Authorization Header:", header);
     res.send("Hello from TypeScript + Express!");
 });
+
 
 
 // local auth 
