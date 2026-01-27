@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { checkEmailValidity } from "@/utils/formValidate";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { useEnvFile } from "@/context/getNextConfigEnv";
 import axios, { AxiosError } from "axios";
 import type { Variants } from "framer-motion"
 
@@ -56,6 +57,7 @@ export default function AcceptInvitation() {
         email: "",
         password: "",
     });
+    const envFile = useEnvFile()
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -112,7 +114,7 @@ export default function AcceptInvitation() {
             };
             localStorage.setItem("email", formData.email);
             const response = await axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/acceptInvite",
+                envFile.apiBaseUrl + "/api/auth/acceptInvite",
                 data
             );
             document.cookie = `accessToken=${response.data.token}; path=/;`;
