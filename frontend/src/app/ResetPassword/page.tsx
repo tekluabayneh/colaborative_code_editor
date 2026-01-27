@@ -2,7 +2,7 @@
 import axios, { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-
+import { useEnvFile } from "@/context/getNextConfigEnv";
 const ResetPassword = () => {
     const [showNew, setShowNew] = useState(false);
     const [showConfirm, setShowConfirm] = useState(true);
@@ -36,7 +36,7 @@ const ResetPassword = () => {
         }
         try {
 
-            const mainUrl = process.env.NEXT_PUBLIC_BACKEND_URL + `/api/auth/ResetPassword?token=${token}&email=${email}`
+            const mainUrl = useEnvFile + `/api/auth/ResetPassword?token=${token}&email=${email}`
             const response = await axios.post(mainUrl, { newPassword: newPassword })
             toast.success(response.data.message)
         } catch (err) {
