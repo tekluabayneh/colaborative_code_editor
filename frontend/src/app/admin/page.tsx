@@ -19,7 +19,7 @@ import Link from "next/link";
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { LucideIcon } from "lucide-react";
-
+import { useEnvFile } from "@/context/getNextConfigEnv"
 
 type userType = {
     _id: number,
@@ -81,7 +81,7 @@ export default function Dashboard() {
     const [search, setSearch] = useState<string>("");
     const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
     const [email, setEmail] = useState("");
-
+    const envFile = useEnvFile()
     useEffect(() => {
         const e = localStorage.getItem("email");
         if (e) setEmail(e);
@@ -92,7 +92,7 @@ export default function Dashboard() {
         const fetchUsers = async () => {
             try {
                 const res = await axios.post(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + "/api/User/GetOwnerUsers",
+                    envFile.apiBaseUrl + "/api/User/GetOwnerUsers",
                     { email },
                     { withCredentials: true }
                 );
@@ -124,7 +124,7 @@ export default function Dashboard() {
             }
         };
         fetchUsers();
-    }, [email]);
+    }, [email, envFile]);
 
     const filteredUsers = users.filter(
         (u) =>
@@ -135,7 +135,7 @@ export default function Dashboard() {
     const updateUser = async (id: number, changes: unknown) => {
         try {
             await axios.put(
-                process.env.NEXT_PUBLIC_BACKEND_URL + `/api/User/updateUserRoleOrStatus/${id}`,
+                envFile.apiBaseUrl + `/api/User/updateUserRoleOrStatus/${id}`,
                 { role: changes },
                 { withCredentials: true }
             );
