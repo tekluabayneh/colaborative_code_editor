@@ -2,8 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Send, X } from "lucide-react";
 import { io } from "socket.io-client";
-
-const socket = io("http://localhost:5000");
+import { useEnvFile } from "@/context/getNextConfigEnv";
 
 interface Message {
     id: string;
@@ -21,11 +20,12 @@ interface Message {
 // }
 //
 type StateType = React.Dispatch<React.SetStateAction<boolean>>;
-export const ChatSidebar = ({
-    setIsChatOpen,
-}: {
-    setIsChatOpen: StateType;
-}) => {
+export const ChatSidebar = ({ setIsChatOpen, }: { setIsChatOpen: StateType; }) => {
+    const envFile = useEnvFile()
+
+    const socket = io(envFile.apiBaseUrl);
+
+
     const [messageText, setMessageText] = useState("");
     const [messages, setMessages] = useState<Message[]>([]);
     const [username] = useState("You");
@@ -58,7 +58,7 @@ export const ChatSidebar = ({
         return () => {
             socket.off("chat_message");
         };
-    }, [username]);
+    }, [username, socket]);
 
     const handleSendMessage = () => {
         if (messageText.trim()) {
