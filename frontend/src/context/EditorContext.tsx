@@ -10,6 +10,7 @@ import axios from "axios";
 const FileTreeContent = createContext<FileSyncHandeleContentType | null>(null);
 import toast from "react-hot-toast";
 import { useFileSystem } from "./FileTreeContext";
+import { useEnvFile } from "@/context/getNextConfigEnv"
 type nodes = {
     node: DocumentType | [];
     name: string;
@@ -23,6 +24,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     const [CurrentFileInEditor, SetCurrentFileInEditor] = useState<
         DocumentType[] | null
     >(null);
+    const envFile = useEnvFile()
 
     const [toBeUpdated, settoBeupdated] = useState<nodes>({
         node: [],
@@ -32,7 +34,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     const handelRefresh = async (email: string) => {
         try {
             const response = await axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/doc/GetAllFolderTree",
+                envFile.apiBaseUrl + "/api/doc/GetAllFolderTree",
                 {
                     email: email,
                 },
@@ -55,7 +57,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     const UpdateFileName = async ({ node }: { node: DocumentType }) => {
         try {
             const res = await axios.put(
-                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/doc/UpdateFolderName/",
+                envFile.apiBaseUrl + "/api/doc/UpdateFolderName/",
                 { folderId: node.folderId, newName: name },
                 { withCredentials: true }
             );
@@ -78,7 +80,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     const newFile = async ({ node }: { node: DocumentType }) => {
         try {
             const res = await axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/doc/newDocument",
+                envFile.apiBaseUrl + "/api/doc/newDocument",
                 {
                     parentId: node._id,
                     content: "",
@@ -101,7 +103,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     const CreateFolder = async ({ node }: { node: DocumentType }) => {
         try {
             const res = await axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/doc/createFolder",
+                envFile.apiBaseUrl + "/api/doc/createFolder",
                 {
                     parentId: node._id,
                     folderName: name,
@@ -122,7 +124,7 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     const DeleteFolder = async ({ node }: { node: DocumentType }) => {
         try {
             const res = await axios.delete(
-                process.env.NEXT_PUBLIC_BACKEND_URL + `/api/doc/DeleteDocument`,
+                envFile.apiBaseUrl + `/api/doc/DeleteDocument`,
                 {
                     data: {
                         email: localStorage.getItem("email"),
