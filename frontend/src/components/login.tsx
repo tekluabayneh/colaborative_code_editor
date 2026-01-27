@@ -11,12 +11,15 @@ import { validateFormData } from "../utils/formValidate";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { FaGoogle, FaGithub } from "react-icons/fa";
-
+import { useEnvFile } from "@/context/getNextConfigEnv";
 type Props = {
     setisLogin: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function Login({ setisLogin }: Props) {
+    const envfile = useEnvFile()
+
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
     const { register, handleSubmit, reset, watch } = useForm<formTypeLogin>();
@@ -28,13 +31,13 @@ export default function Login({ setisLogin }: Props) {
         try {
             setIsSubmitting(true);
             const response = await axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/login",
+                envfile.apiBaseUrl + "/api/auth/login",
                 formData,
                 { withCredentials: true }
             );
             toast.success(response.data.message + ", now verify OTP");
 
-            await axios.post(process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/sendOtp", {
+            await axios.post(envfile.apiBaseUrl + "/api/auth/sendOtp", {
                 email: formData.email,
             });
 
@@ -63,11 +66,11 @@ export default function Login({ setisLogin }: Props) {
     };
 
     const GoogleOAuth = async () => {
-        window.location.href = process.env.NEXT_PUBLIC_BACKEND_URL + "/api/google";
+        window.location.href = envfile.apiBaseUrl + "/api/google";
     };
 
     const GighutOAuth = async () => {
-        window.location.href = process.env.NEXT_PUBLIC_BACKEND_URL + "/api/github";
+        window.location.href = envfile.apiBaseUrl + "/api/github";
     };
 
     return (
