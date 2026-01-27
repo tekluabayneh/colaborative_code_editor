@@ -8,12 +8,14 @@ import React, {
 } from "react";
 import { Node, FileSystemContextType } from "@/types/Node";
 import axios from "axios";
+import { useEnvFile } from "@/context/getNextConfigEnv"
 
 const FileSystemContext = createContext<FileSystemContextType | null>(null);
 
 export const FileSystemProvider = ({ children }: { children: ReactNode }) => {
     const [fileTree, setFileTree] = useState<Node[] | null>(null);
     const [email, setEmail] = useState("");
+    const envFile = useEnvFile()
 
     useEffect(() => {
         const loclStorageEamil = localStorage.getItem("email")!;
@@ -25,7 +27,7 @@ export const FileSystemProvider = ({ children }: { children: ReactNode }) => {
         const handleFetchFileTree = async (email: string) => {
             try {
                 const response = await axios.post(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + "/api/doc/GetAllFolderTree", { email: email, }, { withCredentials: true });
+                    envFile.apiBaseUrl + "/api/doc/GetAllFolderTree", { email: email, }, { withCredentials: true });
                 setFileTree(response.data);
 
                 if (response?.data[0]) {
@@ -38,7 +40,7 @@ export const FileSystemProvider = ({ children }: { children: ReactNode }) => {
             }
         };
         handleFetchFileTree(email);
-    }, [email]);
+    }, [email, envFile]);
 
     return (
         <FileSystemContext.Provider
@@ -52,6 +54,7 @@ export const FileSystemProvider = ({ children }: { children: ReactNode }) => {
             {children}
         </FileSystemContext.Provider>
     );
+
 };
 export const useFileSystem = () => {
     const context = useContext(FileSystemContext);
