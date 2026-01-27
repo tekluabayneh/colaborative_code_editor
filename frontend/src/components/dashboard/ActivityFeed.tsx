@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { LucideIcon, User, GitCommit, FileEdit, MessageSquare, GitPullRequest, Zap, Clock } from "lucide-react";
-
 import { Avatar } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useEnvFile } from "@/context/getNextConfigEnv";
 
 /* =========================
    TYPES
@@ -104,6 +104,7 @@ const icons: Record<ActivityKind, LucideIcon> = {
 export const ActivityFeed = () => {
     const [email, setEmail] = useState("");
     const [activities, setActivities] = useState<ActivityFeedType[]>([]);
+    const envFile = useEnvFile()
 
     useEffect(() => {
         const storedEmail = localStorage.getItem("email");
@@ -116,7 +117,7 @@ export const ActivityFeed = () => {
         const getAllOwnerUsers = async () => {
             try {
                 const res = await axios.post(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + "/api/User/GetOwnerUsers",
+                    envFile.apiBaseUrl + "/api/User/GetOwnerUsers",
                     { email },
                     { withCredentials: true }
                 );
@@ -159,7 +160,7 @@ export const ActivityFeed = () => {
         };
 
         getAllOwnerUsers();
-    }, [email]);
+    }, [email, envFile]);
 
     return (
         <Card className="relative overflow-hidden border border-gray-600/50 bg-neutral-900">
