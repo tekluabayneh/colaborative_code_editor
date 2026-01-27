@@ -23,11 +23,13 @@ import {
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
 import { checkEmailValidity } from "../utils/formValidate";
+import { useEnvFile } from "@/context/getNextConfigEnv";
 
 export default function InviteForm() {
     const [formData, setFormData] = useState({ email: "", role: "Read_only" });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submittedEmail, setSubmittedEmail] = useState("");
+    const envFile = useEnvFile()
 
     const handleInputChange = (field: string, value: string) => {
         setFormData((prev) => ({
@@ -53,7 +55,7 @@ export default function InviteForm() {
 
         try {
             const response = await axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/auth/invite",
+                envFile.apiBaseUrl + "/api/auth/invite",
                 { role: formData.role, email: formData.email },
                 { withCredentials: true }
             );
