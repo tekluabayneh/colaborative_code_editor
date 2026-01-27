@@ -7,7 +7,7 @@ import { FileText, Folder, ExternalLink, Clock, Star, GitBranch } from "lucide-r
 import Link from "next/link";
 import axios from "axios";
 import { useEffect, useState } from "react";
-
+import { useEnvFile } from "@/context/getNextConfigEnv";
 // File type color based on extension
 const getFileTypeColor = (type: string | undefined) => {
     switch (type) {
@@ -58,6 +58,7 @@ export type FileItemType = {
 export const RecentFiles = () => {
     const [recentFiles, setRecentFiles] = useState<FileItemType[]>([]);
     const [email, setEmail] = useState("");
+    const envFile = useEnvFile()
 
     // Load email from localStorage
     useEffect(() => {
@@ -72,7 +73,7 @@ export const RecentFiles = () => {
         const fetchFiles = async () => {
             try {
                 const response = await axios.post(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + "/api/doc/GetOnlyDocument",
+                    envFile.apiBaseUrl + "/api/doc/GetOnlyDocument",
                     { email },
                     { withCredentials: true }
                 );
@@ -105,7 +106,7 @@ export const RecentFiles = () => {
         };
 
         fetchFiles();
-    }, [email]);
+    }, [email, envFile]);
 
     return (
         <Card className="w-full relative overflow-hidden bg-gradient-to-b border border-gray-700/50 bg-neutral-900 group">
