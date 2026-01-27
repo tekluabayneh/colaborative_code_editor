@@ -1,40 +1,38 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../styles/globals.css"
-import {FileSystemProvider } from "../context/FileTreeContext"
+import { FileSystemProvider } from "../context/FileTreeContext"
 import { Toaster } from 'react-hot-toast';
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+    variable: "--font-geist-sans",
+    subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+    variable: "--font-geist-mono",
+    subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "landing page",
-  description: "landing apge",
+    title: "landing page",
+    description: "landing apge",
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <FileSystemProvider>
-        {children}
-		<Toaster/>
-        </FileSystemProvider>
-      </body>
-    </html>
+    return (
+        <html lang="en">
+            <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} >
 
+                <FileSystemProvider>
+                    {children}
+                    <Toaster />
+                </FileSystemProvider>
 
-  );
+            </body>
+        </html >
+    );
 }
