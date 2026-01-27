@@ -9,11 +9,13 @@ import axios from "axios";
 import { DocumentType } from "../types/document";
 import { useFileTree } from "../context/EditorContext";
 import { createPortal } from "react-dom";
+import { useEnvFile } from "@/context/getNextConfigEnv";
 
 export function FilesystemItem({ node }: { node: DocumentType }) {
     const { updateFileToEditor, openModalWithFlag } = useFileTree();
     const [isOpen, setIsOpen] = useState(false);
     const [isRightClick, setisRightClick] = useState(false);
+    const envFile = useEnvFile()
 
     useEffect(() => {
         const handleClick = () => setisRightClick(false);
@@ -39,7 +41,7 @@ export function FilesystemItem({ node }: { node: DocumentType }) {
         }
 
         const result = await axios.get(
-            process.env.NEXT_PUBLIC_BACKEND_URL + `/api/doc/GetSingleDocument/${node.contentId}`,
+            envFile.apiBaseUrl + `/api/doc/GetSingleDocument/${node.contentId}`,
             { withCredentials: true }
         );
         updateFileToEditor(result.data);
