@@ -12,6 +12,7 @@ import axios from "axios";
 import { User, Users, Home } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { useEnvFile } from "@/context/getNextConfigEnv"
 const HomePage = () => {
     const { fileTree } = useFileSystem();
     const { isModalOpen, flag, setFlag, name, setName } = useFileTree();
@@ -20,6 +21,7 @@ const HomePage = () => {
     const [isCreateModalOpen, setisCreateModalOpen] = useState(false);
     const [email, setEmail] = useState("");
     const [isMainFolderExists, setisMainFolderExists] = useState(false);
+    const envFile = useEnvFile()
 
     useEffect(() => {
         const getEmail = localStorage.getItem("email");
@@ -35,7 +37,7 @@ const HomePage = () => {
     const newFile = async () => {
         try {
             const res = await axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/doc/newDocument",
+                envFile.apiBaseUrl + "/api/doc/newDocument",
                 {
                     parentId: localStorage.getItem("main_DocumentId"),
                     content: "",
@@ -57,12 +59,11 @@ const HomePage = () => {
     const CreateFolder = async () => {
         try {
             const res = await axios.post(
-                process.env.NEXT_PUBLIC_BACKEND_URL + "/api/doc/createFolder",
-                {
-                    parentId: null,
-                    folderName: name,
-                    email: email,
-                },
+                envFile.apiBaseUrl + "/api/doc/createFolder", {
+                parentId: null,
+                folderName: name,
+                email: email,
+            },
                 { withCredentials: true }
             );
             toast.success(res.data.message);
