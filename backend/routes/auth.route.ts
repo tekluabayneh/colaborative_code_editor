@@ -1,10 +1,8 @@
 import express from "express";
 import authController from "../controllers/auth.controller";
 import AuthMiddleware from "../middlewares/auth.middleware";
-const { Login, Register, ResetPassword, verifyOtp, SendOTP, sendResetLink } =
-  authController;
-const { ResgisterValidate, LoginValidate, ResetPasswordValidate } =
-  AuthMiddleware;
+const { Login, Register, ResetPassword, verifyOtp, SendOTP, sendResetLink } = authController;
+const { ResgisterValidate, LoginValidate, ResetPasswordValidate } = AuthMiddleware;
 const AuthRouter = express.Router();
 
 AuthRouter.post("/auth/login", LoginValidate, Login);
