@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
-
+import { useEnvFile } from "@/context/getNextConfigEnv";
 import {
     Users,
     Crown,
@@ -94,6 +94,7 @@ const moods: MemberMood[] = [
 export const TeamSection = () => {
     const [teamMembers, setTeamMembers] = useState<TeamMemberType[]>([]);
     const [email, setEmail] = useState("");
+    const envFile = useEnvFile()
 
     useEffect(() => {
         const storedEmail = localStorage.getItem("email");
@@ -106,7 +107,7 @@ export const TeamSection = () => {
         const fetchTeamMembers = async () => {
             try {
                 const res = await axios.post(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + "/api/User/GetOwnerUsers",
+                    envFile.apiBaseUrl + "/api/User/GetOwnerUsers",
                     { email },
                     { withCredentials: true }
                 );
@@ -147,7 +148,7 @@ export const TeamSection = () => {
         };
 
         fetchTeamMembers();
-    }, [email]);
+    }, [email, envFile]);
 
     const onlineCount = teamMembers.filter(
         (m) => m.status === "online"
