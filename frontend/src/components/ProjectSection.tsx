@@ -6,10 +6,13 @@ import { Folder, ExternalLink, GitBranch, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { DocumentType } from "@/app/files/page";
+import { useEnvFile } from "@/context/getNextConfigEnv";
 
 export function ProjectsSection() {
     const [email, setemail] = useState("");
     const [projects, setprojects] = useState<DocumentType[]>([]);
+    const envFile = useEnvFile()
+
     useEffect(() => {
         const getEmail = localStorage.getItem("email");
         if (!getEmail) return;
@@ -21,7 +24,7 @@ export function ProjectsSection() {
         async function FetchFile() {
             try {
                 const response = await axios.post(
-                    process.env.NEXT_PUBLIC_BACKEND_URL + "/api/doc/GetOnlyDocument",
+                    envFile.apiBaseUrl + "/api/doc/GetOnlyDocument",
                     { email: email },
                     { withCredentials: true }
                 );
@@ -31,7 +34,7 @@ export function ProjectsSection() {
             }
         }
         FetchFile();
-    }, [email]);
+    }, [email, envFile]);
 
     const getStatusBadgeVariant = (status: string) => {
         switch (status) {
