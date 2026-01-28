@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { EnvFileSystem } from "../../context/getNextConfigEnv"
-import { Toaster } from 'react-hot-toast';
+import { FileSystemProvider } from "../../context/FileTreeContext"
 
 export const metadata: Metadata = {
     title: "Auth page",
@@ -13,14 +13,12 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body>
-                <EnvFileSystem>
+        <div>
+            <EnvFileSystem>
+                <FileSystemProvider>
                     {children}
-                    <Toaster />
-                </EnvFileSystem>
-
-            </body>
-        </html >
+                </FileSystemProvider>
+            </EnvFileSystem>
+        </div>
     );
 }

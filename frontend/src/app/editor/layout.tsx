@@ -1,19 +1,21 @@
 import type { Metadata } from "next";
-import { FileContentProvider } from "../../context/EditorContext"
 import { EnvFileSystem } from "../../context/getNextConfigEnv"
+import { FileSystemProvider } from "../../context/FileTreeContext"
+
 export const metadata: Metadata = {
     title: "editor page",
-    description: "editor apge",
+    description: "editor page",
 };
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
     return (
+
         <div>
-            <FileContentProvider>
-                <EnvFileSystem>
+            <EnvFileSystem>
+                <FileSystemProvider>
                     {children}
-                </ EnvFileSystem>
-            </FileContentProvider>
+                </FileSystemProvider>
+            </ EnvFileSystem>
         </div>
     );
 }

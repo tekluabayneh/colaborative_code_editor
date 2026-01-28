@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { EnvFileSystem } from "../../context/getNextConfigEnv"
+import { FileSystemProvider } from "../../context/FileTreeContext"
 import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
-    title: "Auth page",
-    description: "Auth apge",
+    title: "invitation page",
+    description: "accept invitation apge",
 };
 
 export default function RootLayout({
@@ -13,14 +14,13 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body>
-                <EnvFileSystem>
+        <div>
+            <EnvFileSystem>
+                <FileSystemProvider>
                     {children}
                     <Toaster />
-                </EnvFileSystem>
-
-            </body>
-        </html >
+                </FileSystemProvider>
+            </EnvFileSystem>
+        </div>
     );
 }

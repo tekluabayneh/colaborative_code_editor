@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { EnvFileSystem } from "../../context/getNextConfigEnv"
+import { FileSystemProvider } from "../../context/FileTreeContext"
 export const metadata: Metadata = {
     title: "invite page",
     description: "invite page",
@@ -11,13 +12,13 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body>
+        <div>
 
-                <EnvFileSystem>
+            <EnvFileSystem>
+                <FileSystemProvider>
                     {children}
-                </EnvFileSystem>
-            </body>
-        </html >
+                </FileSystemProvider>
+            </EnvFileSystem>
+        </div>
     );
 }

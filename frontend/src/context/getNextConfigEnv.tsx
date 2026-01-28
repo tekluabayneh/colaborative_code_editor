@@ -28,6 +28,7 @@ export const EnvFileSystem = ({ children }: { children: ReactNode }) => {
                 }
 
                 const data: EnvConfig = await response.json();
+                console.log("this work i guess", data.apiBaseUrl)
                 if (!data.apiBaseUrl) {
                     throw new Error("baseUrl missing in config");
                 }
@@ -46,6 +47,7 @@ export const EnvFileSystem = ({ children }: { children: ReactNode }) => {
 
     }, []);
 
+    console.log("this work i guess 0")
     return (
         <EnvFileContext.Provider value={{ config, isLoading, error }}>
             {children}
@@ -53,9 +55,9 @@ export const EnvFileSystem = ({ children }: { children: ReactNode }) => {
     );
 };
 
-
 export const useEnvFile = () => {
     const context = useContext(EnvFileContext);
+    console.log("this is context", context)
     if (context === undefined) {
         throw new Error("useEnvFile must be used within EnvFileSystem");
     }
