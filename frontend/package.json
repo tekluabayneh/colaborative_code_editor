@@ -6,7 +6,7 @@
     "dev": "next dev",
     "prestart": "next build",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -H 0.0.0.0",
     "lint": "next lint",
     "test": "jest --watchAll "
   },
