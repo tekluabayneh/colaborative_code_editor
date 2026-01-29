@@ -15,6 +15,7 @@ type nodes = {
     node: DocumentType | [];
     name: string;
 };
+
 export const FileContentProvider = ({ children }: { children: ReactNode }) => {
     const [name, setName] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -246,6 +247,6 @@ export const FileContentProvider = ({ children }: { children: ReactNode }) => {
 export const useFileTree = () => {
     const context = useContext(FileTreeContent);
     if (!context)
-        throw new Error("useFileSystem must be used within a FileSystemProvider");
+        throw new Error("useFileTree must be used within a FileSystemProvider");
     return context;
 };

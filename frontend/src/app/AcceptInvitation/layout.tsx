@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { EnvFileSystem } from "../../context/getNextConfigEnv"
 import { FileSystemProvider } from "../../context/FileTreeContext"
-import { Toaster } from 'react-hot-toast';
+import { FileContentProvider } from "../../context/EditorContext"
+
 
 export const metadata: Metadata = {
     title: "invitation page",
@@ -17,8 +18,9 @@ export default function RootLayout({
         <div>
             <EnvFileSystem>
                 <FileSystemProvider>
-                    {children}
-                    <Toaster />
+                    <FileContentProvider>
+                        {children}
+                    </FileContentProvider>
                 </FileSystemProvider>
             </EnvFileSystem>
         </div>

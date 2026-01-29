@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { EnvFileSystem } from "../../context/getNextConfigEnv"
 import { FileSystemProvider } from "../../context/FileTreeContext"
+import { FileContentProvider } from "../../context/EditorContext"
 export const metadata: Metadata = {
     title: "invite page",
     description: "invite page",
@@ -16,7 +17,9 @@ export default function RootLayout({
 
             <EnvFileSystem>
                 <FileSystemProvider>
-                    {children}
+                    <FileContentProvider>
+                        {children}
+                    </FileContentProvider>
                 </FileSystemProvider>
             </EnvFileSystem>
         </div>

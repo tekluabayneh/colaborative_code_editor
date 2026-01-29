@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { EnvFileSystem } from "../../context/getNextConfigEnv"
 import { FileSystemProvider } from "../../context/FileTreeContext"
-
+import { FileContentProvider } from "../../context/EditorContext"
 export const metadata: Metadata = {
     title: "landing page",
     description: "landing apge",
@@ -13,7 +13,9 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
 
             <EnvFileSystem>
                 <FileSystemProvider>
-                    {children}
+                    <FileContentProvider>
+                        {children}
+                    </FileContentProvider>
                 </FileSystemProvider>
             </EnvFileSystem >
         </div >

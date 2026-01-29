@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { EnvFileSystem } from "../../context/getNextConfigEnv"
 import { FileSystemProvider } from "../../context/FileTreeContext"
+import { FileContentProvider } from "../../context/EditorContext"
 
 export const metadata: Metadata = {
     title: "editor page",
@@ -13,7 +14,9 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
         <div>
             <EnvFileSystem>
                 <FileSystemProvider>
-                    {children}
+                    <FileContentProvider>
+                        {children}
+                    </FileContentProvider>
                 </FileSystemProvider>
             </ EnvFileSystem>
         </div>

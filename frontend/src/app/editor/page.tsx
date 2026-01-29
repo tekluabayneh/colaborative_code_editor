@@ -14,7 +14,6 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { useEnvFile } from "@/context/getNextConfigEnv"
 const HomePage = () => {
-    const { fileTree } = useFileSystem();
     const { isModalOpen, flag, setFlag, name, setName } = useFileTree();
     const [isFileSystemOpen, setIsFileSystemOpen] = useState(false);
     const [isChatOpen, setIsChatOpen] = useState(false);
@@ -22,6 +21,7 @@ const HomePage = () => {
     const [email, setEmail] = useState("");
     const [isMainFolderExists, setisMainFolderExists] = useState(false);
     const envFile = useEnvFile()
+    const { fileTree } = useFileSystem();
     useEffect(() => {
         const getEmail = localStorage.getItem("email");
         if (!getEmail) return;

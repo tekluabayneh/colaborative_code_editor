@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { EnvFileSystem } from "../../context/getNextConfigEnv"
 import { FileSystemProvider } from "../../context/FileTreeContext"
-
+import { FileContentProvider } from "../../context/EditorContext"
 export const metadata: Metadata = {
     title: "Auth page",
     description: "Auth apge",
@@ -16,7 +16,9 @@ export default function RootLayout({
         <div>
             <EnvFileSystem>
                 <FileSystemProvider>
-                    {children}
+                    <FileContentProvider>
+                        {children}
+                    </FileContentProvider>
                 </FileSystemProvider>
             </EnvFileSystem>
         </div>
