@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { CheckCircle, Mail, ArrowLeft } from 'lucide-react';
 import { verifyOtp } from '@/lib/api';
 import toast from 'react-hot-toast';
+import { useEnvFile } from "@/context/getNextConfigEnv";
 
 const EmailVerificationPage = () => {
     const [code, setCode] = useState('');
@@ -14,7 +15,7 @@ const EmailVerificationPage = () => {
     const [isVerified, setIsVerified] = useState(false);
     const [error, setError] = useState('');
     const [email, setEmail] = useState("")
-
+    const fileEnv = useEnvFile()
     useEffect(() => {
         const email_from_local = localStorage.getItem("email")
         const email_from_url = new URLSearchParams(window.location.search).get("email")
@@ -28,7 +29,7 @@ const EmailVerificationPage = () => {
     const handleVerification = async () => {
         setIsLoading(true)
         try {
-            const res = await verifyOtp(code, email);
+            const res = await verifyOtp(code, email, fileEnv.apiBaseUrl);
             if (res?.status !== 200) {
                 setIsLoading(false)
                 return
