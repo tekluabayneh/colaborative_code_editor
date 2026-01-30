@@ -1,9 +1,11 @@
+"use client"
 import { Bell, Search, Settings } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const DashboardHeader = () => {
+    const userName = localStorage.getItem("email")?.split("@")[0] ?? "not found"
+
     return (
         <header className="border-b border-gray-600 bg-card/50 backdrop-blur-sm sticky top-0 z-50">
             <div className="flex h-16 items-center justify-between px-6">
@@ -41,11 +43,7 @@ export const DashboardHeader = () => {
                     </Button>
 
                     <div className="flex items-center gap-2 pl-2 border-l border-gray-600">
-                        <Avatar className="w-8 h-8">
-                            <AvatarImage src="https://github.com/shadcn.png" alt="User" />
-                            <AvatarFallback>JD</AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm font-medium">John Doe</span>
+                        <span className="text-sm font-medium">{userName}</span>
                     </div>
                 </div>
             </div>

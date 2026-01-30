@@ -65,6 +65,7 @@ export const useEnvFile = () => {
         return { apiBaseUrl: "loading..." };
     }
 
+
     if (error) {
         console.warn("Env error:", error);
     }
