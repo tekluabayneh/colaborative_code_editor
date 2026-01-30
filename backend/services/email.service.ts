@@ -1,12 +1,4 @@
 import nodemailer, { Transporter, SendMailOptions } from "nodemailer"
-// const transport: Transporter = nodemailer.createTransport({
-//     service: "gmail",
-//     auth: {
-//         user: process.env.GMAIL,
-//         pass: process.env.USER_PASSWORD,
-//     },
-// })
-//
 const transport: Transporter = nodemailer.createTransport({
     host: "smtp.resend.com",
     port: 465,
