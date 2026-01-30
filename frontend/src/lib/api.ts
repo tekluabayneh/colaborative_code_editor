@@ -1,8 +1,9 @@
 import axios from "axios";
 import toast from "react-hot-toast";
-export async function verifyOtp(code: string, email: string) {
+
+export async function verifyOtp(code: string, email: string, apiBaseUrl: string) {
     try {
-        const response = await axios.post(process.env.BACKEND_BASEURL + "/api/auth/verifyOtp", { email: email, Otp: code })
+        const response = await axios.post(apiBaseUrl + "/api/auth/verifyOtp", { email: email, Otp: code })
         return response
     } catch (err) {
         if (axios.isAxiosError(err)) {
