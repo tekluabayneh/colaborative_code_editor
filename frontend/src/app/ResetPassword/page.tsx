@@ -9,6 +9,7 @@ const ResetPassword = () => {
     const [newPassword, setnewPassword] = useState("")
     const [confirmPassword, setconfirmPassword] = useState("")
     const [urlParams, setUrlParams] = useState<URLSearchParams | null>(null);
+    const fielEnv = useEnvFile()
 
 
     useEffect(() => {
@@ -36,7 +37,7 @@ const ResetPassword = () => {
         }
         try {
 
-            const mainUrl = useEnvFile + `/api/auth/ResetPassword?token=${token}&email=${email}`
+            const mainUrl = fielEnv.apiBaseUrl + `/api/auth/ResetPassword?token=${token}&email=${email}`
             const response = await axios.post(mainUrl, { newPassword: newPassword })
             toast.success(response.data.message)
         } catch (err) {

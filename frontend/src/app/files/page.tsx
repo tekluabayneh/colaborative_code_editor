@@ -55,11 +55,10 @@ export default function Files() {
                     { email: email },
                     { withCredentials: true }
                 );
-                console.log(response.data);
                 setFiles(response.data);
-
                 setIsLoading(false);
             } catch (error) {
+                setIsLoading(false);
                 console.log(error);
             }
         }

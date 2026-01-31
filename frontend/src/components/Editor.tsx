@@ -6,6 +6,7 @@ import { extensionToLanguage } from "../data/FolderTree";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useEnvFile } from "@/context/getNextConfigEnv";
+import { debounce } from 'lodash';
 
 export default function CodeEditor() {
     const { CurrentFileInEditor } = useFileTree();
@@ -15,51 +16,54 @@ export default function CodeEditor() {
 
     const fetchAISuggestions = async (code: string, language: string) => {
         try {
+            if (envFile.apiBaseUrl == "loading...") {
+                return
+            }
             const res = await axios.post(
-                envFile.apiBaseUrl + "/api/code-complete",
+                `${envFile.apiBaseUrl}/api/code-complete`,
                 { codeSnippet: code, language },
                 { withCredentials: true }
             );
+
             return res.data.completion;
         } catch (err) {
             console.error(err);
             return "";
         }
     };
-    // Handle editor mount
-    {/* @ts-expect-error fils type need to be updated */ }
+
+    // Inside handleEditorDidMount
     const handleEditorDidMount = (editor, monaco: Monaco) => {
         editorRef.current = editor;
         monacoRef.current = monaco;
-
         const model = editor.getModel();
         const language = model ? model.getLanguageId() : "javascript";
 
+        const debouncedFetch = debounce(async (model: Monaco) => {
+            const code = model.getValue();
+            const suggestion = await fetchAISuggestions(code, language);
+            if (!suggestion) return { suggestions: [] };
+            return {
+                suggestions: [
+                    {
+                        label: "AI Suggestion",
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: suggestion,
+                        range: undefined,
+                    },
+                ],
+            };
+        }, 200);
+
         monaco.languages.registerCompletionItemProvider(language, {
-            triggerCharacters: [" ", ".", "(", ","], // common triggers
-
-            // @ts-expect-error fils type need to be updated 
-            provideCompletionItems: async (model) => {
-                const code = model.getValue();
-                const suggestion = await fetchAISuggestions(code, language);
-
-                if (!suggestion) return { suggestions: [] };
-
-                return {
-                    suggestions: [
-                        {
-                            label: "AI Suggestion",
-                            kind: monaco.languages.CompletionItemKind.Snippet,
-                            insertText: suggestion,
-                            range: undefined, // Monaco will insert at cursor
-                        },
-                    ],
-                };
+            triggerCharacters: [" ", ".", "(", ",", "\n", ">", "}", "]"],
+            provideCompletionItems: (model: Monaco) => {
+                return debouncedFetch(model);
             },
         });
     };
 
-    // Handle file changes
+
     useEffect(() => {
 
         // @ts-expect-error fils type need to be updated 

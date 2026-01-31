@@ -22,6 +22,7 @@ const HomePage = () => {
     const [isMainFolderExists, setisMainFolderExists] = useState(false);
     const envFile = useEnvFile()
     const { fileTree } = useFileSystem();
+
     useEffect(() => {
         const getEmail = localStorage.getItem("email");
         if (!getEmail) return;
