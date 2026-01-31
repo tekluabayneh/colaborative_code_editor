@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import cors from "cors"
 dotenv.config();
 import express, { Request, Response } from "express";
 import helmet from "helmet";
@@ -15,7 +16,7 @@ import GloblaError from "./middlewares/error.middleware"
 import cookieParser from "cookie-parser";
 import UserRouter from "./routes/user.route";
 import AICodeCompletionRouter from "./routes/codeCompletion.route";
-
+import { GetAzureToken } from "./Utils/GetAzuerCode"
 
 
 const app = express();
@@ -24,34 +25,40 @@ type user = {
     _id?: number
 }
 
-app.use((req, res, next) => {
-    const origin = req.headers.origin;
+app.use(cors({
+    origin: true,             // allows any origin that requests (very permissive in dev)
+    credentials: true         // if you use cookies / auth headers later
+}));
 
-    if (origin && origin === process.env.ORIGIN_FRONTEND_URL) {
-        res.setHeader("Access-Control-Allow-Origin", origin);
-        res.setHeader("Vary", "Origin");
-    }
-
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-    );
-
-    res.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET, POST, PUT, DELETE, OPTIONS"
-    );
-
-    if (req.method === "OPTIONS") {
-        res.sendStatus(204);
-        return
-    }
-
-    next();
-});
-
-app.set("trust proxy", 1);
+//
+// app.use((req, res, next) => {
+//     const origin = req.headers.origin;
+//
+//     if (origin && origin === process.env.ORIGIN_FRONTEND_URL) {
+//         res.setHeader("Access-Control-Allow-Origin", origin);
+//         res.setHeader("Vary", "Origin");
+//     }
+//
+//     res.setHeader("Access-Control-Allow-Credentials", "true");
+//     res.setHeader(
+//         "Access-Control-Allow-Headers",
+//         "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+//     );
+//
+//     res.setHeader(
+//         "Access-Control-Allow-Methods",
+//         "GET, POST, PUT, DELETE, OPTIONS"
+//     );
+//
+//     if (req.method === "OPTIONS") {
+//         res.sendStatus(204);
+//         return
+//     }
+//
+//     next();
+// });
+//
+// app.set("trust proxy", 1);
 
 app.use(
     session({
@@ -135,6 +142,12 @@ app.use("/api", UserRouter)
 // get the ai code completion
 app.use("/api", AICodeCompletionRouter);
 
+
+// call the fuction and get the token
+app.get("/api/getAzureToken", (req, res) => {
+    GetAzureToken();
+    res.send("Token fetch triggered");
+});
 
 app.use(GloblaError)
 

@@ -1,21 +1,22 @@
-import nodemailer, { Transporter, SendMailOptions } from "nodemailer"
-const transport: Transporter = nodemailer.createTransport({
-    host: "smtp.resend.com",
-    port: 465,
-    secure: true,
+import nodemailer from "nodemailer"
+const transport = nodemailer.createTransport({
+    host: process.env.BREVO_HOST,
+    port: 587,
+    secure: false,
     auth: {
-        user: "resend",
-        pass: process.env.RESEND_API_KEY,
+        user: process.env.BREVO_USER,
+        pass: process.env.BREVO_SMTP_KEY,
     },
 });
 
 // invitation link mail
-export const sendInvitationLink = (to: string, invitationLink: string) => {
-    const sendInvitationLinkMailOption: SendMailOptions = {
-        from: "CodeSync <onboarding@resend.dev>",
-        to: to,
-        subject: "You’ve Been Invited to CodeSync 🎉",
-        html: `
+export const sendInvitationLink = async (to: string, invitationLink: string) => {
+    try {
+        const info = await transport.sendMail({
+            from: "CodeSync <tekluabayneh@gmail.com>",
+            to: to,
+            subject: "You’ve Been Invited to CodeSync 🎉",
+            html: `
 <div style="font-family: Arial, sans-serif; background-color: #f7f8fa; padding: 30px; text-align: center;">
 
   <h1 style="color: #4A90E2; font-size: 28px; margin-bottom: 10px;">
@@ -44,19 +45,24 @@ export const sendInvitationLink = (to: string, invitationLink: string) => {
   <p style="color: #999; font-size: 12px; margin-top: 20px;">
     &copy; ${new Date().getFullYear()} CodeSync. All rights reserved.
   </p>
-</div>
-`,
-    };
-    transport.sendMail(sendInvitationLinkMailOption);
+</div> `,
+        });
+
+        console.log("Email sent:", info.messageId);
+    } catch (error) {
+        console.log(error)
+    }
 };
 
 // reset passwordk verification
-export const sendResetPasswordLink = (to: string, resetLink: string) => {
-    const resetPasswordMailOption: SendMailOptions = {
-        from: "CodeSync <onboarding@resend.dev>",
-        to: to,
-        subject: "Password Reset Request - CodeSync",
-        html: `
+export const sendResetPasswordLink = async (to: string, resetLink: string) => {
+    try {
+        const info = await transport.sendMail(
+            {
+                from: "CodeSync <tekluabayneh@gmail.com>",
+                to: to,
+                subject: "Password Reset Request - CodeSync",
+                html: `
 <div style="font-family: Arial, sans-serif; background-color: #f7f8fa; padding: 30px; text-align: center;">
 
 <h1 style="color: #4A90E2; font-size: 28px; margin-bottom: 10px;">
@@ -86,18 +92,24 @@ If you didn’t request this change, you can safely ignore this email. This link
 </p>
 </div>
 `,
-    };
-    transport.sendMail(resetPasswordMailOption)
-}
+            })
+        console.log("Email sent:", info.messageId);
+    } catch (error) {
+        console.log(error)
+    }
 
+
+}
 
 // otp email verification 
 export const sendOtpEmail = async (to: string, otp: string) => {
-    const mailOption: SendMailOptions = {
-        from: "CodeSync <onboarding@resend.dev>",
-        to: to,
-        subject: "Your OTP Code - from  CodeSync",
-        html: `
+    try {
+        const info = await transport.sendMail(
+            {
+                from: "CodeSync <tekluabayneh@gmail.com>",
+                to: to,
+                subject: "Your OTP Code - from  CodeSync",
+                html: `
 <div style="font-family: Arial, sans-serif; background-color: #f7f8fa; padding: 30px; text-align: center;">
 
 <h1 style="color: #4A90E2; font-size: 28px; margin-bottom: 10px;">
@@ -126,9 +138,10 @@ This code will expire in 5 minutes. Please do not share it with anyone.
 </p>
 </div>
 `,
-    };
-    transport.sendMail(mailOption)
+            })
+        console.log("Email sent:", info.messageId);
+    } catch (error) {
+        console.log(error)
+    }
+
 };
-
-
-

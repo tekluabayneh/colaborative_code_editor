@@ -15,6 +15,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@azure/msal-node": "^5.0.3",
     "@google/generative-ai": "^0.24.1",
     "@types/cookie-parser": "^1.4.9",
     "@types/express-session": "^1.18.2",
@@ -35,6 +36,7 @@
     "mongodb": "^6.17.0",
     "mongoose": "^8.16.3",
     "nanoid": "^5.1.5",
+    "node-fetch": "^3.3.2",
     "nodemailer": "^7.0.5",
     "passport": "^0.7.0",
     "passport-github2": "^0.1.12",
