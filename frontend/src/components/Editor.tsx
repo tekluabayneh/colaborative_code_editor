@@ -33,6 +33,7 @@ export default function CodeEditor() {
     };
 
     // Inside handleEditorDidMount
+    // @ts-expect-error fils type need to be updated 
     const handleEditorDidMount = (editor, monaco: Monaco) => {
         editorRef.current = editor;
         monacoRef.current = monaco;

@@ -2,9 +2,17 @@
 import { Bell, Search, Settings } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
+import { useEffect, useState } from "react";
 
 export const DashboardHeader = () => {
-    const userName = localStorage.getItem("email")?.split("@")[0] ?? "not found"
+    const [userName, setName] = useState("not found")
+
+    useEffect(() => {
+        const Email = localStorage.getItem("email")
+        if (Email) {
+            setName(Email.split("@")[0])
+        }
+    }, [])
 
     return (
         <header className="border-b border-gray-600 bg-card/50 backdrop-blur-sm sticky top-0 z-50">
