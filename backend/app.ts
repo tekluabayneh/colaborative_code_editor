@@ -26,8 +26,8 @@ type user = {
 }
 
 // app.use(cors({
-//     origin: true,             
-//     credentials: true        
+//     origin: true,
+//     credentials: true
 // }));
 
 
