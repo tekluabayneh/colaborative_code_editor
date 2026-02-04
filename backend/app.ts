@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-import cors from "cors"
 dotenv.config();
 import express, { Request, Response } from "express";
 import helmet from "helmet";
@@ -29,7 +28,7 @@ type user = {
 //     origin: true,
 //     credentials: true
 // }));
-
+//
 
 app.use((req, res, next) => {
     const origin = req.headers.origin;
@@ -58,21 +57,22 @@ app.use((req, res, next) => {
     next();
 });
 
+
 app.set("trust proxy", 1);
 
-app.use(
-    session({
-        secret: "my-secret",
-        resave: false,
-        saveUninitialized: true,
-        cookie: {
-            secure: true,
-            sameSite: "none",
-            httpOnly: true,
-        },
-    })
-);
-
+const isProd = process.env.NODE_ENV === 'production';
+app.use(session({
+    secret: process.env.SESSION_SECRET || "my-secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: isProd,
+        sameSite: isProd ? 'lax' : 'lax',
+        maxAge: 24 * 60 * 60 * 1000,
+        domain: isProd ? process.env.COOKIE_DOMAIN : undefined,
+    },
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -107,12 +107,12 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 const RateLimit = rateLimit({
-    windowMs: 5 * 60 * 1000,
-    max: 10,
+    windowMs: 3 * 60 * 1000,
+    max: 1000,
     message: "Too many requests, please try again later.",
 });
 
-// app.use(RateLimit);
+app.use(RateLimit);
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
