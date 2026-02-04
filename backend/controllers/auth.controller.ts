@@ -9,256 +9,260 @@ import OtpModel from "../models/Otp";
 import { sendOtpEmail, sendResetPasswordLink } from "../services/email.service";
 import ResetLinkModel from "../models/ResetPassword";
 interface ResetLinkRequestBody {
-  email: string;
+    email: string;
 }
 interface success {
-  message: string;
-  err?: any;
+    message: string;
+    err?: any;
 }
 
 const Register = async (req: Request, res: Response) => {
-  const { email, password, userName } = req.body;
+    const { email, password, userName } = req.body;
 
-  const HashedPassword = await HashPassword(password);
+    const HashedPassword = await HashPassword(password);
 
-  const userInfo = {
-    userName: userName,
-    password: HashedPassword,
-    email: email,
-  };
+    const userInfo = {
+        userName: userName,
+        password: HashedPassword,
+        email: email,
+    };
 
-  const AddOwner = await Owners.insertOne(userInfo);
+    const AddOwner = await Owners.insertOne(userInfo);
 
-  if (!AddOwner || !AddOwner._id) {
-    res.status(400).json({ message: "User was not registered correctly" });
-    return;
-  }
+    if (!AddOwner || !AddOwner._id) {
+        res.status(400).json({ message: "User was not registered correctly" });
+        return;
+    }
 
-  res.status(200).json({ message: "Registration successful" });
+    res.status(200).json({ message: "Registration successful" });
 };
 
 const Login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+    const { email, password } = req.body;
 
-  // check usr role get the role from the db using the email
-  const UserRole = await validator.isUserRoleOwnerOrUser(email);
-  let IsOwnerOrUser;
+    // check usr role get the role from the db using the email
+    const UserRole = await validator.isUserRoleOwnerOrUser(email);
+    let IsOwnerOrUser;
 
-  if (!UserRole) {
-    res.status(400).json({ message: "user not found" });
-    return;
-  }
-  if (UserRole.isOwner) {
-    IsOwnerOrUser = UserRole?.Owners_user;
-  } else {
-    IsOwnerOrUser = UserRole.Users_user;
-  }
+    if (!UserRole) {
+        res.status(400).json({ message: "user not found" });
+        return;
+    }
+    if (UserRole.isOwner) {
+        IsOwnerOrUser = UserRole?.Owners_user;
+    } else {
+        IsOwnerOrUser = UserRole.Users_user;
+    }
 
-  if (!IsOwnerOrUser?.password || IsOwnerOrUser?.password.length === 0) {
-    res.status(400).json({
-      message:
-        "This account was created using Google or GitHub. Please log in with that provider.",
+    if (!IsOwnerOrUser?.password || IsOwnerOrUser?.password.length === 0) {
+        res.status(400).json({
+            message:
+                "This account was created using Google or GitHub. Please log in with that provider.",
+        });
+        return;
+    }
+
+    if (!(await validator.isPasswordMatch(password, IsOwnerOrUser.password))) {
+        res.status(404).json({ message: "password is not correct" });
+        return;
+    }
+
+    const token = Tokens.SignUser_JWT_Token(
+        IsOwnerOrUser.email,
+        IsOwnerOrUser?.role,
+        process.env.JWT_SECRET_KEY!
+    );
+
+    const isProduction = process.env.NODE_ENV === 'production';
+    res.cookie("accessToken", token, {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        path: '/',
+        partitioned: true,
+        // domain: isProduction ? '.yourdomain.com' : undefined,
+        signed: false,
     });
-    return;
-  }
 
-  if (!(await validator.isPasswordMatch(password, IsOwnerOrUser.password))) {
-    res.status(404).json({ message: "password is not correct" });
-    return;
-  }
-
-  const token = Tokens.SignUser_JWT_Token(
-    IsOwnerOrUser.email,
-    IsOwnerOrUser?.role,
-    process.env.JWT_SECRET_KEY!
-  );
-
-  res.cookie("accessToken", token, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: false,
-    maxAge: 100 * 60 * 60 * 60,
-    signed: false,
-  });
-
-  res.status(200).json({
-    message: "user login successfully",
-    role: UserRole?.role,
-  });
+    res.status(200).json({
+        message: "user login successfully",
+        role: UserRole?.role,
+    });
 };
 
 const SendOTP = async (req: Request, res: Response) => {
-  if (!req.body?.email) {
-    res.status(400).json({
-      message: "email is required if you want to reset your password",
-    });
-    return;
-  }
-
-  try {
-    const { email } = req.body;
-
-    const checkuserFromOwners = await Owners.findOne({ email: email });
-    const checkusrFromUsers = await Users.findOne({ email: email });
-
-    if (!checkuserFromOwners && !checkusrFromUsers) {
-      res.status(400).json({
-        message:
-          "user is not found with the provided email check your email again ",
-      });
-      return;
+    if (!req.body?.email) {
+        res.status(400).json({
+            message: "email is required if you want to reset your password",
+        });
+        return;
     }
 
-    // stpre the otp in db
-    const otp = Tokens.Otp();
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
-    const StoreOtp = await OtpModel.insertOne({ email, otp, expiresAt });
+    try {
+        const { email } = req.body;
 
-    if (!StoreOtp._id) {
-      res.status(500).json({ message: "otp is not stored unsuccessfully" });
-      return;
+        const checkuserFromOwners = await Owners.findOne({ email: email });
+        const checkusrFromUsers = await Users.findOne({ email: email });
+
+        if (!checkuserFromOwners && !checkusrFromUsers) {
+            res.status(400).json({
+                message:
+                    "user is not found with the provided email check your email again ",
+            });
+            return;
+        }
+
+        // stpre the otp in db
+        const otp = Tokens.Otp();
+        const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+        const StoreOtp = await OtpModel.insertOne({ email, otp, expiresAt });
+
+        if (!StoreOtp._id) {
+            res.status(500).json({ message: "otp is not stored unsuccessfully" });
+            return;
+        }
+        await sendOtpEmail(email, otp);
+        res.status(200).json({ message: "otp sent successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "internal server error", error });
     }
-    await sendOtpEmail(email, otp);
-    res.status(200).json({ message: "otp sent successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "internal server error", error });
-  }
 };
 
 const verifyOtp = async (req: Request, res: Response) => {
-  if (!req.body.email || !req.body.Otp) {
-    res.status(400).json({ message: "email and opt are mandatory" });
-    return;
-  }
-  try {
-    const { email, Otp } = req.body;
-
-    // get the opt from the data and match them and also the email
-    const Record = await OtpModel.findOne({ email: email });
-
-    if (!Record?._id) {
-      res.status(400).json({ message: "no OTP found for this email" });
-      return;
+    if (!req.body.email || !req.body.Otp) {
+        res.status(400).json({ message: "email and opt are mandatory" });
+        return;
     }
+    try {
+        const { email, Otp } = req.body;
 
-    if (Number(Date.now()) > Number(Record.expiresAt)) {
-      res.status(400).json({ message: "OTP expired " });
-      return;
+        // get the opt from the data and match them and also the email
+        const Record = await OtpModel.findOne({ email: email });
+
+        if (!Record?._id) {
+            res.status(400).json({ message: "no OTP found for this email" });
+            return;
+        }
+
+        if (Number(Date.now()) > Number(Record.expiresAt)) {
+            res.status(400).json({ message: "OTP expired " });
+            return;
+        }
+
+        if (Record.otp !== Otp) {
+            res.status(400).json({ message: "no OTP found for this email" });
+            return;
+        }
+
+        await OtpModel.deleteOne({ email });
+        res.status(200).json({ message: "OTP verifyed successfully" });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "something went wrong" });
     }
-
-    if (Record.otp !== Otp) {
-      res.status(400).json({ message: "no OTP found for this email" });
-      return;
-    }
-
-    await OtpModel.deleteOne({ email });
-    res.status(200).json({ message: "OTP verifyed successfully" });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "something went wrong" });
-  }
 };
 
 const sendResetLink = async (
-  req: Request<{}, {}, ResetLinkRequestBody>,
-  res: Response<success>
+    req: Request<{}, {}, ResetLinkRequestBody>,
+    res: Response<success>
 ) => {
-  if (!req.body || !req.body.email) {
-    res.status(400).json({ message: "email is required" });
-    return;
-  }
-
-  const { email } = req.body;
-  try {
-    const checkUserExistFromUsers = await Users.findOne({ email: email });
-    const checkUserExistFromOwners = await Owners.findOne({ email: email });
-
-    if (!checkUserExistFromUsers && !checkUserExistFromOwners) {
-      res
-        .status(400)
-        .json({ message: `user is not found with the email of ${email} ` });
-      return;
+    if (!req.body || !req.body.email) {
+        res.status(400).json({ message: "email is required" });
+        return;
     }
 
-    const token = Tokens.ResetPasswordLink();
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
-    const StoreToken = await ResetLinkModel.insertOne({
-      email,
-      token,
-      expiresAt,
-    });
+    const { email } = req.body;
+    try {
+        const checkUserExistFromUsers = await Users.findOne({ email: email });
+        const checkUserExistFromOwners = await Owners.findOne({ email: email });
 
-    if (!StoreToken._id) {
-      res.status(500).json({ message: "internal server error" });
-      return;
+        if (!checkUserExistFromUsers && !checkUserExistFromOwners) {
+            res
+                .status(400)
+                .json({ message: `user is not found with the email of ${email} ` });
+            return;
+        }
+
+        const token = Tokens.ResetPasswordLink();
+        const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+        const StoreToken = await ResetLinkModel.insertOne({
+            email,
+            token,
+            expiresAt,
+        });
+
+        if (!StoreToken._id) {
+            res.status(500).json({ message: "internal server error" });
+            return;
+        }
+        const resetLink: string = process.env.ORIGIN_FRONTEND_URL + `/ResetPassword?token=${token}&email=${email}`;
+
+        sendResetPasswordLink(email, resetLink);
+
+        res.status(200).json({ message: "reset-password send successfully" });
+    } catch (err) {
+        res.status(500).json({ message: "internal server error", err });
+        return;
     }
-    const resetLink: string = `http://localhost:3000/ResetPassword?token=${token}&email=${email}`;
-
-    sendResetPasswordLink(email, resetLink);
-
-    res.status(200).json({ message: "reset-password send successfully" });
-  } catch (err) {
-    res.status(500).json({ message: "internal server error", err });
-    return;
-  }
 };
 
 const ResetPassword = async (req: Request, res: Response) => {
-  const { newPassword } = req.body;
-  const { token, email } = req.query;
-  try {
-    if (typeof email !== "string" || typeof token !== "string") {
-      res.status(400).json({ message: "Invalid request" });
-      return;
-    }
+    const { newPassword } = req.body;
+    const { token, email } = req.query;
+    try {
+        if (typeof email !== "string" || typeof token !== "string") {
+            res.status(400).json({ message: "Invalid request" });
+            return;
+        }
 
-    const storedToken = await ResetLinkModel.findOne({ email });
-    if (!storedToken) {
-      res.status(400).json({ message: "User not found" });
-      return;
-    }
+        const storedToken = await ResetLinkModel.findOne({ email });
+        if (!storedToken) {
+            res.status(400).json({ message: "User not found" });
+            return;
+        }
 
-    if (token !== storedToken.token) {
-      res.status(401).json({ message: "Invalid or expired token" });
-      return;
-    }
+        if (token !== storedToken.token) {
+            res.status(401).json({ message: "Invalid or expired token" });
+            return;
+        }
 
-    const isUser = await validator.isUserRoleOwnerOrUser(email);
-    if (!isUser) {
-      res.status(400).json({ message: "User not found" });
-      return;
-    }
+        const isUser = await validator.isUserRoleOwnerOrUser(email);
+        if (!isUser) {
+            res.status(400).json({ message: "User not found" });
+            return;
+        }
 
-    const hashedPassword = await HashPassword(newPassword);
+        const hashedPassword = await HashPassword(newPassword);
 
-    let updateResult: UpdateResult;
-    if (!isUser.isOwner) {
-      updateResult = await Users.updateOne(
-        { email },
-        { password: hashedPassword }
-      );
-    } else {
-      updateResult = await Owners.updateOne(
-        { email },
-        { password: hashedPassword }
-      );
-    }
+        let updateResult: UpdateResult;
+        if (!isUser.isOwner) {
+            updateResult = await Users.updateOne(
+                { email },
+                { password: hashedPassword }
+            );
+        } else {
+            updateResult = await Owners.updateOne(
+                { email },
+                { password: hashedPassword }
+            );
+        }
 
-    if (updateResult.acknowledged) {
-      res.status(200).json({ message: "Password reset successfully" });
-      return;
+        if (updateResult.acknowledged) {
+            res.status(200).json({ message: "Password reset successfully" });
+            return;
+        }
+        res.status(500).json({ message: "Something went wrong" });
+    } catch (err) {
+        res.status(500).json({ message: "Something went wrong" });
     }
-    res.status(500).json({ message: "Something went wrong" });
-  } catch (err) {
-    res.status(500).json({ message: "Something went wrong" });
-  }
 };
 
 export default {
-  sendResetLink,
-  ResetPassword,
-  Login,
-  Register,
-  verifyOtp,
-  SendOTP,
+    sendResetLink,
+    ResetPassword,
+    Login,
+    Register,
+    verifyOtp,
+    SendOTP,
 };
