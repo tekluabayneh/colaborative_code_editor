@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 
 export const DashboardHeader = () => {
-    const [userName, setName] = useState("not found")
+    const [userName, setName] = useState("NO userName!")
 
     useEffect(() => {
         const Email = localStorage.getItem("email")
