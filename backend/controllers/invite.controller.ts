@@ -178,13 +178,19 @@ const acceptInvite = async (req: Request, res: Response) => {
                 process.env.JWT_SECRET_KEY!
             );
 
+            const isProduction = process.env.NODE_ENV === 'production';
             res.cookie("accessToken", token, {
                 httpOnly: true,
-                sameSite: "lax",
-                secure: true,
-                maxAge: 100 * 60 * 60 * 60,
+                secure: isProduction,
+                sameSite: isProduction ? 'none' : 'lax',
+                maxAge: 7 * 24 * 60 * 60 * 1000,
+                path: '/',
+                partitioned: true,
+                // domain: isProduction ? '.yourdomain.com' : undefined,
                 signed: false,
             });
+
+
 
             res.status(201).json({ message: "Welcome! You are now a member", token });
             return;
