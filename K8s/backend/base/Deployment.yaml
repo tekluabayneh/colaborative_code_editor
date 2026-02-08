@@ -17,8 +17,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: cgr.dev/chainguard/nginx:latest
-
+          image: tekluman/colab-backend:v1.9.0
           env:
             - name: PORT
               value: "5000"
