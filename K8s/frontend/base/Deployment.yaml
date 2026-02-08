@@ -4,20 +4,20 @@ metadata:
   name: colab-frontend
   namespace: colab-app
   labels:
-    app: colab-frontend 
+    app: colab-frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: colab-frontend 
+      app: colab-frontend
   template:
     metadata:
       labels:
-        app: colab-frontend 
+        app: colab-frontend
     spec:
       containers:
-        - name: nginx
-          image: cgr.dev/chainguard/nginx:latest
+        - name: colab-frontend-app
+          image: tekluman/colab-frontend:v1.0.9
           ports:
             - containerPort: 3000
               protocol: TCP
@@ -26,17 +26,31 @@ spec:
               value: "3000"
           envFrom:
             - secretRef:
-                name: colab-backend-secret 
+                name: colab-frontend-secret
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "768Mi"
+            requests:
+              cpu: "500m"
+              memory: "384Mi"
           readinessProbe:
             httpGet:
               path: /
               port: 3000
-          resources:
-            limits:
-              memory: "50Mi"
-            requests:
-              memory: "50Mi"
-              cpu: "250m"
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 12
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 6
           securityContext:
             allowPrivilegeEscalation: false
             privileged: false
