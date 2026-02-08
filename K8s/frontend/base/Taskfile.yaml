@@ -22,3 +22,9 @@ tasks:
     desc: "Apply Secret configuration"
     cmds:
       - kubectl apply -f Secret.yaml -n {{.NAMESPACE}}
+
+  04-apply-nodeport-service:
+    desc: "Apply Secret configuration"
+    cmds:
+      - kubectl apply -f nodeport_service.yaml -n {{.NAMESPACE}}
+
