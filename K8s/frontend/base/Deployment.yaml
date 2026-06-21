@@ -4,16 +4,16 @@ metadata:
   name: colab-frontend
   namespace: colab-app
   labels:
-    app: colab-frontend
+    app: colab-frontend-deploy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: colab-frontend
+      app: colab-frontend # only manage this pods 
   template:
     metadata:
       labels:
-        app: colab-frontend
+        app: colab-frontend # this is the pod labels that let's us to connect to services 
     spec:
       containers:
         - name: colab-frontend-app
@@ -60,4 +60,3 @@ spec:
         runAsUser: 1001
         runAsGroup: 1001
         runAsNonRoot: true
-
