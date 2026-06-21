@@ -1,5 +1,4 @@
 version: "3"
-
 env:
   BORDER: double
   BORDER_FOREGROUND: "212"
@@ -8,17 +7,28 @@ env:
   NAMESPACE: colab-app
 
 tasks:
-  01-apply-Deployment:
+
+  01-apply-Pod:
+    desc: "Apply the Pod Service"
+    cmds:
+      - kubectl apply -f Pod.yaml -n {{.NAMESPACE}}
+
+  02-apply-Deployment:
     desc: "Apply Deployment configuration"
     cmds:
       - kubectl apply -f Deployment.yaml -n {{.NAMESPACE}}
 
-  02-apply-clusterip-service:
+  03-apply-clusterip-service:
     desc: "Apply the ClusterIP Service"
     cmds:
       - kubectl apply -f Service.yaml -n {{.NAMESPACE}}
 
-  03-apply-secret-string-data:
+  04-apply-secret-string-data:
     desc: "Apply Secret configuration"
     cmds:
       - kubectl apply -f Secret.yaml -n {{.NAMESPACE}}
+
+  05-apply-loadbalancer:
+    desc: "Apply Secret configuration"
+    cmds:
+      - kubectl apply -f Loadbalancer.yaml -n {{.NAMESPACE}}
