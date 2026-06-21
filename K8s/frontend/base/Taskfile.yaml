@@ -28,3 +28,7 @@ tasks:
     cmds:
       - kubectl apply -f nodeport_service.yaml -n {{.NAMESPACE}}
 
+  05-apply-loadbalancer-service:
+    desc: "Apply Secret configuration"
+    cmds:
+      - kubectl apply -f Loadbalancer.yaml -n {{.NAMESPACE}}
