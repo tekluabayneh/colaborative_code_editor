@@ -13,29 +13,49 @@ tasks:
       - REPLACE_WITH_ABSOLUTE_PATH=${PWD} envsubst < kind-config.yaml.TEMPLATE >
         kind-config.yaml
 
-  kind:02-create-cluster:
+  kind:02-generate-local-config:
+    desc: "Generate kind config with local absolute paths for PV mounts"
+    cmds:
+      - REPLACE_WITH_ABSOLUTE_PATH=${PWD} envsubst <
+        kind-config-local.yaml.TEMPLATE > kind-config-local.yaml
+
+  kind:03-create-local-cluster:
+    desc: "Create local Kubernetes cluster using kind"
+    cmds:
+      - kind create cluster --config kind-config-local.yaml
+
+  kind:04-create-cluster:
     desc: "Create a Kubernetes cluster using kind"
     cmds:
       - kind create cluster --config kind-config.yaml
 
-  kind:03-run-cloud-provider-kind:
+  kind:05-run-cloud-provider-kind:
     desc: "Run sigs.k8s.io/cloud-provider-kind@latest to enable load balancer
       services with KinD"
     cmds:
-      # - sudo cloud-provider-kind
       - kitty --title "KinD Cloud Provider" bash -c "sudo \$(which
-        cloud-provider-kind); exec bash" # open in another terminal since i don't want to hog my terminal
+        cloud-provider-kind); exec bash"
 
-  kind:04-install-ingress-controller:
-    desc: "Install NGINX Ingress Controller"
+  kind:06-local-ingress-controller:
+    desc: "Install NGINX Ingress Controller for Local Testing"
+    cmds:
+      - kubectl apply -f
+        https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+      - echo "Waiting for local Ingress controller to be ready (up to 5
+        minutes)..."
+      - kubectl wait --namespace ingress-nginx --for=condition=ready pod
+        --selector=app.kubernetes.io/component=controller --timeout=300s
+
+  kind:07-install-ingress-controller:
+    desc: "Install NGINX Ingress Controller for Cloud"
     cmds:
       - kubectl apply -f
         https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.11.2/deploy/static/provider/cloud/deploy.yaml
       - echo "Waiting for Ingress controller to be ready (up to 5 minutes)..."
-      - kubectl wait --namespace ingress-nginx \ --for=condition=ready pod \
-        --selector=app.kubernetes.io/component=controller \ --timeout=300s
+      - kubectl wait --namespace ingress-nginx --for=condition=ready pod
+        --selector=app.kubernetes.io/component=controller --timeout=300s
 
-  kind:04-delete-cluster:
+  kind:08-delete-cluster:
     desc: "Delete an existing kind Kubernetes cluster"
     cmds:
       - kind delete cluster
@@ -44,12 +64,10 @@ tasks:
     desc: "Run full local setup: generate config → create cluster → enable LB →
       install ingress"
     deps:
-      [
-        kind:01-generate-config,
-        kind:02-create-cluster,
-        kind:03-run-cloud-provider-kind,
-        kind:04-install-ingress-controller,
-      ]
+      - kind:01-generate-config
+      - kind:04-create-cluster
+      - kind:05-run-cloud-provider-kind
+      - kind:07-install-ingress-controller
     cmds:
       - echo "Kind cluster is now ready with Ingress controller!"
 
@@ -59,24 +77,24 @@ tasks:
       - kubectl create namespace colab-app
       - echo "colab-app namespace created successfully"
 
-  app:apply-sandbox:
+  kind:apply-sandbox:
     desc: "Apply the sandbox overlay (your actual app)"
     cmds:
       - kustomize build overlays/sandbox | kubectl apply -f -
 
-  app:show-external-ip:
+  kind:show-external-ip:
     desc: "Show the public IP or hostname of the Ingress controller"
     cmds:
       - echo "Your public URL (wait if EXTERNAL-IP is still <pending>):"
       - kubectl get svc ingress-nginx-controller -n ingress-nginx
 
-  dev:up:
+  kind:up:
     desc: "Full setup: cluster + LB + ingress + apply app"
-    deps: [kind:setup-all, app:apply-sandbox]
+    deps: [kind:setup-all, kind:apply-sandbox]
     cmds:
-      - task: app:show-external-ip
+      - task: kind:show-external-ip
 
-  dev:down:
+  kind:down:
     desc: "Clean up: delete the cluster"
     cmds:
-      - task: kind:04-delete-cluster
+      - task: kind:08-delete-cluster

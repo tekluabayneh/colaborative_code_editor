@@ -1,0 +1,29 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+    extraPortMappings:
+      - containerPort: 80
+        hostPort: 80
+        protocol: TCP
+      - containerPort: 443
+        hostPort: 443
+        protocol: TCP
+
+  # 2. WORKER NODE ONE (With your first local folder mount)
+  - role: worker
+    extraMounts:
+      - hostPath: /home/teklu/Desktop/colaborative_code_editor/K8s/kind-bind-mount-1
+        containerPath: /some/path/in/container
+
+  # 3. WORKER NODE TWO (With your second local folder mount)
+  - role: worker
+    extraMounts:
+      - hostPath: /home/teklu/Desktop/colaborative_code_editor/K8s/kind-bind-mount-1
+        containerPath: /some/path/in/container

@@ -12,33 +12,32 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: "localhost" 
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: frontend-service
-            port:
-              number: 80
+    - host: "localhost"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-service
+                port:
+                  number: 80
 
-      # 2. Backend – ONLY /api and subpaths (strict prefix match)
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: backend-service
-            port:
-              number: 5000
+          # 2. Backend – ONLY /api and subpaths (strict prefix match)
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-service
+                port:
+                  number: 5000
 
-      # 3. Catch-all fallback – any unmatched path goes to frontend (SPA-friendly)
-      #    This comes LAST so /api is preferred over it
-      - path: /(.*)
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: frontend-service
-            port:
-              number: 80
-
+          # 3. Catch-all fallback – any unmatched path goes to frontend (SPA-friendly)
+          #    This comes LAST so /api is preferred over it
+          - path: /(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: frontend-service
+                port:
+                  number: 80

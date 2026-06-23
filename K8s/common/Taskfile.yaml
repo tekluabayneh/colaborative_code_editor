@@ -8,28 +8,23 @@ env:
   NAMESPACE: colab-app
 
 tasks:
-  01-create-namespace:
-    desc: "Create the colab-app namespace (if it doesn't exist)"
-    cmds:
-      - kubectl apply -f Namespace.yaml
-      - echo "Namespace '{{.NAMESPACE}}' is ready."
-
-  02-apply-loadbalancer-service:
+  01-apply-loadbalancer-service:
     desc: "Apply the LoadBalancer Service to namespace {{.NAMESPACE}}"
-    deps: [01-create-namespace] 
+    deps: [01-create-namespace]
     cmds:
       - kubectl apply -f Service.yaml -n {{.NAMESPACE}}
 
-  03-apply-ingress-service:
+  02-apply-ingress-service:
     desc: "Apply the Ingress to namespace {{.NAMESPACE}}"
     deps: [01-create-namespace]
     cmds:
       - kubectl apply -f Ingress.yaml -n {{.NAMESPACE}}
 
-  04-delete-namespace:
+  03-delete-namespace:
     desc: "Delete the entire colab-app namespace and everything inside it"
     cmds:
-      - cmd: gum style "🚨 Deleting namespace {{.NAMESPACE}} will recursively delete ALL resources inside it! 🚨"
+      - cmd: gum style "🚨 Deleting namespace {{.NAMESPACE}} will recursively delete ALL
+          resources inside it! 🚨"
         silent: true
       - kubectl delete -f Namespace.yaml
       - kubectl delete namespace {{.NAMESPACE}} --force --grace-period=0
@@ -37,10 +32,14 @@ tasks:
   # apply all
   deploy-all:
     desc: "Create namespace + apply Service + apply Ingress"
-    deps: [01-create-namespace, 02-apply-loadbalancer-service, 03-apply-ingress-service]
+    deps:
+      [
+        01-create-namespace,
+        02-apply-loadbalancer-service,
+        03-apply-ingress-service,
+      ]
     silent: true
 
   cleanup:
     desc: "Alias to delete the namespace"
     cmds: [04-delete-namespace]
-

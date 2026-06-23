@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ingress-nginx-controller   
-  namespace: colab-app 
+  name: Centrall-Loadbalncer
+  namespace: colab-app
 spec:
-  type: LoadBalancer             
+  type: LoadBalancer
   ports:
     - port: 80
       targetPort: http
@@ -15,4 +15,4 @@ spec:
       protocol: TCP
       name: https
   selector:
-    app.kubernetes.io/name: ingress-nginx   
+    app.kubernetes.io/name: ingress-nginx-router
