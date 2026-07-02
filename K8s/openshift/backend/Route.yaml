@@ -1,0 +1,13 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: colab-backend-route
+  namespace: teklu-soft-dev
+spec:
+  path: /api
+  to:
+    kind: Service
+    name: backend-service
+  port:
+    targetPort: 5000
+  wildcardPolicy: None

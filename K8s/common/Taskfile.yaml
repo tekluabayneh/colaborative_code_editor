@@ -8,15 +8,13 @@ env:
   NAMESPACE: colab-app
 
 tasks:
-  01-apply-loadbalancer-service:
+  01-apply-loadbalancer:
     desc: "Apply the LoadBalancer Service to namespace {{.NAMESPACE}}"
-    deps: [01-create-namespace]
     cmds:
       - kubectl apply -f Service.yaml -n {{.NAMESPACE}}
 
-  02-apply-ingress-service:
+  02-apply-ingress:
     desc: "Apply the Ingress to namespace {{.NAMESPACE}}"
-    deps: [01-create-namespace]
     cmds:
       - kubectl apply -f Ingress.yaml -n {{.NAMESPACE}}
 
@@ -32,12 +30,7 @@ tasks:
   # apply all
   deploy-all:
     desc: "Create namespace + apply Service + apply Ingress"
-    deps:
-      [
-        01-create-namespace,
-        02-apply-loadbalancer-service,
-        03-apply-ingress-service,
-      ]
+    deps: [01-create-namespace, 02-apply-loadbalancer, 03-apply-ingress]
     silent: true
 
   cleanup:

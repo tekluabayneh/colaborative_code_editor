@@ -1,0 +1,34 @@
+version: "3"
+env:
+  BORDER: double
+  BORDER_FOREGROUND: "212"
+  PADDING: "1 1"
+  MARGIN: "1 1"
+  NAMESPACE: teklu-soft-dev
+
+tasks:
+
+  01-apply-Deployment:
+    desc: "Apply Deployment configuration"
+    cmds:
+      - kubectl apply -f Deployment.yaml -n {{.NAMESPACE}}
+
+  02-apply-clusterip-service:
+    desc: "Apply the ClusterIP Service"
+    cmds:
+      - kubectl apply -f Service.yaml -n {{.NAMESPACE}}
+
+  03-apply-secret-string-data:
+    desc: "Apply Secret configuration"
+    cmds:
+      - kubectl apply -f Secret.yaml -n {{.NAMESPACE}} --validate=false
+
+  04-apply-loadbalancer:
+    desc: "Apply Secret configuration"
+    cmds:
+      - kubectl apply -f Loadbalancer.yaml -n {{.NAMESPACE}}
+
+  05-apply-openshift-route:
+    desc: "Apply openshift route"
+    cmds:
+      - kubectl apply -f Route.yaml -n {{.NAMESPACE}}

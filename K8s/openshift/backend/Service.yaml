@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service # this is what your Ingress backend.service.name must match exactly
-  namespace: colab-app
+  namespace: teklu-soft-dev
   labels:
     svcidentifyer: service-label
   annotations:

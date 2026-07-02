@@ -28,7 +28,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: backend-service
+                name: backend-service # this need to match the backend clusterIP metadata.name 
                 port:
                   number: 5000
 
